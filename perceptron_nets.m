@@ -4,6 +4,17 @@ no_of_bands = 25;
 no_of_classes = 6;
 
 %% Three layer neural network
+two_layer_net = feedforwardnet([no_of_bands no_of_classes], 'trainlm');
+
+two_layer_net.performFcn = 'crossentropy';
+
+two_layer_net.trainParam.epochs = 5000;
+
+two_layer_net.layers{3}.transferFcn  = 'softmax'; 
+
+[two_layer_net, tr] = train(two_layer_net, P', T', 'useGPU','yes');
+
+%% Three layer neural network
 three_layer_net = feedforwardnet([no_of_bands 50 no_of_classes], 'trainlm');
 
 three_layer_net.performFcn = 'crossentropy';
