@@ -65,9 +65,25 @@ for i = 1: length(dirList)
             % Get white spot from the image and correct the data cube
             
         else
-            [correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, whitedark_ref_cube,...
-                dark_ref_cube);
+            [correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, white_ref_cube,...
+                whitedark_ref_cube);
         end
+        
+        slice_no = 20;
+        
+        original_slice = uint8(hsi_cube(:,:, slice_no) / 16);
+        corrected_slice = uint8(correctd_hsi_cube(:,:, slice_no) / 16);
+        reflect_slice = uint8(reflect_cube(:,:, slice_no) / 16);
+        
+        figure()
+        subplot(1,3, 1)
+        imshow(original_slice)
+        
+        subplot(1,3, 2)
+        imshow(corrected_slice)
+        subplot(1,3, 3)
+        imshow(reflect_slice)
+        
         
         % Plot the spectral distribution for one point in the image
         [wh_ref_h, wh_ref_w, wh_ref_d] = size(whitedark_ref_cube);
