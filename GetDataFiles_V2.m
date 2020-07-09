@@ -1,6 +1,13 @@
 function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
-    dark_ref_cube, dark_ref_hdr, white_dark_cube, white_dark_hdr] = GetDataFiles_V2(directory_path, simultaneous)
+    dark_ref_cube, dark_ref_hdr, white_dark_cube, white_dark_hdr] = GetDataFiles_V2(directory_path)
 
+    % Specim IQ camera images contain ehite reference and dark reference
+    % cube for simulataneos aquisition mode images. In this case, there 
+    % should be a calibration pad in the image. For pre-set white reference
+    % images, it will create additional file which is "whitedarkref". This
+    % function only for the second type images which doesn't contain white
+    % reference in the image but there is pre-set white reference.
+    
     file_list = dir(directory_path);
 
     files = strings(length(file_list),1);
@@ -35,6 +42,8 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
                         hdr_file = strcat(str_temp, '\',capture_data_list(j).name);                         
                     elseif (contains(capture_data_list(j).name,'DARKREF_'))                        
                         dark_ref_hdr = strcat(str_temp, '\',capture_data_list(j).name);                        
+                    elseif (contains(capture_data_list(j).name,'WHITEDARKREF_'))
+                        white_dark_hdr = strcat(str_temp, '\',capture_data_list(j).name);
                     elseif (contains(capture_data_list(j).name,'WHITEREF_'))
                         white_ref_hdr = strcat(str_temp, '\',capture_data_list(j).name);
                     end
@@ -47,6 +56,8 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
                         hsi_file = strcat(str_temp, '\',capture_data_list(j).name); 
                     elseif (contains(capture_data_list(j).name,'DARKREF_'))                        
                         dark_ref_cube = strcat(str_temp, '\',capture_data_list(j).name);                        
+                    elseif (contains(capture_data_list(j).name,'WHITEDARKREF_'))
+                        white_dark_cube = strcat(str_temp, '\',capture_data_list(j).name);
                     elseif (contains(capture_data_list(j).name,'WHITEREF_'))
                         white_ref_cube = strcat(str_temp, '\',capture_data_list(j).name);
                     end
