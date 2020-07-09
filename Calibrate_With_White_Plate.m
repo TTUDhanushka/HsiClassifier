@@ -1,4 +1,4 @@
-function corrected_image = CalibrateWhiteDark(hsi_cube, simultaneous)
+function corrected_image = Calibrate_With_White_Plate(hsi_cube)
 
     if (corrected_image)
         corrected_image = 0;

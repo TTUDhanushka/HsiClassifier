@@ -1,5 +1,6 @@
 function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
-    dark_ref_cube, dark_ref_hdr, white_dark_cube, white_dark_hdr] = GetDataFiles_V2(directory_path)
+    dark_ref_cube, dark_ref_hdr, white_dark_cube, white_dark_hdr,...
+    res_cube, res_hdr] = GetDataFiles_V2(directory_path)
 
     % Specim IQ camera images contain ehite reference and dark reference
     % cube for simulataneos aquisition mode images. In this case, there 
@@ -14,10 +15,12 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
     
     hdr_ext = '.hdr'; 
     raw_ext = '.raw';
+    res_ext = '.dat';
     
     darkref_name = 'DARKREF_';
     white_dark_ref_name = 'WHITEDARKREF_';
     white_ref_name = 'WHITEREF_';
+    results_cube_name = 'REFLECTANCE_';
     
     files = strings(length(file_list),1);
 
@@ -73,8 +76,37 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
             if ~(isequal(files_in_capture, files_should_in))
                 fprintf("Files not in the folder");
             end
-
+            
+        % Results folder contains reflectances.
+        elseif contains(file_list(i).name, 'results')
+            
+            str_temp = fullfile(directory_path, file_list(i).name);
+            results_file_struct = dir(str_temp);
+            
+            results_file_list = strings(length(results_file_struct), 1);
+             
+            for idx = 1:length(results_file_struct)
+                results_file_list(idx) = results_file_struct(idx).name;
+                
+                if (contains(results_file_struct(idx).name, '.hdr'))
+                    res_hdr = strcat(str_temp, '\', results_file_struct(idx).name);
+                elseif (contains(results_file_struct(idx).name, '.dat'))
+                    res_cube = strcat(str_temp, '\', results_file_struct(idx).name);
+                end
+                
+            end
+            
+            if ~isfile(res_hdr)
+                fprintf("Header doesn't exist.")
+            end
+            
+            if ~isfile(res_cube)
+                fprintf("Reflectance cube doesn't exist.")
+            end
+                     
         end
+        
+        
     end
 
 end

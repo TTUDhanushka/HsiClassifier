@@ -1,9 +1,10 @@
 %% HSI based image labeling pipeline
 
-%%
+%% Parameters
 
 % White reference in the image
 simultaneousRef = false;
+
 
 %%
 % Get images scene folder
@@ -32,12 +33,16 @@ for i = 1: length(dirList)
         % Read the HSI data cube.
         [rgb_file, header_file, hsi_file, white_ref_file,...
             white_ref_hdr, dark_ref_file, dark_ref_hdr,...
-            white_dark_file, white_dark_hdr] = GetDataFiles_V2(directory_path);
+            white_dark_file, white_dark_hdr, ...
+            reflect_file, reflect_hdr] = GetDataFiles_V2(directory_path);
         
         % Get the header data
         [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
         
         hsi_cube = multibandread(hsi_file, [cols lines bands],...
+            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+        
+        reflect_cube = multibandread(reflect_file, [cols lines bands],...
             'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
         
         white_ref_cube = multibandread(white_ref_file, [cols 1 bands],...
@@ -68,31 +73,22 @@ for i = 1: length(dirList)
         [wh_ref_h, wh_ref_w, wh_ref_d] = size(whitedark_ref_cube);
         
         X_axis = linspace(1, wh_ref_d, wh_ref_d);
-        Y_axis = zeros(wh_ref_h *  wh_ref_w, wh_ref_d);
-        
-        for i = 1:wh_ref_h
-            
-            for j = 1:wh_ref_w
+        Y_WD = zeros(1, wh_ref_d);
+        Y_W = zeros(1, wh_ref_d);
+        Y_D = zeros(1, wh_ref_d);
                 
-                Y_axis(((i - 1) * wh_ref_w) + j, :) = whitedark_ref_cube(i, j, :);
-                hold on
-                
-                plot(X_axis, Y_axis(((i - 1) * wh_ref_w) + j, :));
-            end
-        end
-        
-        white_ref_avg = zeros(1, wh_ref_d);
-        dark_ref_avg = zeros(1, wh_ref_d);
-        
         for i = 1:wh_ref_d
-            dark_ref_avg(1,i) = mean (dark_ref_cube(:,1,i));
-            white_ref_avg(1,i) = mean (Y_axis(:,i));
+            Y_D(1,i) = mean (dark_ref_cube(:,1,i));
+            Y_WD(1,i) = mean (whitedark_ref_cube(:,1,i));
+            Y_W(1,i) = mean (white_ref_cube(:,1,i));
         end
         
         figure()
-        plot(X_axis, white_ref_avg, 'b', 'LineWidth', 2)
+        plot(X_axis, Y_D, 'b', 'LineWidth', 2)
         hold on
-        plot(X_axis, dark_ref_avg, 'r', 'LineWidth', 2)
+%         plot(X_axis, Y_WD, 'r', 'LineWidth', 2)
+%         hold on
+        plot(X_axis, Y_W, 'g', 'LineWidth', 2)
         hold off
 
         
