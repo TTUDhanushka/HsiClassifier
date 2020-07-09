@@ -34,25 +34,18 @@ function [calibrated_hsi, error] = Calibrate_Spectral_Image(hsi_cube, white_ref,
         end
     end
     
-    figure()
-    xx = linspace(1, 512, 512)
-    plot(xx, z(:,1))
+%     figure()
+%     xx = linspace(1, 512, 512)
+%     plot(xx, z(:,1))
     
     
     for i = 1:h
         for j = 1:w
             for k = 1:d
-%                 calibrated_hsi(j,i,k) = (4096 * (hsi_cube(j,i,k) - dark_ref_avg(1,k)) / (white_ref_avg(1,k) - dark_ref_avg(1,k)));
-%                 calibrated_hsi(i,j,k) = (4096 * (hsi_cube(i,j,k)) / (dark_ref(i,1,k)) - white_ref(i,1,k));
                 calibrated_hsi(i,j,k) = (4096 * (hsi_cube(i,j,k) - dark_ref(i,1,k)) / (white_ref(i,1,k) - dark_ref(i,1,k)));
             end
         end
     end
     
-    figure()
-    xx1 = linspace(1, 512, 512)
-    plot(xx1, hsi_cube(:,1,1))
-    
-    hsi_cube(1,1, 100)
 
 end

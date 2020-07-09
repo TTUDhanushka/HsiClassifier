@@ -1,5 +1,8 @@
 %% HSI based image labeling pipeline
 
+%%
+
+
 % Get images scene folder
 
 workingFolder = pwd;
@@ -17,17 +20,31 @@ for i = 1: length(dirList)
     if (~strcmp(dirList(i).name, '.') && ~strcmp(dirList(i).name, '..'))
         
         directory_path = fullfile(scenePath, dirList(3).name);
-
+        
         % Read the HSI data cube.
         [rgb_file, header_file, hsi_file, white_ref_file,...
             white_ref_hdr, dark_ref_file, dark_ref_hdr, ...
-            white_dark_cube, white_dark_hd] = GetDataFiles_V2(directory_path);
-
+            white_dark_file, white_dark_hdr] = GetDataFiles_V2(directory_path);
+        
         % Get the header data
         [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
         
+        hsi_cube = multibandread(hsi_file, [cols lines bands],...
+            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+        
+        white_ref_cube = multibandread(white_ref_file, [cols 1 bands],...
+            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+        
+        whitedark_ref_cube = multibandread(white_dark_file, [cols 1 bands],...
+            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+        
+        dark_ref_cube = multibandread(dark_ref_file, [cols 1 bands],...
+            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+
+        
+        
         if (img_count == 1)
-            %
+            % 
         end
 
        
