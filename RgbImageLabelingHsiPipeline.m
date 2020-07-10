@@ -43,7 +43,7 @@ for i = 1: length(dirList)
             'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
         
         reflect_cube = multibandread(reflect_file, [cols lines bands],...
-            'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
+            'uint8', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
         
         white_ref_cube = multibandread(white_ref_file, [cols 1 bands],...
             'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
@@ -73,7 +73,7 @@ for i = 1: length(dirList)
         
         original_slice = uint8(hsi_cube(:,:, slice_no) / 16);
         corrected_slice = uint8(correctd_hsi_cube(:,:, slice_no) / 16);
-        reflect_slice = uint8(reflect_cube(:,:, slice_no) / 16);
+        reflect_slice = uint8(reflect_cube(:,:, slice_no));
         
         figure()
         subplot(1,3, 1)
