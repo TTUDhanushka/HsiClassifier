@@ -54,12 +54,6 @@ for i = 1: length(dirList)
         dark_ref_cube = multibandread(dark_ref_file, [cols 1 bands],...
             'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
 
-        % Reconstruct RGB image from the cube
-        dummyRGB = zeros(512, 512, 3, 'uint8');
-        br = 30;
-        dummyRGB(:,:,1) = uint8(hsi_cube(:,:,26) / 16) + br;
-        dummyRGB(:,:,2) = uint8(hsi_cube(:,:,53) / 16) + br + 10;
-        dummyRGB(:,:,3) = uint8(hsi_cube(:,:,104) / 16) + br + 15;
         
         if (simultaneousRef)
             % Get white spot from the image and correct the data cube
@@ -68,6 +62,16 @@ for i = 1: length(dirList)
             [correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, white_ref_cube,...
                 whitedark_ref_cube);
         end
+        
+                % Reconstruct RGB image from the cube
+        dummyRGB = zeros(512, 512, 3, 'uint8');
+        br = 30;
+        dummyRGB(:,:,1) = uint8(correctd_hsi_cube(:,:,26) / 16) + br;
+        dummyRGB(:,:,2) = uint8(correctd_hsi_cube(:,:,53) / 16) + br + 10;
+        dummyRGB(:,:,3) = uint8(correctd_hsi_cube(:,:,104) / 16) + br + 15;
+        
+        figure()
+        imshow(dummyRGB)
         
         slice_no = 20;
         
