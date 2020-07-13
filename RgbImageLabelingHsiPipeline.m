@@ -28,7 +28,7 @@ hsi_file = '';
 for i = 1: length(dirList)
     if (~strcmp(dirList(i).name, '.') && ~strcmp(dirList(i).name, '..'))
         
-        directory_path = fullfile(scenePath, dirList(3).name);
+        directory_path = fullfile(scenePath, dirList(i).name);
         
         % Read the HSI data cube.
         [rgb_file, header_file, hsi_file, white_ref_file,...
@@ -116,8 +116,10 @@ for i = 1: length(dirList)
 %             % 
 %         end
 
-       
-        % 
+        figure()
+        reconstructedImg = ConvertFalseRgb(correctd_hsi_cube, white_ref_cube);
+        imshow(reconstructedImg);
+        %
     end
 end
 
