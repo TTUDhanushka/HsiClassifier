@@ -1,5 +1,6 @@
 %% HSI based image labeling pipeline
 
+addpath('HelperFunctions')
 %% Parameters
 
 % White reference in the image
