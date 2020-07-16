@@ -113,6 +113,9 @@ for i = 1: length(dirList)
 %         hold off
 
         %% Run classification
+        % Get the list of minimum bands
+        
+        % Create minimum band images
         reduced_cube = Create_Min_Band_Image(correctd_hsi_cube, min_max_pool_bands);
         
         % Convert cube to plane
@@ -121,8 +124,9 @@ for i = 1: length(dirList)
         
         NN_result = zeros(l_h, no_of_classes, 'uint8');
         
-        test_in = zeros(hsi_bands,1);
+        test_in = zeros(length(min_max_pool_bands),1);
         
+        % Call classifier
         parfor i = 1:l_h
             
             test_in = linear_image(i, :);
@@ -131,19 +135,38 @@ for i = 1: length(dirList)
             
         end
 
+        % Save RGB image
+        classified_image = zeros(cols, lines, 3, 'uint8');
+
+        
+        for i = 1: l_h
+            
+            [res_val, res_ind] = max(NN_result(i,:));
+            
+            c_h = floor((i - 1) / cols) + 1;
+            c_w = (i-1) - ((c_h - 1) * cols) + 1;
+            classified_image(c_h, c_w, :) = Get_Masking_Color(no_of_classes, res_ind);
+            
+        end
+
+
+        % Save classification result
+        
         figure()
+        subplot(1, 2, 1)
         reconstructedImg = ConvertFalseRgb(correctd_hsi_cube, white_ref_cube);
         imshow(reconstructedImg);
-        %
+        
+        subplot(1, 2, 2)
+        classified_image = imrotate(classified_image, -90);
+        imshow(classified_image);
+
     end
 end
 
-% Get the list of minimum bands
 
-% Create minimum band images
 
-% Call classifier
 
-% Save RGB image
 
-% Save classification result
+
+

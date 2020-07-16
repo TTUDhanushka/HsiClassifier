@@ -113,7 +113,7 @@ for i = 1: length(dirList)
 %         hold off
 
         %% Run classification
-        reduced_cube = Create_Min_Band_Image(correctd_hsi_cube)
+        reduced_cube = Create_Min_Band_Image(correctd_hsi_cube, min_max_pool_bands);
         
         % Convert cube to plane
         linear_image = Convert_to_1d_Spectral(reduced_cube);
@@ -121,7 +121,7 @@ for i = 1: length(dirList)
         
         NN_result = zeros(l_h, no_of_classes, 'uint8');
         
-        test_in = zeros(hsi_bands,1);
+        test_in = zeros(length(min_max_pool_bands),1);
         
         parfor i = 1:l_h
             

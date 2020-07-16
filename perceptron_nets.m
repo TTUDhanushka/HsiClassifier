@@ -1,7 +1,7 @@
 %% Shallow neural networks without back propagation
 
 no_of_bands = 25;
-no_of_classes = 6;
+no_of_classes = 8;
 
 %% Three layer neural network
 two_layer_net = feedforwardnet([no_of_bands no_of_classes], 'trainlm');
