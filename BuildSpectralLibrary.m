@@ -11,8 +11,8 @@ desired_bands = 25;                 % Number of spectral bands needed for for th
 % the workspace. Therefore it should be "false". This will generate set of
 % bands according to the image.
 
-use_predefined_bands = false;       % Get the spectral data cubes from predefined bands
-white_ref_set = false;
+use_predefined_bands = true;       % Get the spectral data cubes from predefined bands
+white_ref_set = true;
 
 %% Build spectral library for all the terrain classes
 
