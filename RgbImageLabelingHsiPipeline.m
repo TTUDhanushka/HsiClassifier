@@ -90,32 +90,46 @@ for i = 1: length(dirList)
         imshow(reflect_slice)
         
         
-        % Plot the spectral distribution for one point in the image
-        [wh_ref_h, wh_ref_w, wh_ref_d] = size(whitedark_ref_cube);
-        
-        X_axis = linspace(1, wh_ref_d, wh_ref_d);
-        Y_WD = zeros(1, wh_ref_d);
-        Y_W = zeros(1, wh_ref_d);
-        Y_D = zeros(1, wh_ref_d);
-                
-        for i = 1:wh_ref_d
-            Y_D(1,i) = mean (dark_ref_cube(:,1,i));
-            Y_WD(1,i) = mean (whitedark_ref_cube(:,1,i));
-            Y_W(1,i) = mean (white_ref_cube(:,1,i));
-        end
-        
-        figure()
-        plot(X_axis, Y_D, 'b', 'LineWidth', 2)
-        hold on
-%         plot(X_axis, Y_WD, 'r', 'LineWidth', 2)
-%         hold on
-        plot(X_axis, Y_W, 'g', 'LineWidth', 2)
-        hold off
-
-        
-%         if (img_count == 1)
-%             % 
+%         %% Plot the spectral distribution for one point in the image
+%         [wh_ref_h, wh_ref_w, wh_ref_d] = size(whitedark_ref_cube);
+%         
+%         X_axis = linspace(1, wh_ref_d, wh_ref_d);
+%         Y_WD = zeros(1, wh_ref_d);
+%         Y_W = zeros(1, wh_ref_d);
+%         Y_D = zeros(1, wh_ref_d);
+%         
+%         for i = 1:wh_ref_d
+%             Y_D(1,i) = mean (dark_ref_cube(:,1,i));
+%             Y_WD(1,i) = mean (whitedark_ref_cube(:,1,i));
+%             Y_W(1,i) = mean (white_ref_cube(:,1,i));
 %         end
+%         
+%         figure()
+%         plot(X_axis, Y_D, 'b', 'LineWidth', 2)
+%         hold on
+% %         plot(X_axis, Y_WD, 'r', 'LineWidth', 2)
+% %         hold on
+%         plot(X_axis, Y_W, 'g', 'LineWidth', 2)
+%         hold off
+
+        %% Run classification
+        reduced_cube = Create_Min_Band_Image(correctd_hsi_cube, min_max_pool_bands);
+        
+        % Convert cube to plane
+        linear_image = Convert_to_1d_Spectral(reduced_cube);
+        [l_h, l_d] = size(linear_image);
+        
+        NN_result = zeros(l_h, no_of_classes, 'uint8');
+        
+        test_in = zeros(hsi_bands,1);
+        
+        parfor i = 1:l_h
+            
+            test_in = linear_image(i, :);
+            
+            NN_result(i, :) = uint8(255 * (sim(two_layer_net, test_in')));
+            
+        end
 
         figure()
         reconstructedImg = ConvertFalseRgb(correctd_hsi_cube, white_ref_cube);
