@@ -12,3 +12,6 @@ All the neural networks are based on multilayer perceptrons which are comprise o
 1. Two layer network
 2. Three layer network
 3. Four layer network
+
+### HSI scene classification pipeline
+This HSI classification pipeline built based on pre-recorded white reference images. All the images are stored in same directory where first image contains the white reference.
