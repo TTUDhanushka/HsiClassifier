@@ -160,6 +160,12 @@ for i = 1: length(dirList)
         subplot(1, 2, 2)
         classified_image = imrotate(classified_image, -90);
         imshow(classified_image);
+        
+        checkAccuracyUser = input("Does the classification accuracy correct? True / False");
+        
+        if ~checkAccuracyUser
+            UpdateSpectralClass()
+        end
 
     end
 end
