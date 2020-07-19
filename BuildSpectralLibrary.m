@@ -134,6 +134,7 @@ else
     
     min_max_pool_bands = Min_Max_Pooling(linear_image, desired_bands);
     
+    
     reduced_hsi_image_min_max = Create_Min_Band_Image(correctd_hsi_cube, min_max_pool_bands);
 end
 %% Extract image classes

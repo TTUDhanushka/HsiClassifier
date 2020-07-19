@@ -4,6 +4,9 @@
 In the working directory, it will create additional folder named "SpectralLibrary". This folder contains, datacubes, spectral distribution, 
 meta data and location of the sample data captured for each class.
 
+The spectral data library folder is in the same working directory named as "SpectralLibrary". It contains spectral data for each class, image location where the samples taken, 
+spectral characteristic curve and meta data containing size of the sample. 
+
 ### Training various neural network architectures
 Various neural network architectures are implementd in "percepttron_nets.m" file.
 These networks can be trained using "nn_trainer.m" script. And the "nn_tester.m" has all the functions needed for classification.
