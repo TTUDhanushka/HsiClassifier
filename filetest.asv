@@ -1,13 +1,14 @@
 %% Writing a file
 
-fid = fopen('myfile_3.txt', 'w')
+fid = fopen('myfile_3.txt', 'w');
 
-data = [1, 11, 21, 32, 46, 53, 67, 77, 83, 95, 102, 119]
-
+data = [1, 11, 21, 32, 46, 53, 67, 77, 83, 95, 102, 119];
+nbytes = fprintf(fid, '%3.2f \n', data)
+fclose(fid);
 
 %% Reading a file to mat.
 
-fid = fopen('myfile_2.txt');
+fid = fopen('myfile_3.txt');
 
 tline = fgetl(fid);
 

@@ -11,8 +11,8 @@ desired_bands = 25;                 % Number of spectral bands needed for for th
 % the workspace. Therefore it should be "false". This will generate set of
 % bands according to the image.
 
-use_predefined_bands = true;       % Get the spectral data cubes from predefined bands
-white_ref_set = true;
+use_predefined_bands = false;       % Get the spectral data cubes from predefined bands
+white_ref_set = false;
 
 %% Build spectral library for all the terrain classes
 
@@ -134,6 +134,11 @@ else
     
     min_max_pool_bands = Min_Max_Pooling(linear_image, desired_bands);
     
+    % Write band numbers to a text file.
+    fid = fopen('bands_list.txt', 'w');
+
+    nbytes = fprintf(fid, '%3.2f \n', min_max_pool_bands)
+    fclose(fid);
     
     reduced_hsi_image_min_max = Create_Min_Band_Image(correctd_hsi_cube, min_max_pool_bands);
 end
