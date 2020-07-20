@@ -6,6 +6,21 @@ addpath('HelperFunctions')
 % White reference in the image
 simultaneousRef = false;
 
+%% Get the bands list
+fid = fopen('bands_list.txt');
+
+tline = fgetl(fid);
+
+count = 0;
+bands = zeros(25, 1);
+
+while ischar(tline)
+    count = count + 1;
+    bands(count) = str2num(tline);
+    tline = fgetl(fid);
+end
+
+fclose(fid);
 
 %%
 % Get images scene folder
