@@ -2,7 +2,7 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
     dark_ref_cube, dark_ref_hdr, white_dark_cube, white_dark_hdr,...
     res_cube, res_hdr] = GetDataFiles_V2(directory_path)
 
-    % Specim IQ camera images contain ehite reference and dark reference
+    % Specim IQ camera images contain white reference and dark reference
     % cube for simulataneos aquisition mode images. In this case, there 
     % should be a calibration pad in the image. For pre-set white reference
     % images, it will create additional file which is "whitedarkref". This
@@ -27,7 +27,7 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
     for i = 1 : length(file_list)
         files(i) = file_list(i).name;
 
-        if contains(file_list(i).name, '.png')
+        if (contains(file_list(i).name, '.png') && not(contains(file_list(i).name, 'gt'))&& not(contains(file_list(i).name, 'GT')))
             rgb_file_name = file_list(i).name;
             rgb_file = fullfile (directory_path, rgb_file_name);
         end

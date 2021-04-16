@@ -16,9 +16,6 @@ clc;
 %       Max Pooling
 %       Min-Max Pooling
 
-%% Add necessary folders to path
-
-addpath HelperFunctions
 
 %% Import data
 
@@ -28,6 +25,7 @@ image_source = 'specim';
 directory_path = uigetdir;
 
 directory_path = strcat(directory_path,'\');
+
 
 %% Get the data file paths from the data directory.
 
@@ -42,24 +40,6 @@ hsi_file = '';
 % Get the header data
 [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
 
-%% Get the preview RGB image.
-
-%
-%   This image is from the RGB camera on top of the Specim spectral
-%   imaging sensor. This view and actual false RGB of HSI are not
-%   necessarily matching.
-%
-
-rgb_image = imread(rgb_file);
-
-rgb_image = RotateRgbImage(rgb_image, 90);
-
-% Display the RGB preview image
-if ~(rgb_file == "")
-    subplot(2,2,1), imshow(rgb_image)
-    set(gcf,'position',[10,10,1600,800]);
-    title('PNG file from Specim');
-end
 
 %% Get the datacube, white reference and dark reference cubes and calibrate.
 
@@ -76,21 +56,60 @@ white_ref_cube = multibandread(white_ref_file, [cols 1 bands],...
 dark_ref_cube = multibandread(dark_ref_file, [cols 1 bands],...
     'uint16', 0, 'bil', 'ieee-le', {'Band', 'Range', [1 1 bands]});
 
-
-[correctd_hsi_cube, error] = ConstructFalseRgbImage(hsi_cube, white_ref_cube,...
+% perform calibration.
+[correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, white_ref_cube,...
     dark_ref_cube);
 
-% RGB reconstruction from HSI data cube
-rgb_from_hsi = ConstructRgbImage(correctd_hsi_cube, 28, 58, 85);
+% RGB reconstruction from HSI data cube. The bands were selected manually.
+rgb_from_hsi = Construct_False_Rgb_Image(correctd_hsi_cube, 28, 58, 85);
 
-% The bands has been inserted to the program manually
-subplot(2,2,2), imshow(rgb_from_hsi);
-title('Reconstructed image from selected bands');
+subplot(1,3,1), imshow(rgb_from_hsi);
+title('Reconstructed image from manually selected bands');
 
-rgb_2_from_hsi = ConstructRgbImage(correctd_hsi_cube);
-subplot(1,3,3), imshow(rgb_2_from_hsi);
-title('Reconstructed image from selected bands - corrected');
 
+%% Get the preview RGB image.
+
+%
+%   This image is from the RGB camera on top of the Specim spectral
+%   imaging sensor. This view and actual false RGB of HSI are not
+%   necessarily matching.
+%
+
+rgb_image = imread(rgb_file);
+
+rgb_image = RotateRgbImage(rgb_image, 90);
+
+% Display the RGB preview image
+if ~(rgb_file == "")
+    subplot(1,3,2), imshow(rgb_image)
+    set(gcf,'position',[10,10,1600,800]);
+    title('PNG file from Specim');
+end
+
+
+%% Get the ground truth image
+
+fileList = dir(directory_path);
+
+for fileId = 1 : length(fileList)
+    if (contains(fileList(fileId).name, 'gt') || contains(fileList(fileId).name, 'GT'))
+        groundTruthFileName = fileList(fileId).name;
+        
+        groundTruthFilePath = strcat(directory_path, groundTruthFileName);
+        
+        groundTruthImage = imread(groundTruthFilePath);
+        groundTruthImage = RotateRgbImage(groundTruthImage, 90);
+    end
+end
+
+if groundTruthFilePath
+    
+    subplot(1,3,3), imshow(groundTruthImage);
+    title('Manually labeled ground truth.');
+end
+
+
+%%
 % figure()
 
 % %%
@@ -159,78 +178,11 @@ title('Reconstructed image from selected bands - corrected');
 % 
 % % reduced_hsi_image_mul_stp = Create_Min_Band_Image(hsi_cube, mul_step_bands);
 % 
-% %% Display segmented image according to the classes
-% % Need to change
-% 
-% number_of_classes = 5;          % How many classes in the image
-% samples_per_class = 1;          % How many training samples per class
-% read_coords_from_file = false;   % Read training sample coordinates from file.
-% 
-% seg_image = rgb_2_from_hsi;     % zeros(cols, lines, 3, 'uint8');
-% 
-% % All the class names
-% class_names = [ "class1" "class2" "class3" "class4"...
-%                 "class5" "class6" "class7" "class8"...
-%                 "class9" "class10" "class11" "class12"...
-%                 "class13" "class14" "class15" "class16"...
-%                 "class17" "class18" "class19" "class20"];
-% %             ...
-% %                 "class21" "class22" "class23" "class24"
-% 
-% % class_coord = zeros(number_of_classes, 4);
-% 
-% sample_coords_struct = struct;
-% 
-% 
-% if ~read_coords_from_file
-%     
-%     for mask_id = 1: (number_of_classes * samples_per_class)
-%         
-%         masking_color = Get_Masking_Color(number_of_classes, mask_id);
-%         
-%         [im, im_x, im_y] = Select_Pixel_Class(rgb_file, true);
-%         
-%         sample_coords_struct(mask_id).im_x = im_x;
-%         sample_coords_struct(mask_id).im_y = im_y;
-%         sample_coords_struct(mask_id).color = masking_color;
-%         
-%         seg_image = Display_Classified_Image(seg_image, im_x, im_y, masking_color);
-%         
-%     end
-%     
-%     writetable(struct2table(sample_coords_struct),'coords.txt')
-%     
-% else
-%     coords_table = readtable('coords.txt');
-%     
-%     table_size = size(coords_table);
-%     table_len = table_size(1,1);
-%     
-%     for i = 1: table_len
-%         im_x = [coords_table.im_x_1(i) coords_table.im_x_2(i)];
-%         im_y = [coords_table.im_y_1(i) coords_table.im_y_2(i)];
-%         
-%         mask_color = [coords_table.color_1(i) coords_table.color_2(i) coords_table.color_3(i)];
-%         
-%         seg_image = Display_Classified_Image(seg_image, im_x, im_y, mask_color);
-%         
-%         % Extract the HSI pixels from reconstructued image
-% %         class_cube = Extract_Training_Pixels(reduced_hsi_image, im_x, im_y);
-%         
-%         % Extract the HSI pixels from min max pooling
-%         class_cube = Extract_Training_Pixels(reduced_hsi_image_min_max, im_x, im_y);
-%         
-%         % Extract the HSI pixels from reconstructued image from PCA
-% %         class_cube = Extract_Training_Pixels(reduced_hsi_image_pca, im_x, im_y);
-% 
-%         Generate_Training_Datacubes(class_names(i), class_cube);
-%     end
-% 
-% end
-% 
-% figure();
-% imshow(seg_image);
-% title('Classes on the image');
+% rgb_2_from_hsi = ConstructRgbImage(correctd_hsi_cube);
+% subplot(1,3,3), imshow(rgb_2_from_hsi);
+% title('Reconstructed image from selected bands - corrected');
+
+
 % 
 % 
 % % Extract the HSI pixels from reconstructued image for multi step

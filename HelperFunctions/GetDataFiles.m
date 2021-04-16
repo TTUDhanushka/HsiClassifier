@@ -8,7 +8,7 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
     for i = 1 : length(file_list)
         files(i) = file_list(i).name;
 
-        if contains(file_list(i).name, '.png')
+        if (contains(file_list(i).name, '.png') && not(contains(file_list(i).name, 'gt'))&& not(contains(file_list(i).name, 'GT')))
             rgb_file_name = file_list(i).name;
             rgb_file = strcat (directory_path, rgb_file_name);
         end
