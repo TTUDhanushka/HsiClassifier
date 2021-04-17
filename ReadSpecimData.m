@@ -35,7 +35,7 @@ header_file = '';
 hsi_file = '';
 
 [rgb_file, header_file, hsi_file, white_ref_file,...
-    white_ref_hdr, dark_ref_file, dark_ref_hdr] = GetDataFiles(directory_path);
+    white_ref_hdr, dark_ref_file, dark_ref_hdr, reflectance_cube_file] = GetDataFiles(directory_path);
 
 % Get the header data
 [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
@@ -60,8 +60,10 @@ dark_ref_cube = multibandread(dark_ref_file, [cols 1 bands],...
 [correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, white_ref_cube,...
     dark_ref_cube);
 
+reflectanceCube = hypercube(reflectance_cube_file);
+
 % RGB reconstruction from HSI data cube. The bands were selected manually.
-rgb_from_hsi = Construct_False_Rgb_Image(correctd_hsi_cube, 28, 58, 85);
+rgb_from_hsi = Construct_False_Rgb_Image(reflectanceCube.DataCube, 28, 58, 85);
 
 subplot(1,3,1), imshow(rgb_from_hsi);
 title('Reconstructed image from manually selected bands');

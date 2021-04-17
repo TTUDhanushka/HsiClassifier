@@ -13,7 +13,7 @@ clc;
 %% Add necessary folders to path
 
     addpath HelperFunctions
-
+    addpath NN_Library
 
 %% Parameters
 
@@ -31,4 +31,18 @@ clc;
 
 ReadSpecimData();               % Reads all the files into workspace.
 
+%%
+
 BuildTrainingDataset();         % Collect training data and labels for CNN.
+
+%% Training
+height = 1;
+width = bands;
+channels = 1;
+
+% Get neural network
+convnet_2_network();
+
+deep_net = trainNetwork(CNN_TrainingData, CNN_LabelData, convnet_2, opts);
+
+%% Prediction

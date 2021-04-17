@@ -30,7 +30,7 @@ function [calibrated_hsi, error] = Calibrate_Spectral_Image(hsi_cube, white_ref,
     for i = 1:h
         for j = 1:w
             for k = 1:d
-                calibrated_hsi(i,j,k) = (4096 * (hsi_cube(i,j,k) - dark_ref_avg(k)) / (white_ref_avg(k) - dark_ref_avg(k)));
+                calibrated_hsi(i,j,k) = (255 * (hsi_cube(i,j,k) - dark_ref_avg(k)) / (white_ref_avg(k) - dark_ref_avg(k)));
             end
         end
     end

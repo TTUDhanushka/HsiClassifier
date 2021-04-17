@@ -1,5 +1,5 @@
 function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
-    dark_ref_cube, dark_ref_hdr, reflectance_cube] = GetDataFiles(directory_path)
+    dark_ref_cube, dark_ref_hdr] = GetDataFiles(directory_path)
 
     file_list = dir(directory_path);
 
@@ -61,8 +61,7 @@ function [rgb_file, hdr_file, hsi_file, white_ref_cube, white_ref_hdr,...
             for k = 1:length(result_data_list)
                 if contains(result_data_list(k).name, '.dat')
                     reflectanceCubeFile = result_data_list(k).name;
-                    reflectance_cube = strcat(str_result, '\',result_data_list(k).name);
-
+                    reflectance_cube = strcat(str_result, '\',capture_data_list(j).name);
                 end
             end
         end

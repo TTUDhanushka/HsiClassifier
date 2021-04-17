@@ -54,7 +54,7 @@ if ~read_coords_from_file
         
         for idI = 1: sampleWidth + 1
             for idJ = 1:sampleHeight + 1
-               trainingDataLabels(1, sampleLen + ((idI - 1) * sampleWidth) + idJ) = mask_id - 1;
+               trainingDataLabels(1, sampleLen + ((idI - 1) * sampleWidth) + idJ) = mask_id;
             end
         end
         
@@ -97,17 +97,9 @@ title('Classes on the image');
 
 % Split the array
 tempCube = trainingDataCube(:, 1: sampleLen);
+
+CNN_TrainingData = reshape(tempCube,[1, bands, 1, sampleLen]);
+
 tempLabels = trainingDataLabels(1, 1: sampleLen);
 
-rndTempCube = zeros(bands, sampleLen);
-rndTempLabels = zeros(1, sampleLen);
-
-randIdx = randperm(sampleLen);
-
-for i = 1: sampleLen
-    rndTempCube(:, i) = tempCube(:, randIdx(i));
-    rndTempLabels(1, i) = tempLabels(1, randIdx(i));
-end
-
-CNN_TrainingData = reshape(rndTempCube,[1, bands, 1, sampleLen]);
-CNN_LabelData = categorical(rndTempLabels);
+CNN_LabelData = categorical(trainingDataLabels);

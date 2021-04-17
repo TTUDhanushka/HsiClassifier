@@ -10,14 +10,14 @@ ReadSpecimData();
 
 % Get input data from workspace.
 % [data_h, data_w, data_d] = size(correctd_hsi_cube);
-[data_h, data_w, data_d] = size(correctd_hsi_cube);
+[data_h, data_w, data_d] = size(reflectanceCube.DataCube);
 
 %% Unfold the datacube and get spectral data into rows
 inputData = zeros(data_d, data_h * data_w);
 
 for a = 1:data_h
     for b = 1:data_w
-        inputData(:, ((a-1) * data_h) + b) = uint8(correctd_hsi_cube(a, b, :));
+        inputData(:, ((a-1) * data_h) + b) = uint8(reflectanceCube.DataCube(a, b, :));
     end
 end
 
@@ -55,9 +55,9 @@ width = data_d;
 channels = 1;
 sampleSize = data_h * data_w;
 
-CNN_TrainData = reshape(inputData,[height, width, channels, sampleSize]);
+CNN_TestPixels = reshape(inputData,[height, width, channels, sampleSize]);
 
-CNN_LabelData = categorical(outPutLabels);
+CNN_TestLabel = categorical(outPutLabels);
 
 %% Call NN and perform the test
 

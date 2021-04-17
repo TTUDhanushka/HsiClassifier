@@ -18,7 +18,7 @@ function image_segment = Extract_Training_Pixels(hsi_cube, pos_x1, pos_x2)
     for i = x1 : x2
         for j = y1:y2
             for k = 1:d
-                image_segment(i + 1 - x1, j + 1 - y1, k) = uint16(hsi_cube(i,j,k));
+                image_segment(i + 1 - x1, j + 1 - y1, k) = hsi_cube(i,j,k);
             end
         end
     end
