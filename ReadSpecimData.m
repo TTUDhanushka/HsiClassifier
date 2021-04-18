@@ -40,6 +40,24 @@ hsi_file = '';
 % Get the header data
 [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
 
+%% Get the preview RGB image.
+
+%
+%   This image is from the RGB camera on top of the Specim spectral
+%   imaging sensor. This view and actual false RGB of HSI are not
+%   necessarily matching.
+%
+
+rgb_image = imread(rgb_file);
+
+%rgb_image = RotateRgbImage(rgb_image, 90);
+
+% Display the RGB preview image
+if ~(rgb_file == "")
+    subplot(1,3,1), imshow(rgb_image)
+    %set(gcf,'position',[10,10,1600,800]);
+    title('PNG file from Specim');
+end
 
 %% Get the datacube, white reference and dark reference cubes and calibrate.
 
@@ -58,35 +76,20 @@ dark_ref_cube = multibandread(dark_ref_file, [cols 1 bands],...
 
 % perform calibration.
 [correctd_hsi_cube, error] = Calibrate_Spectral_Image(hsi_cube, white_ref_cube,...
-    dark_ref_cube);
+    dark_ref_cube, rgb_image);
 
 reflectanceCube = hypercube(reflectance_cube_file);
 
 % RGB reconstruction from HSI data cube. The bands were selected manually.
 rgb_from_hsi = Construct_False_Rgb_Image(reflectanceCube.DataCube, 28, 58, 85);
 
-subplot(1,3,1), imshow(rgb_from_hsi);
+% RGB reconstruction from HSI data cube. The bands were selected manually.
+rgb_from_corrected = Construct_False_Rgb_Image(correctd_hsi_cube, 28, 58, 85);
+
+
+rgb_from_corrected = imrotate(rgb_from_corrected, -90);
+subplot(1,3,2), imshow(rgb_from_corrected);
 title('Reconstructed image from manually selected bands');
-
-
-%% Get the preview RGB image.
-
-%
-%   This image is from the RGB camera on top of the Specim spectral
-%   imaging sensor. This view and actual false RGB of HSI are not
-%   necessarily matching.
-%
-
-rgb_image = imread(rgb_file);
-
-rgb_image = RotateRgbImage(rgb_image, 90);
-
-% Display the RGB preview image
-if ~(rgb_file == "")
-    subplot(1,3,2), imshow(rgb_image)
-    set(gcf,'position',[10,10,1600,800]);
-    title('PNG file from Specim');
-end
 
 
 %% Get the ground truth image
@@ -105,8 +108,8 @@ for fileId = 1 : length(fileList)
 end
 
 if groundTruthFilePath
-    
-    subplot(1,3,3), imshow(groundTruthImage);
+    %groundTruthImageDisplay = imrotate(groundTruthImage, 90);
+    subplot(1,3,3), imshow(groundTruthImageDisplay);
     title('Manually labeled ground truth.');
 end
 
