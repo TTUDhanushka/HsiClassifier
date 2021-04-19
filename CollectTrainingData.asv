@@ -1,0 +1,63 @@
+%% Instructions: 
+
+% Data should be collected from Reflectance data cube in the workspace.
+%   1. Therefore ReadSpecimData should be called before this script.
+%   2. Clear workspace if the workspace contains any other variables.
+
+
+%%
+
+% Select the label class from the class list.
+class = 1;
+
+
+classList = ["undefined";...
+            "Grass"; ...
+            "Bush"; ...
+            "Mud"; ...
+            "concrete"; ...
+            "Asphalt"; ...
+            "Trees"; ...
+            "Rocks"; ...
+            "water"; ...
+            "sky"; ...
+            "Snow"; ...
+            "Black_ice"; ...
+            "Dirt"; ...
+            "Gravel"; ...
+            "Objects"; ...
+            "Person"; ...
+            ];
+
+rgb_image = rgb_from_ref;
+        
+masking_color = Get_Label_Color( class);
+
+[im, im_x, im_y] = Select_Pixel_Class(rgb_image, false);
+
+rgb_image = Display_Classified_Image(rgb_image, im_x, im_y, masking_color);
+
+sampleHeight = im_y(1) - im_x(1);
+sampleWidth = im_y(2) - im_x(2);
+
+pointsInSample = sampleWidth * sampleHeight;
+
+% Extract the HSI pixels from calibrated hsi image datacube.
+class_cube = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);
+
+% for idX = 1: sampleWidth + 1                % Because matlab arrays are starting from 1.
+%     for idY = 1:sampleHeight + 1
+%        trainingDataCube(:, sampleLen + ((idX - 1) * sampleWidth) + idY) = class_cube(idX, idY,:);
+%     end
+% end
+% 
+% for idI = 1: sampleWidth + 1
+%     for idJ = 1:sampleHeight + 1
+%        trainingDataLabels(1, sampleLen + ((idI - 1) * sampleWidth) + idJ) = class - 1;
+%     end
+% end
+
+
+
+% sampleLen = sampleLen + (sampleWidth * sampleHeight);
+

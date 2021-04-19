@@ -1,6 +1,5 @@
 function class_color = Get_Pixel_Class(rgb_image)
-    
-   
+       
     % Get the dimensions of the image.  numberOfColorBands should be = 1.
     [rows columns numberOfColorBands] = size(rgb_image(:,:,1));
 
@@ -40,6 +39,5 @@ function class_color = Get_Pixel_Class(rgb_image)
 
 
     class_color = croppedImage(1,1,:);
-
-    
+   
 end
