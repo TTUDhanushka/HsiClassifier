@@ -7,25 +7,25 @@
 %
 
 ReadSpecimData();
-
+%%
 % Get input data from workspace.
 % [data_h, data_w, data_d] = size(correctd_hsi_cube);
-[data_h, data_w, data_d] = size(reflectanceCube.DataCube);
+[data_h, data_w, data_d] = size(correctd_hsi_cube);
 
 %% Unfold the datacube and get spectral data into rows
 inputData = zeros(data_d, data_h * data_w);
 
 for a = 1:data_h
     for b = 1:data_w
-        inputData(:, ((a-1) * data_h) + b) = uint8(reflectanceCube.DataCube(a, b, :));
+        inputData(:, ((a-1) * data_h) + b) = correctd_hsi_cube(a, b, :);
     end
 end
 
 %% Output labels
 
 % Get the ground truth.
-labelImage = imread("G:\3. Hyperspectral\5. Matlab HSI\20200420\REFLECTANCE_2019-11-18_021_gt.png");
-labelImage = imrotate(labelImage, 90);
+%labelImage = imread("G:\3. Hyperspectral\5. Matlab HSI\20200420\REFLECTANCE_2019-11-18_021_gt.png");
+labelImage = groundTruthImage; %imrotate(labelImage, 90);
 
 [h,w,d] = size(labelImage);
 
@@ -61,3 +61,17 @@ CNN_TestLabel = categorical(outPutLabels);
 
 %% Call NN and perform the test
 
+predictY = predict(deep_net, CNN_TestPixels);
+
+%% Create result classification
+
+classifiedImage = zeros(data_h, data_w, 1, 'uint8');
+
+for n = 1: sampleSize
+    row = fix(n/data_w) + 1;
+    column = mod(n,data_w) + 1;
+    classifiedImage(row, column) = predictY(n) * 50;
+end
+
+figure()
+imshow(classifiedImage)

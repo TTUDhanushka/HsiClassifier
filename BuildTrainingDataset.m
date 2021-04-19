@@ -4,7 +4,7 @@
 % 4-D array as an input data set for the CNN while labels will be made as
 % categorical vectors.
 
-seg_image = rgb_from_hsi;     % zeros(cols, lines, 3, 'uint8');
+seg_image = rgb_from_corrected;     % zeros(cols, lines, 3, 'uint8');
 
 % All the class names
 class_names = [ "class1" "class2" "class3" "class4"...
@@ -30,7 +30,7 @@ if ~read_coords_from_file
         
         masking_color = Get_Masking_Color(number_of_classes, mask_id);
         
-        [im, im_x, im_y] = Select_Pixel_Class(rgb_file, true);
+        [im, im_x, im_y] = Select_Pixel_Class(seg_image, false);
         
         sample_coords_struct(mask_id).im_x = im_x;
         sample_coords_struct(mask_id).im_y = im_y;
