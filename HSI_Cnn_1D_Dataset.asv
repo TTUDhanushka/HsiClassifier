@@ -65,19 +65,15 @@ predictY = predict(deep_net, CNN_TestPixels);
 
 %% Create result classification
 
-usedClassList = [1 2 7 9 10];
-
-classifiedImage = zeros(data_h, data_w, 3, 'uint8');
+classifiedImage = zeros(data_h, data_w, 1, 'uint8');
 
 for n = 1: sampleSize
     [val, id] = max(predictY(n,:));
     
     row = fix(n/data_w) + 1;
     column = mod(n,data_w) + 1;
-    classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
+    classifiedImage(row, column) = Get_Label_Color(d);
 end
 
 figure()
 imshow(classifiedImage)
-
-%% Perform accuracy / precision test

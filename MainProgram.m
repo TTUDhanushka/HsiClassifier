@@ -32,8 +32,13 @@ clc;
 ReadSpecimData();               % Reads all the files into workspace.
 
 %%
+% Old method removed
+% BuildTrainingDataset();         % Collect training data and labels for CNN.
 
-BuildTrainingDataset();         % Collect training data and labels for CNN.
+
+%%
+
+DatacubeTransformTo1D();
 
 %% Training
 height = 1;
@@ -43,6 +48,6 @@ channels = 1;
 % Get neural network
 convnet_2_network();
 
-deep_net = trainNetwork(CNN_TrainingData, CNN_LabelData, convnet_2, opts);
+deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, convnet_2, opts);
 
 %% Prediction

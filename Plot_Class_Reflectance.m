@@ -1,5 +1,5 @@
 
-class_cube = mud_cube;
+class_cube = sky_cube;
 
 %%
 
@@ -32,7 +32,7 @@ end
 % Plot the average curve.
 plot(class_avg, 'LineWidth', 2, 'Color', [0,0,0]);
 
-title("Reflectance characteristics of mud class.");     % Change the class name
+title("Reflectance characteristics of sky class.");     % Change the class name
 xlabel('Bands');
 xlim([0 204]);
 ylim([0 1]);
