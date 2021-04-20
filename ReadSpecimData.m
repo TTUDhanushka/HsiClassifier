@@ -111,26 +111,26 @@ subplot(2,2,3), imshow(rgb_from_ref);
 title('Reconstructed image from reflectance');
 
 
-%% Get the ground truth image
-
-fileList = dir(directory_path);
-
-for fileId = 1 : length(fileList)
-    if (contains(fileList(fileId).name, 'gt') || contains(fileList(fileId).name, 'GT'))
-        groundTruthFileName = fileList(fileId).name;
-        
-        groundTruthFilePath = strcat(directory_path, groundTruthFileName);
-        
-        groundTruthImage = imread(groundTruthFilePath);
-        groundTruthImage = RotateRgbImage(groundTruthImage, 90);
-    end
-end
-
-if groundTruthFilePath
-    %groundTruthImageDisplay = imrotate(groundTruthImage, 90);
-    subplot(1,3,3), imshow(groundTruthImageDisplay);
-    title('Manually labeled ground truth.');
-end
+% %% Get the ground truth image
+% 
+% fileList = dir(directory_path);
+% 
+% for fileId = 1 : length(fileList)
+%     if (contains(fileList(fileId).name, 'gt') || contains(fileList(fileId).name, 'GT'))
+%         groundTruthFileName = fileList(fileId).name;
+%         
+%         groundTruthFilePath = strcat(directory_path, groundTruthFileName);
+%         
+%         groundTruthImage = imread(groundTruthFilePath);
+%         groundTruthImage = RotateRgbImage(groundTruthImage, 90);
+%     end
+% end
+% 
+% if groundTruthFilePath
+%     groundTruthImageDisplay = imrotate(groundTruthImage, 90);
+%     subplot(1,3,3), imshow(groundTruthImageDisplay);
+%     title('Manually labeled ground truth.');
+% end
 
 
 %%
