@@ -24,8 +24,8 @@ sample_pos = 0;
 % Get the data from undefined class.
 for i = 1:undefined_h
     for j = 1: undefined_w
-        training_Data(:, sample_pos + ((i - 1) * undefined_h) + j) = undefined_cube(i, j, :);
-        training_Labels(1, sample_pos + ((i - 1) * undefined_h) + j) = undefined_labels(i, j);
+        training_Data(:, sample_pos + ((i - 1) * undefined_w) + j) = undefined_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * undefined_w) + j) = undefined_labels(i, j);
     end
 end
 
@@ -34,8 +34,8 @@ sample_pos = sample_pos + (undefined_h * undefined_w);
 % Get the data from grass class.
 for i = 1:grass_h
     for j = 1: grass_w
-        training_Data(:, sample_pos + ((i - 1) * grass_h) + j) = grass_cube(i, j, :);
-        training_Labels(1, sample_pos + ((i - 1) * grass_h) + j) = grass_labels(i, j);
+        training_Data(:, sample_pos + ((i - 1) * grass_w) + j) = grass_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * grass_w) + j) = grass_labels(i, j);
     end
 end
 
@@ -44,8 +44,8 @@ sample_pos = sample_pos + (grass_h * grass_w);
 % Get the data from tree class.
 for i = 1:tree_h
     for j = 1: tree_w
-        training_Data(:, sample_pos + ((i - 1) * tree_h) + j) = tree_cube(i, j, :);
-        training_Labels(1, sample_pos + ((i - 1) * tree_h) + j) = tree_labels(i, j);
+        training_Data(:, sample_pos + ((i - 1) * tree_w) + j) = tree_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * tree_w) + j) = tree_labels(i, j);
     end
 end
 
@@ -54,8 +54,8 @@ sample_pos = sample_pos + (tree_h * tree_w);
 % Get the data from water class.
 for i = 1:water_h
     for j = 1: water_w
-        training_Data(:, sample_pos + ((i - 1) * water_h) + j) = water_cube(i, j, :);
-        training_Labels(1, sample_pos + ((i - 1) * water_h) + j) = water_labels(i, j);
+        training_Data(:, sample_pos + ((i - 1) * water_w) + j) = water_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * water_w) + j) = water_labels(i, j);
     end
 end
 
@@ -64,8 +64,8 @@ sample_pos = sample_pos + (water_h * water_w);
 % Get the data from water class.
 for i = 1:sky_h
     for j = 1: sky_w
-        training_Data(:, sample_pos + ((i - 1) * sky_h) + j) = sky_cube(i, j, :);
-        training_Labels(1, sample_pos + ((i - 1) * sky_h) + j) = sky_labels(i, j);
+        training_Data(:, sample_pos + ((i - 1) * sky_w) + j) = sky_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * sky_w) + j) = sky_labels(i, j);
     end
 end
 

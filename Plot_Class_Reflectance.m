@@ -25,7 +25,7 @@ set(gcf, 'PaperUnits', 'inches');
 set(gcf, 'PaperSize', [4 2]);
 
 % Plot 25 sample characteristic curves on the same plot.
-for n = 1:50
+for n = 1:25
     plot(class_temp_cube(n,:),'Color',[0.8,0.8,0.8]);
 end
 
