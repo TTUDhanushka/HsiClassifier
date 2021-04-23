@@ -1,0 +1,7 @@
+clc;
+
+%% SVM classifier
+
+% Multiclass classifier
+
+fitcecoc()
