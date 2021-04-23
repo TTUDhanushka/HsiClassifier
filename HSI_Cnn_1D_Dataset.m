@@ -66,7 +66,7 @@ predictY = predict(deep_net, CNN_TestPixels);
 
 %% Create result classification
 
-usedClassList = [1 2 7 9 10];
+usedClassList = [2 6 7 10 13];
 
 classifiedImage = zeros(data_h, data_w, 3, 'uint8');
 

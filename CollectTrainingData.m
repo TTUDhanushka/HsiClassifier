@@ -10,7 +10,7 @@
 % Select the label class from the class list. and modify
 % class_cube_class_labels variable names accordingly.
 
-class = 10;          % CHANGE
+class = 2;          % CHANGE
 
 classList = ["undefined";...
             "Grass"; ...
@@ -34,6 +34,8 @@ rgb_image = rgb_from_ref;
         
 masking_color = Get_Label_Color( class);
 
+rgb_image = imrotate(rgb_image, 90);
+
 [im, im_x, im_y] = Select_Pixel_Class(rgb_image, false);
 
 rgb_image = Display_Classified_Image(rgb_image, im_x, im_y, masking_color);
@@ -44,14 +46,14 @@ sampleWidth = im_y(2) - im_x(2);
 pointsInSample = sampleWidth * sampleHeight;
 
 % Extract the HSI pixels from calibrated hsi image datacube.
-%sky_cube = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y); % CHANGE
-sky_cube = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y); % CHANGE
+grass_cube = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y); % CHANGE
+%sky_cube = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y); % CHANGE
 
-sky_labels = zeros(sampleWidth, sampleHeight, 'uint8');                   % CHANGE
+grass_labels = zeros(sampleWidth, sampleHeight, 'uint8');                   % CHANGE
 
 for idI = 1: sampleWidth + 1
     for idJ = 1:sampleHeight + 1
-       sky_labels(idI, idJ) = class;
+       grass_labels(idI, idJ) = class;
     end
 end
 

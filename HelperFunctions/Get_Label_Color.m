@@ -1,7 +1,7 @@
 function label_color = Get_Label_Color(class_id)
 
 
-colors =   [250 0 0;...           % Black (undefined classes)
+colors =   [0 0 0;...           % Black (undefined classes)
             0 102 0; ...        % dark green (Grass)
             255 153 204; ...    % Pink (Bush)
             99 66 34; ...       % Brown (Mud)

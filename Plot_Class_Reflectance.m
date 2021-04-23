@@ -1,5 +1,5 @@
 
-class_cube = sky_cube;
+class_cube = dirt_cube;
 
 %%
 

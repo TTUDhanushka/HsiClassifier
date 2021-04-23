@@ -15,34 +15,29 @@ if exist('undefined_cube','var')
 end
 
 if exist('grass_cube','var')
-    [grass_h, grass_w, d] = size(grass_cube);
+    [grass_h, grass_w, ~] = size(grass_cube);
     samples = samples + (grass_h * grass_w);
 end
 
 if exist('tree_cube','var')
-    [tree_h, tree_w, d] = size(tree_cube);
+    [tree_h, tree_w, ~] = size(tree_cube);
     samples = samples + (tree_h * tree_w);
 end
 
 if exist('asphalt_cube','var')
-    [asphalt_h, asphalt_w, d] = size(asphalt_cube);
+    [asphalt_h, asphalt_w, ~] = size(asphalt_cube);
     samples = samples + (asphalt_h * asphalt_w);
 end
 
 if exist('water_cube','var')
-    [water_h, water_w, d] = size(water_cube);
-    samples = samples  + (water_h * water_w);
+    [water_h, water_w,~] = size(water_cube);
 end
 
 if exist('sky_cube','var')
-    [sky_h, sky_w, d] = size(sky_cube);
-    samples = samples + (sky_h * sky_w);
+    [sky_h, sky_w, ~] = size(sky_cube);
 end
 
-if exist('dirt_cube','var')
-    [dirt_h, dirt_w, d] = size(dirt_cube);
-    samples = samples + (dirt_h * dirt_w);
-end
+samples + (tree_h * tree_w) + (water_h * water_w) + (sky_h * sky_w);
 
 training_Data = zeros(d, samples);
 training_Labels = zeros(1, samples);
@@ -109,37 +104,20 @@ if exist('water_cube','var')
     sample_pos = sample_pos + (water_h * water_w);
 end
 
-% Get the data from sky class.
-if exist('sky_cube','var')
-    for i = 1:sky_h
-        for j = 1: sky_w
-            training_Data(:, sample_pos + ((i - 1) * sky_w) + j) = sky_cube(i, j, :);
-            training_Labels(1, sample_pos + ((i - 1) * sky_w) + j) = sky_labels(i, j);
-        end
+% Get the data from water class.
+for i = 1:sky_h
+    for j = 1: sky_w
+        training_Data(:, sample_pos + ((i - 1) * sky_w) + j) = sky_cube(i, j, :);
+        training_Labels(1, sample_pos + ((i - 1) * sky_w) + j) = sky_labels(i, j);
     end
-
-    sample_pos = sample_pos + (sky_h * sky_w);
 end
-
-% Get the data from dirt class.
-if exist('dirt_cube','var')
-    for i = 1:dirt_h
-        for j = 1: dirt_w
-            training_Data(:, sample_pos + ((i - 1) * dirt_w) + j) = dirt_cube(i, j, :);
-            training_Labels(1, sample_pos + ((i - 1) * dirt_w) + j) = dirt_labels(i, j);
-        end
-    end
-
-    sample_pos = sample_pos + (dirt_h * dirt_w);
-end
-
 
 %% This sample_pos should be as same as sample number.
+sample_pos = sample_pos + (sky_h * sky_w);
 
 if ~(sample_pos == samples)
     errordlg("Error in the sample count");
 end
-
 
 %% Data augmentation
 
