@@ -40,7 +40,6 @@ ReadSpecimData();               % Reads all the files into workspace.
 
 DatacubeTransformTo1D();
 
-
 %% Training
 height = 1;
 width = bands;
@@ -51,11 +50,7 @@ convnet_2_network();
 
 deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, convnet_2, opts);
 
-
 %% Prediction
-% call HSI_Cnn_1D_Dataset.m file. This should run section by section.
 
-%% Classification  accuracy
 
-Classification_Accuracy();
-
+%% Classification  accura

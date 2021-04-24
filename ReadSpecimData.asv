@@ -123,11 +123,14 @@ for fileId = 1 : length(fileList)
         groundTruthFilePath = strcat(directory_path, groundTruthFileName);
         
         groundTruthImage = imread(groundTruthFilePath);
-        groundTruthImageDisp = RotateRgbImage(groundTruthImage, -90);
-        
-        subplot(2,2,4), imshow(groundTruthImageDisp);
-        title('Manually labeled ground truth.');
+        groundTruthImage = RotateRgbImage(groundTruthImage, 90);
     end
+end
+
+if (groundTruthFilePath && groundTruthExist)
+    groundTruthImageDisplay = imrotate(groundTruthImage, 90);
+    subplot(1,3,3), imshow(groundTruthImageDisplay);
+    title('Manually labeled ground truth.');
 end
 
 
