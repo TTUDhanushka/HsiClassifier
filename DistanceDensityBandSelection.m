@@ -62,3 +62,88 @@ reqBands = 25;
         nd(1, l) =  round((dd(1, l) / totalDistanceDensities) * reqBands);
         
     end
+    
+    
+%% Select bands
+
+newCube = zeros(cube_h, cube_w, bands);
+max_accuracy = 19;
+
+for iterations = 1:500
+
+%     for ptn = 1: nd(1, 1)
+        partition_1 = randi([1, 50], 1, nd(1, 1));
+        partition_1 = sort(partition_1);
+        
+%     end
+
+%     for ptn = 1: nd(1, 2)
+        partition_2 = randi([51, 100], 1, nd(1, 2));
+        partition_2 = sort(partition_2);
+%     end
+
+%     for ptn = 1: nd(1, 3)
+        partition_3 = randi([101, 150], 1, nd(1, 3));
+        partition_3 = sort(partition_3);
+%     end
+
+%     for ptn = 1: nd(1, 4)
+        partition_4 = randi([151, 204], 1, nd(1, 4));
+        partition_4 = sort(partition_4);
+%     end
+
+
+    % Select bands
+    bandIds = [partition_1, partition_2, partition_3, partition_4];
+
+
+    for cnt = 1: 204
+        for id = 1: reqBands - 1
+            if(cnt == bandIds(id))
+                newCube(:, :, cnt) = reflectanceCube.DataCube(:,:, cnt);
+            end
+        end
+    end
+
+
+    % Unfold the datacube and get spectral data into rows
+    reshapedData = zeros(data_d, data_h * data_w);
+
+    for a = 1:data_h
+        for b = 1:data_w
+            reshapedData(:, ((a-1) * data_h) + b) = newCube(a, b, :);
+        end
+    end
+
+    height = 1;
+    width = bands;
+    channels = 1;
+    sampleSize = data_h * data_w;
+
+    DD_TestPixels = reshape(reshapedData,[height, width, channels, sampleSize]);
+
+    predictY = predict(deep_net, DD_TestPixels);
+
+    usedClassList = [2 6 7 10 13];
+
+    classifiedImage = zeros(data_h, data_w, 3, 'uint8');
+
+    for n = 1: sampleSize
+        [val, id] = max(predictY(n,:));
+
+        row = fix(n/data_w) + 1;
+        column = mod(n,data_w) + 1;
+        classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
+    end
+
+%     figure()
+%     imshow(classifiedImage)
+
+    Classification_Accuracy();
+
+    if (max_accuracy < accuracy)
+        max_accuracy = accuracy;
+        finalBands = bandIds;
+    end
+
+end
