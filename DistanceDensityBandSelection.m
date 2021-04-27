@@ -11,8 +11,8 @@
 %% Distance density input parameters.
 
 % Inputs
-    partitions = 4;                                     % Number of partitions, p.
-    bandsPerPartition = 50;                             % Original number of bands per partition.
+    partitions = 8;                                     % Number of partitions, p.
+    bandsPerPartition = 25;                             % Original number of bands per partition.
  
     totalDdBands = partitions * bandsPerPartition;      % Total number of bands
     
@@ -56,7 +56,7 @@ DdCube(:,:,:) = correctd_hsi_cube(:,:,1:200);
 totalDistanceDensities = sum(dd);
 nd = zeros(1, partitions);
 
-reqBands = 25;
+reqBands = 40;
 
     for l = 1:partitions
         nd(1, l) =  round((dd(1, l) / totalDistanceDensities) * reqBands);
@@ -69,36 +69,26 @@ reqBands = 25;
 newCube = zeros(cube_h, cube_w, bands);
 max_accuracy = 19;
 
+
+selectedIds = [];
+
 for iterations = 1:500
-
-%     for ptn = 1: nd(1, 1)
-        partition_1 = randi([1, 50], 1, nd(1, 1));
-        partition_1 = sort(partition_1);
-        
-%     end
-
-%     for ptn = 1: nd(1, 2)
-        partition_2 = randi([51, 100], 1, nd(1, 2));
-        partition_2 = sort(partition_2);
-%     end
-
-%     for ptn = 1: nd(1, 3)
-        partition_3 = randi([101, 150], 1, nd(1, 3));
-        partition_3 = sort(partition_3);
-%     end
-
-%     for ptn = 1: nd(1, 4)
-        partition_4 = randi([151, 204], 1, nd(1, 4));
-        partition_4 = sort(partition_4);
-%     end
-
-
-    % Select bands
-    bandIds = [partition_1, partition_2, partition_3, partition_4];
-
+    
+%     bandIds = [];
+%     
+%      for ptn = 1: length(nd)
+%         selectedIds = randperm(bandsPerPartition, nd(1, ptn)) + bandsPerPartition * (ptn - 1);
+%         selectedIds = sort(selectedIds);
+%         
+%         bandIds = [bandIds, selectedIds];
+%         
+%      end
+    
+    
+    bandIds = finalBands;
 
     for cnt = 1: 204
-        for id = 1: reqBands - 1
+        for id = 1: length(bandIds)
             if(cnt == bandIds(id))
                 newCube(:, :, cnt) = reflectanceCube.DataCube(:,:, cnt);
             end
@@ -136,8 +126,8 @@ for iterations = 1:500
         classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
     end
 
-%     figure()
-%     imshow(classifiedImage)
+    figure()
+    imshow(classifiedImage)
 
     Classification_Accuracy();
 
