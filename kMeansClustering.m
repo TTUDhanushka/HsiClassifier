@@ -15,7 +15,8 @@
     
     for i = 1:cols
         for j = 1:lines
-            kInputCube(((i - 1) * lines + j), :) = reflectanceCube.DataCube(i, j, :);
+%             kInputCube(((i - 1) * lines + j), :) = reflectanceCube.DataCube(i, j, :);
+            kInputCube(((i - 1) * lines + j), :) = sgFilteredCube(i, j, :);
         end
     end
     

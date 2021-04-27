@@ -1,0 +1,19 @@
+%% Savitsky-Golay filering.
+
+
+%% Filter parameters
+    order = 2;
+    frameLen = 5;
+    
+    sgFilteredCube = zeros(cols, lines, bands);
+    spectra = zeros(1, bands);
+    
+    for i = 1: cols 
+        for j = 1: lines
+            for k = 1: bands
+                spectra(1, k) = correctd_hsi_cube(i, j, k) * 100;
+            end
+
+            sgFilteredPixel(1, :) = sgolayfilt( spectra(1, :),order, frameLen);
+        end
+    end
