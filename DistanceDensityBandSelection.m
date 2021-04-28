@@ -16,16 +16,24 @@
  
     totalDdBands = partitions * bandsPerPartition;      % Total number of bands
     
-
-
     
 %% Resize the datacube by removing some spectral bands.
-cube_h = 145;
-cube_w = 145;
+
+hsiDataCube = indian_pines_corrected;
+
+[cube_h, cube_w, cube_d] = size(hsiDataCube);
 
 DdCube = zeros(cube_h, cube_w, totalDdBands);
 % DdCube(:,:,:) = correctd_hsi_cube(:,:,1:200);
-DdCube(:,:,:) = indian_pines_corrected(:,:,1:200);
+DdCube(:,:,:) = hsiDataCube(:,:,1:200);
+
+
+%% Only for Indian Pines
+
+selectedPixels =   [[9, 2]; [70, 101]; [20, 7]; [1, 1]; [36, 9 ]; [83, 12];...
+                    [68, 36]; [77, 111]; [46, 126]; [66, 24]; [13, 31];...
+                    [12, 103]; [19, 69]; [121, 44]; [129, 120]; [9, 94]; [17, 51]];
+                
 
 %% Calculate distance density
 
@@ -39,13 +47,13 @@ DdCube(:,:,:) = indian_pines_corrected(:,:,1:200);
 % Notes: This method seems taking one class at a time. However, their
 % article results can't be reproduced.
 
-%     for cnt_X = 1: cube_h
-%         for cnt_y = 1:cube_w
+    for cnt_X = 1: length(selectedPixels)
             
             radiance = zeros(1, totalDdBands);                          % Radiance of band.
 
             for i = 1: totalDdBands
-                radiance(1, i) = DdCube(selectedPxX, selectedPxY, i);
+                % radiance(1, i) = DdCube(selectedPxX, selectedPxY, i);
+                radiance(1, i) = DdCube(selectedPixels(cnt_X, 1), selectedPixels(cnt_X, 2), i);
             end
 
             distance_array = zeros(1, bandsPerPartition);                % Absolute distances.
@@ -64,15 +72,15 @@ DdCube(:,:,:) = indian_pines_corrected(:,:,1:200);
                 dd(1, k) = dd(1, k) + absDistance / bandsPerPartition;  
 
             end
-%         end
-%     end
+
+    end
     
 %% Bands list
 
 totalDistanceDensities = sum(dd);
 nd = zeros(1, partitions);
 
-reqBands = 40;
+reqBands = 50;
 
     for l = 1:partitions
         nd(1, l) =  round((dd(1, l) / totalDistanceDensities) * reqBands);
@@ -82,31 +90,29 @@ reqBands = 40;
     
 %% Select bands
 
-newCube = zeros(cube_h, cube_w, bands);
-max_accuracy = 19;
-
+newCube = zeros(cube_h, cube_w, cube_d);
+max_accuracy = 20;                  % Minimum 20% accuracy
 
 selectedIds = [];
 
 for iterations = 1:500
     
-%     bandIds = [];
-%     
-%      for ptn = 1: length(nd)
-%         selectedIds = randperm(bandsPerPartition, nd(1, ptn)) + bandsPerPartition * (ptn - 1);
-%         selectedIds = sort(selectedIds);
-%         
-%         bandIds = [bandIds, selectedIds];
-%         
-%      end
+    bandIds = [];
     
+     for ptn = 1: length(nd)
+        selectedIds = randperm(bandsPerPartition, nd(1, ptn)) + bandsPerPartition * (ptn - 1);
+        selectedIds = sort(selectedIds);
+        
+        bandIds = [bandIds, selectedIds];
+        
+     end
     
-    bandIds = finalBands;
+%     bandIds = finalBands;
 
-    for cnt = 1: 204
+    for cnt = 1: cube_d
         for id = 1: length(bandIds)
             if(cnt == bandIds(id))
-                newCube(:, :, cnt) = reflectanceCube.DataCube(:,:, cnt);
+                newCube(:, :, cnt) = hsiDataCube(:,:, cnt);
             end
         end
     end
@@ -160,8 +166,13 @@ end
 % This graph used for Indian Pines dataset which shows same plot in the paper.
 
 figure()
-plot(radiance(1, :))
 hold on;
+
+for cnt_Px = 1: length(selectedPixels)
+    radiance(1, :) = DdCube(selectedPixels(cnt_Px, 1), selectedPixels(cnt_Px, 2), :);
+    plot(radiance(1, :));
+end
+
 
 for kk = 1: partitions - 1
     line([(kk * bandsPerPartition) (kk * bandsPerPartition)], [0 7000], 'Color', [0.5, 0.5, 0.5])
