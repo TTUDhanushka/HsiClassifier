@@ -1,4 +1,13 @@
-% CIE lookup table
+%% CIE lookup table following ISO/CIE 10527-1991
+
+% Reference:
+% https://www.ies.org/definitions/table-t-5a-color-matching-functions-and-chromaticity-coordinates-of-cie-1931-standard-colorimetric-observer/
+
+%% Table
+function [returnVector] = GetCieLutValues(band)
+
+returnVector = [];
+
 % Wavelength range 400 - 1000 nm and 204 bands
 cie_lut_val = [ 400 0.01431 0.00039 0.06785;
                 403 0.01878 0.00052 0.08915;
@@ -138,3 +147,8 @@ cie_lut_val = [ 400 0.01431 0.00039 0.06785;
                 806 0.00001 0.00000 0.00000;
                 809 0.00001 0.00000 0.00000;
                 812 0.00000 0.00000 0.00000];
+            
+        % Specim camera wavelength range start at 397nm.
+        returnVector = cie_lut_val(band - 1, :);
+                
+end

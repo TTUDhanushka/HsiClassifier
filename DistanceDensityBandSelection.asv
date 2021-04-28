@@ -157,14 +157,15 @@ end
 
 %% plot the radiance for the first pixel
 
-% This graph used for Indian Pines dataset which shows same plot in the paper.
-
 figure()
 plot(radiance(1, :))
 hold on;
 
-for kk = 1: partitions - 1
-    line([(kk * bandsPerPartition) (kk * bandsPerPartition)], [0 7000], 'Color', [0.5, 0.5, 0.5])
+x_band_seperation = linspace(1, totalDdBands, 1);
+for kk = 1:partitions - 1
+    x_band_seperation(kk * bandsPerPartition) = 7000;
 end
-hold off;
 
+
+plot(x_band_seperation(:), 'Color', [0.5, 0.5, 0.5]);
+hold o
