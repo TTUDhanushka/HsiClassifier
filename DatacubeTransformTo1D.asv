@@ -5,6 +5,9 @@
 % will convert the HSI data into 4-D array and class labels into
 % categorical vector.
 
+%% Read all 
+
+
 
 %%
 % All the datacubes should have same number of bands.

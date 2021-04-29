@@ -10,24 +10,24 @@
 % Select the label class from the class list. and modify
 % class_cube_class_labels variable names accordingly.
 
-class = 8;          % CHANGE 
+class = 5;          % CHANGE 
 
-classList = ["undefined";...        % 0
-            "Grass"; ...            % 1
-            "Bush"; ...             % 2
-            "Mud"; ...              % 3
-            "concrete"; ...         % 4
-            "Asphalt"; ...          % 5
-            "Trees"; ...            % 6
-            "Rocks"; ...            % 7
-            "water"; ...            % 8
-            "sky"; ...              % 9
-            "Snow"; ...             % 10
-            "Black_ice"; ...        % 11
-            "Dirt"; ...             % 12
-            "Gravel"; ...           % 13    
-            "Objects"; ...          % 14
-            "Person"; ...           % 15
+classList = ["undefined";...        % 1
+            "grass"; ...            % 2
+            "bush"; ...             % 3
+            "mud"; ...              % 4
+            "concrete"; ...         % 5
+            "asphalt"; ...          % 6
+            "tree"; ...             % 7
+            "rocks"; ...            % 8
+            "water"; ...            % 9
+            "sky"; ...              % 10
+            "snow"; ...             % 11
+            "ice"; ...              % 12
+            "dirt"; ...             % 13
+            "gravel"; ...           % 14    
+            "objects"; ...          % 15
+            "person"; ...           % 16
             ];
 
 rgb_image = rgb_from_ref;
@@ -46,16 +46,15 @@ sampleWidth = im_y(2) - im_x(2);
 pointsInSample = sampleWidth * sampleHeight;
 
 % Extract the HSI pixels from calibrated hsi image datacube.
-dirt_cube = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y); % CHANGE
-%sky_cube = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y); % CHANGE
+concrete_cube_Ref = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);  % CHANGE
+mud_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
 
-dirt_labels = zeros(sampleWidth, sampleHeight, 'uint8');                   % CHANGE
+mud_labels = zeros(sampleWidth, sampleHeight, 'uint8');                    % CHANGE
 
 for idI = 1: sampleWidth + 1
     for idJ = 1:sampleHeight + 1
-       dirt_labels(idI, idJ) = class;
+       mud_labels(idI, idJ) = class;
     end
 end
 
-% Training data save as workspace
-% save('training_data.mat')
+

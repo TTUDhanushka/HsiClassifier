@@ -49,10 +49,7 @@ trainingDataFolder = 'G:\3. Hyperspectral\5. Matlab HSI\3. TrainingData Mat File
 matFilesList = dir(trainingDataFolder);
 
 for nFile = 1:length(matFilesList)
-    if contains(matFilesList(nFile).name, '.mat')
-        path = fullfile(trainingDataFolder, matFilesList(nFile).name);
-        load (path);
-    end
+    if contain(matFilesList.name(nFile),
 end
 
 
