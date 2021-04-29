@@ -16,34 +16,79 @@ if exist('undefined_cube_Ref','var')
     samples = samples + (undefined_h * undefined_w);
 end
 
-if exist('grass_cube','var')
-    [grass_h, grass_w, d] = size(grass_cube);
+if exist('grass_cube_Ref','var')
+    [grass_h, grass_w, d] = size(grass_cube_Ref);
     samples = samples + (grass_h * grass_w);
 end
 
-if exist('tree_cube','var')
-    [tree_h, tree_w, d] = size(tree_cube);
-    samples = samples + (tree_h * tree_w);
+if exist('bush_cube_Ref','var')
+    [bush_h, bush_w, d] = size(bush_cube_Ref);
+    samples = samples + (bush_h * bush_w);
 end
 
-if exist('asphalt_cube','var')
-    [asphalt_h, asphalt_w, d] = size(asphalt_cube);
+if exist('mud_cube_Ref','var')
+    [mud_h, mud_w, d] = size(mud_cube_Ref);
+    samples = samples + (mud_h * mud_w);
+end
+
+if exist('concrete_cube_Ref','var')
+    [concrete_h, concrete_w, d] = size(concrete_cube_Ref);
+    samples = samples + (concrete_h * concrete_w);
+end
+
+if exist('asphalt_cube_Ref','var')
+    [asphalt_h, asphalt_w, d] = size(asphalt_cube_Ref);
     samples = samples + (asphalt_h * asphalt_w);
 end
 
-if exist('water_cube','var')
-    [water_h, water_w, d] = size(water_cube);
+if exist('tree_cube_Ref','var')
+    [tree_h, tree_w, d] = size(tree_cube_Ref);
+    samples = samples + (tree_h * tree_w);
+end
+
+if exist('rocks_cube_Ref','var')
+    [rocks_h, rocks_w, d] = size(rocks_cube_Ref);
+    samples = samples + (rocks_h * rocks_w);
+end
+
+if exist('water_cube_Ref','var')
+    [water_h, water_w, d] = size(water_cube_Ref);
     samples = samples  + (water_h * water_w);
 end
 
-if exist('sky_cube','var')
-    [sky_h, sky_w, d] = size(sky_cube);
+if exist('sky_cube_Ref','var')
+    [sky_h, sky_w, d] = size(sky_cube_Ref);
     samples = samples + (sky_h * sky_w);
 end
 
-if exist('dirt_cube','var')
-    [dirt_h, dirt_w, d] = size(dirt_cube);
+if exist('snow_cube_Ref','var')
+    [snow_h, snow_w, d] = size(snow_cube_Ref);
+    samples = samples + (snow_h * snow_w);
+end
+
+if exist('ice_cube_Ref','var')
+    [ice_h, ice_w, d] = size(ice_cube_Ref);
+    samples = samples + (ice_h * ice_w);
+end
+
+if exist('dirt_cube_Ref','var')
+    [dirt_h, dirt_w, d] = size(dirt_cube_Ref);
     samples = samples + (dirt_h * dirt_w);
+end
+
+if exist('gravel_cube_Ref','var')
+    [gravel_h, gravel_w, d] = size(gravel_cube_Ref);
+    samples = samples + (gravel_h * gravel_w);
+end
+
+if exist('objects_cube_Ref','var')
+    [objects_h, objects_w, d] = size(objects_cube_Ref);
+    samples = samples + (objects_h * objects_w);
+end
+
+if exist('person_cube_Ref','var')
+    [person_h, person_w, d] = size(person_cube_Ref);
+    samples = samples + (person_h * person_w);
 end
 
 training_Data = zeros(d, samples);
@@ -64,10 +109,10 @@ if exist('undefined_cube_Ref','var')
 end
 
 % Get the data from grass class.
-if exist('grass_cube','var')
+if exist('grass_cube_Ref','var')
     for i = 1:grass_h
         for j = 1: grass_w
-            training_Data(:, sample_pos + ((i - 1) * grass_w) + j) = grass_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * grass_w) + j) = grass_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * grass_w) + j) = grass_labels(i, j);
         end
     end
@@ -75,11 +120,47 @@ if exist('grass_cube','var')
     sample_pos = sample_pos + (grass_h * grass_w);
 end
 
+% Get the data from bush class.
+if exist('bush_cube_Ref','var')
+    for i = 1:bush_h
+        for j = 1: bush_w
+            training_Data(:, sample_pos + ((i - 1) * bush_w) + j) = bush_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * bush_w) + j) = bush_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (bush_h * bush_w);
+end
+
+% Get the data from mud class.
+if exist('mud_cube_Ref','var')
+    for i = 1:mud_h
+        for j = 1: mud_w
+            training_Data(:, sample_pos + ((i - 1) * mud_w) + j) = mud_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * mud_w) + j) = mud_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (mud_h * mud_w);
+end
+
+% Get the data from concrete class.
+if exist('concrete_cube_Ref','var')
+    for i = 1:concrete_h
+        for j = 1: concrete_w
+            training_Data(:, sample_pos + ((i - 1) * concrete_w) + j) = concrete_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * concrete_w) + j) = concrete_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (concrete_h * concrete_w);
+end
+
 % Get the data from asphalt class.
-if exist('asphalt_cube','var')
+if exist('asphalt_cube_Ref','var')
     for i = 1:asphalt_h
         for j = 1: asphalt_w
-            training_Data(:, sample_pos + ((i - 1) * asphalt_w) + j) = asphalt_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * asphalt_w) + j) = asphalt_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * asphalt_w) + j) = asphalt_labels(i, j);
         end
     end
@@ -88,10 +169,10 @@ if exist('asphalt_cube','var')
 end
 
 % Get the data from tree class.
-if exist('tree_cube','var')
+if exist('tree_cube_Ref','var')
     for i = 1:tree_h
         for j = 1: tree_w
-            training_Data(:, sample_pos + ((i - 1) * tree_w) + j) = tree_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * tree_w) + j) = tree_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * tree_w) + j) = tree_labels(i, j);
         end
     end
@@ -99,11 +180,23 @@ if exist('tree_cube','var')
     sample_pos = sample_pos + (tree_h * tree_w);
 end
 
+% Get the data from rocks class.
+if exist('rocks_cube_Ref','var')
+    for i = 1:rocks_h
+        for j = 1: rocks_w
+            training_Data(:, sample_pos + ((i - 1) * rocks_w) + j) = rocks_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * rocks_w) + j) = rocks_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (rocks_h * rocks_w);
+end
+
 % Get the data from water class.
-if exist('water_cube','var')
+if exist('water_cube_Ref','var')
     for i = 1:water_h
         for j = 1: water_w
-            training_Data(:, sample_pos + ((i - 1) * water_w) + j) = water_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * water_w) + j) = water_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * water_w) + j) = water_labels(i, j);
         end
     end
@@ -112,10 +205,10 @@ if exist('water_cube','var')
 end
 
 % Get the data from sky class.
-if exist('sky_cube','var')
+if exist('sky_cube_Ref','var')
     for i = 1:sky_h
         for j = 1: sky_w
-            training_Data(:, sample_pos + ((i - 1) * sky_w) + j) = sky_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * sky_w) + j) = sky_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * sky_w) + j) = sky_labels(i, j);
         end
     end
@@ -123,16 +216,76 @@ if exist('sky_cube','var')
     sample_pos = sample_pos + (sky_h * sky_w);
 end
 
+% Get the data from snow class.
+if exist('snow_cube_Ref','var')
+    for i = 1:snow_h
+        for j = 1: snow_w
+            training_Data(:, sample_pos + ((i - 1) * snow_w) + j) = snow_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * snow_w) + j) = snow_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (snow_h * snow_w);
+end
+
+% Get the data from ice class.
+if exist('ice_cube_Ref','var')
+    for i = 1:ice_h
+        for j = 1: ice_w
+            training_Data(:, sample_pos + ((i - 1) * ice_w) + j) = ice_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * ice_w) + j) = ice_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (ice_h * ice_w);
+end
+
 % Get the data from dirt class.
-if exist('dirt_cube','var')
+if exist('dirt_cube_Ref','var')
     for i = 1:dirt_h
         for j = 1: dirt_w
-            training_Data(:, sample_pos + ((i - 1) * dirt_w) + j) = dirt_cube(i, j, :);
+            training_Data(:, sample_pos + ((i - 1) * dirt_w) + j) = dirt_cube_Ref(i, j, :);
             training_Labels(1, sample_pos + ((i - 1) * dirt_w) + j) = dirt_labels(i, j);
         end
     end
 
     sample_pos = sample_pos + (dirt_h * dirt_w);
+end
+
+% Get the data from gravel class.
+if exist('gravel_cube_Ref','var')
+    for i = 1:gravel_h
+        for j = 1: gravel_w
+            training_Data(:, sample_pos + ((i - 1) * gravel_w) + j) = gravel_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * gravel_w) + j) = gravel_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (gravel_h * gravel_w);
+end
+
+% Get the data from objects class.
+if exist('objects_cube_Ref','var')
+    for i = 1:objects_h
+        for j = 1: objects_w
+            training_Data(:, sample_pos + ((i - 1) * objects_w) + j) = objects_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * objects_w) + j) = objects_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (objects_h * objects_w);
+end
+
+% Get the data from person class.
+if exist('person_cube_Ref','var')
+    for i = 1:person_h
+        for j = 1: person_w
+            training_Data(:, sample_pos + ((i - 1) * person_w) + j) = person_cube_Ref(i, j, :);
+            training_Labels(1, sample_pos + ((i - 1) * person_w) + j) = person_labels(i, j);
+        end
+    end
+
+    sample_pos = sample_pos + (person_h * person_w);
 end
 
 

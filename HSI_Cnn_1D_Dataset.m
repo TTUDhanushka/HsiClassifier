@@ -22,6 +22,40 @@ for a = 1:data_h
     end
 end
 
+
+%% Transform data into CNN usable format
+
+height = 1;
+width = data_d;
+channels = 1;
+sampleSize = data_h * data_w;
+
+CNN_TestPixels = reshape(inputData,[height, width, channels, sampleSize]);
+
+
+%% Call NN and perform the test
+
+predictY = predict(deep_net, CNN_TestPixels);
+
+
+%% Create result classification
+
+usedClassList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+classifiedImage = zeros(data_h, data_w, 3, 'uint8');
+
+for n = 1: sampleSize
+    [val, id] = max(predictY(n,:));
+    
+    row = fix(n/data_w) + 1;
+    column = mod(n,data_w) + 1;
+    classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
+end
+
+figure()
+imshow(classifiedImage)
+
+
 %% Output labels
 
 % Get the ground truth.
@@ -49,36 +83,9 @@ end
 
 outPutLabels = outPutLabelsRaw.';
 
-%% Transform data into CNN usable format
 
-height = 1;
-width = data_d;
-channels = 1;
-sampleSize = data_h * data_w;
-
-CNN_TestPixels = reshape(inputData,[height, width, channels, sampleSize]);
 %%
 CNN_TestLabel = categorical(outPutLabels);
 
-%% Call NN and perform the test
-
-predictY = predict(deep_net, CNN_TestPixels);
-
-%% Create result classification
-
-usedClassList = [2 6 7 10 13];
-
-classifiedImage = zeros(data_h, data_w, 3, 'uint8');
-
-for n = 1: sampleSize
-    [val, id] = max(predictY(n,:));
-    
-    row = fix(n/data_w) + 1;
-    column = mod(n,data_w) + 1;
-    classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
-end
-
-figure()
-imshow(classifiedImage)
 
 %% Perform accuracy / precision test

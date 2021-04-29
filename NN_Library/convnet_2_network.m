@@ -12,7 +12,7 @@ c2 = convolution2dLayer([1 5], 64, 'stride', [1 5]); %Filter window size = [1 5]
 r2 = reluLayer();
 p2 = maxPooling2dLayer([1 2],'stride',[1 2]); %PoolSize = [1 20], Stride = [1 20]
 
-f1 = fullyConnectedLayer(5); %Reduce to three output classes
+f1 = fullyConnectedLayer(16); % No of output classes
 s1 = softmaxLayer();
 outputLayer=classificationLayer();
 
