@@ -27,13 +27,18 @@ clc;
                                     % False: Capture manually.
 
     
-%% Collect HSI datacubes
+%% Get HSI images into workspace and perform calculate relative reflectance.
 
 ReadSpecimData();               % Reads all the files into workspace.
 
-%%
-% Old method removed
-% BuildTrainingDataset();         % Collect training data and labels for CNN.
+
+%% get training data for each class. This step need to be done class-by-class.
+
+CollectTrainingData();
+
+
+%% Read all the training data MAT files into workspace.
+
 
 
 %%

@@ -1,0 +1,16 @@
+%% Some snippets to run / save various operations.
+
+clear;
+
+
+%% Delete unwanted variables from the workspace
+
+
+%% Save workspace to mat file.
+
+% Rename the mat file according to the class name to avoid conflicts.
+
+className = 'water';
+
+save('G:\3. Hyperspectral\5. Matlab HSI\3. TrainingData Mat Files\training_data.mat')
+

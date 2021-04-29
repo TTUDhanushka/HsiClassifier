@@ -10,24 +10,24 @@
 % Select the label class from the class list. and modify
 % class_cube_class_labels variable names accordingly.
 
-class = 13;          % CHANGE
+class = 8;          % CHANGE 
 
-classList = ["undefined";...
-            "Grass"; ...
-            "Bush"; ...
-            "Mud"; ...
-            "concrete"; ...
-            "Asphalt"; ...
-            "Trees"; ...
-            "Rocks"; ...
-            "water"; ...
-            "sky"; ...
-            "Snow"; ...
-            "Black_ice"; ...
-            "Dirt"; ...
-            "Gravel"; ...
-            "Objects"; ...
-            "Person"; ...
+classList = ["undefined";...        % 1
+            "Grass"; ...            % 2
+            "Bush"; ...             % 3
+            "Mud"; ...              % 4
+            "concrete"; ...         % 5
+            "Asphalt"; ...          % 6
+            "Trees"; ...            % 7
+            "Rocks"; ...            % 8
+            "water"; ...            % 9
+            "sky"; ...              % 10
+            "Snow"; ...             % 11
+            "Black_ice"; ...        % 12
+            "Dirt"; ...             % 13
+            "Gravel"; ...           % 14    
+            "Objects"; ...          % 15
+            "Person"; ...           % 16
             ];
 
 rgb_image = rgb_from_ref;
@@ -46,10 +46,10 @@ sampleWidth = im_y(2) - im_x(2);
 pointsInSample = sampleWidth * sampleHeight;
 
 % Extract the HSI pixels from calibrated hsi image datacube.
-dirt_cube = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y); % CHANGE
-%sky_cube = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y); % CHANGE
+dirt_cube_Ref = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);  % CHANGE
+dirt_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
 
-dirt_labels = zeros(sampleWidth, sampleHeight, 'uint8');                   % CHANGE
+dirt_labels = zeros(sampleWidth, sampleHeight, 'uint8');                    % CHANGE
 
 for idI = 1: sampleWidth + 1
     for idJ = 1:sampleHeight + 1
@@ -57,5 +57,4 @@ for idI = 1: sampleWidth + 1
     end
 end
 
-% Training data save as workspace
-% save('training_data.mat')
+
