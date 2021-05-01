@@ -10,7 +10,7 @@
 % Select the label class from the class list. and modify
 % class_cube_class_labels variable names accordingly.
 
-class = 8;          % CHANGE 
+class = 7;          % CHANGE 
 
 classList = ["undefined";...        % 1
             "grass"; ...            % 2
@@ -46,14 +46,14 @@ sampleWidth = im_y(2) - im_x(2);
 pointsInSample = sampleWidth * sampleHeight;
 
 % Extract the HSI pixels from calibrated hsi image datacube.
-rocks_cube_Ref = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);  % CHANGE
-rocks_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
+tree_cube_Ref = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);  % CHANGE
+tree_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
 
-rocks_labels = zeros(sampleWidth, sampleHeight, 'uint8');                    % CHANGE
+tree_labels = zeros(sampleWidth, sampleHeight, 'uint8');                    % CHANGE
 
 for idI = 1: sampleWidth + 1
     for idJ = 1:sampleHeight + 1
-       rocks_labels(idI, idJ) = class;
+       tree_labels(idI, idJ) = class;
     end
 end
 

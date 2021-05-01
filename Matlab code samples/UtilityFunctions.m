@@ -22,7 +22,7 @@ clear vars
 
 % Rename the mat file according to the class name to avoid conflicts.
 
-className = 'rocks.mat';                % CHANGE THIS
+className = 'tree.mat';                % CHANGE THIS
 trainingDataFolder = 'G:\3. Hyperspectral\5. Matlab HSI\3. TrainingData Mat Files\';
 trainingDataPath = fullfile(trainingDataFolder, className);
 

@@ -18,6 +18,25 @@ end
 figure();
 imshow(falseRgbImage);
 
+%%
+
+sample_cube = reflectanceCube.DataCube;
+
+[cube_h, cube_w, d] = size(sample_cube);
+
+singleBandImage = zeros(cube_h, cube_w, 1, 'uint8');
+
+
+for i = 1:cube_h
+    for j = 1: cube_w
+        singleBandImage(i, j) = uint8(sample_cube(i, j, 38) * 255);
+    end
+end
+
+% mono_image = imrotate(mono_image, -90);
+figure();
+imshow(singleBandImage);
+
 
 %% Save image to directory
 
