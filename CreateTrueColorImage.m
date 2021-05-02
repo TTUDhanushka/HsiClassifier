@@ -159,5 +159,7 @@ for i = 1:cube_h
 end
 
 figure();
+
 rot_Image = imrotate(falseRgbImage, -90);
 imshow(rot_Image);
+
