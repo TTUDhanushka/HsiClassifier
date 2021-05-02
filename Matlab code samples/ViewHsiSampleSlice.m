@@ -4,13 +4,16 @@ sample_cube = reflectanceCube.DataCube;
 [cube_h, cube_w, d] = size(sample_cube);
 
 falseRgbImage = zeros(cube_h, cube_w, 3, 'uint8');
-
+A = zeros(cube_h, cube_w, 1, 'double');
+B = zeros(cube_h, cube_w, 1, 'double');
 
 for i = 1:cube_h
     for j = 1: cube_w
-        falseRgbImage(i, j, 3) = uint8(sample_cube(i, j, 18) * 255);
-        falseRgbImage(i, j, 2) = uint8(sample_cube(i, j, 58) * 255);
-        falseRgbImage(i, j, 1) = uint8(sample_cube(i, j, 85) * 255);
+        falseRgbImage(i, j, 3) = uint8(sample_cube(i, j, 26) * 255);
+        falseRgbImage(i, j, 2) = uint8(sample_cube(i, j, 51) * 255);
+        falseRgbImage(i, j, 1) = uint8(sample_cube(i, j, 99) * 255);
+        A(i, j) = double(sample_cube(i, j, 26));
+        B(i, j) = double(sample_cube(i, j, 51));
     end
 end
 

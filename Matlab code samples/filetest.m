@@ -22,3 +22,9 @@ while ischar(tline)
 end
 
 fclose(fid);
+%%
+A = [1 2 12 48 25 15 1 2 0 36 25 88 1 4 2 5 6]
+
+B = sum(A)
+B_av = sum(A) / (length(A))
+C = mean(A)

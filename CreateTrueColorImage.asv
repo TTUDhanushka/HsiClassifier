@@ -29,59 +29,114 @@ for n = 1:length(bSet)
     end
 end
 
-%% correlation calculation
+%% Get the maximum correlated band from a group
 
-bandA = 75;
-bandB = 99;
-bandC = 75;
+dataCube = reflectanceCube.DataCube;
 
-totalpixels = cols * lines;
+theRedBand = 0;
 
-corSlice = zeros(cols, lines, 1);
+if length(suitableRedBands) > 2   
+    decisionMatrixRed = zeros(length(suitableRedBands));
+    
+    for nId = 1: length(suitableRedBands)
+        
+        band1 = nId;
+        band2 = nId + 1;
+        
+        if (nId + 1) > 3
+            band2 = nId + 1 - 3;
+        end
+        
+        decisionMatrixRed(band1, band2) = CovarianceHsiBands(suitableRedBands(band1), suitableRedBands(band2), reflectanceCube.DataCube);
+        decisionMatrixRed(band2, band1) = CovarianceHsiBands(suitableRedBands(band1), suitableRedBands(band2), reflectanceCube.DataCube);
+                
+    end
+    
+    [v, index] = max(sum(decisionMatrixRed));
+    
+    theRedBand = suitableRedBands(index);
+    
+elseif (length(suitableRedBands) == 2)
+    
+else
+    % Get the only band and use it
+    theRedBand = suitableRedBands(1);
+end
 
-for i = 1:cols
-    for j = 1:lines
-        %corSlice = reflectanceCube.DataCube(i, j, bandA) * 255;
-        sumA = sumA + (reflectanceCube.DataCube(i, j, bandA) * 4095);
+theGreenBand = 0;
+
+if length(suitableGreenBands) > 2   
+    decisionMatrixGreen = zeros(length(suitableGreenBands));
+    
+    for nId = 1: length(suitableGreenBands)
+        
+        band1 = nId;
+        band2 = nId + 1;
+        
+        if (nId + 1) > 3
+            band2 = nId + 1 - 3;
+        end
+        
+        decisionMatrixGreen(band1, band2) = CovarianceHsiBands(suitableGreenBands(band1), suitableGreenBands(band2), reflectanceCube.DataCube);
+        decisionMatrixGreen(band2, band1) = CovarianceHsiBands(suitableGreenBands(band1), suitableGreenBands(band2), reflectanceCube.DataCube);
+                
+    end
+    
+    [v, index] = max(sum(decisionMatrixGreen));
+    
+    theGreenBand = suitableGreenBands(index);
+    
+elseif (length(suitableGreenBands) == 2)
+    
+else
+    % Get the only band and use it
+    theGreenBand = suitableGreenBands(1);
+end
+
+theBlueBand = 0;
+
+if length(suitableBlueBands) > 2   
+    decisionMatrixBlue = zeros(length(suitableBlueBands));
+    
+    for nId = 1: length(suitableBlueBands)
+        
+        band1 = nId;
+        band2 = nId + 1;
+        
+        if (nId + 1) > 3
+            band2 = nId + 1 - 3;
+        end
+        
+        decisionMatrixBlue(band1, band2) = CovarianceHsiBands(suitableBlueBands(band1), suitableBlueBands(band2), reflectanceCube.DataCube);
+        decisionMatrixBlue(band2, band1) = CovarianceHsiBands(suitableBlueBands(band1), suitableBlueBands(band2), reflectanceCube.DataCube);
+                
+    end
+    
+    [v, index] = max(sum(decisionMatrixBlue));
+    
+    theBlueBand = suitableBlueBands(index);
+    
+elseif (length(suitableBlueBands) == 2)
+    band1_mean = mean2(reflectanceCube.DataCube()
+else
+    % Get the only band and use it
+    theBlueBand = suitableBlueBands(1);
+end
+
+selectedTriBands = [theRedBand, theGreenBand, theBlueBand];
+
+%% Display the image
+
+falseRgbImage = zeros(cube_h, cube_w, 3, 'uint8');
+
+for i = 1:cube_h
+    for j = 1: cube_w
+        falseRgbImage(i, j, 3) = uint8(sample_cube(i, j, selectedTriBands(1)) * 255);
+        falseRgbImage(i, j, 2) = uint8(sample_cube(i, j, selectedTriBands(2)) * 255);
+        falseRgbImage(i, j, 1) = uint8(sample_cube(i, j, selectedTriBands(3)) * 255);
     end
 end
 
-for i = 1:cols
-    for j = 1:lines
-        sumB = sumB + (reflectanceCube.DataCube(i, j, bandB) * 4095);
-    end
-end
-
-Ua = sumA / totalpixels;
-Ub = sumB / totalpixels;
-
-varA = 0;
-
-for i = 1:cols
-    for j = 1:lines
-        varA = varA + ((reflectanceCube.DataCube(i, j, bandA) * 4095) - Ua)^2;
-    end
-end
-
-covA = sqrt(varA);
-
-varB = 0;
-
-for i = 1:cols
-    for j = 1:lines
-        varB = varB + ((reflectanceCube.DataCube(i, j, bandB) * 4095) - Ub)^2;
-    end
-end
-
-covB = sqrt(varB);
-
-varAB = 0;
-for i = 1:cols
-    for j = 1:lines
-        varAB = varAB + (((reflectanceCube.DataCube(i, j, bandA) * 4095) - Ua) * ((reflectanceCube.DataCube(i, j, bandB) * 4095) - Ub)) ;
-    end
-end
-
-covAB = sqrt(varAB);
-
-CC = varAB / (covA * covB)
+figure();
+rot_Image = imrotate(falseRgbImage, -90);
+imshow(rot_Image);
