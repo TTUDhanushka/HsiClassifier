@@ -31,7 +31,7 @@ end
 
 %% Get the maximum correlated band from a group
 
-dataCube = reflectanceCube.DataCube;
+% dataCube = reflectanceCube.DataCube;
 
 theRedBand = 0;
 
@@ -152,14 +152,14 @@ falseRgbImage = zeros(cube_h, cube_w, 3, 'uint8');
 
 for i = 1:cube_h
     for j = 1: cube_w
-        falseRgbImage(i, j, 1) = uint8(sample_cube(i, j, selectedTriBands(1)) * 255);
-        falseRgbImage(i, j, 2) = uint8(sample_cube(i, j, selectedTriBands(2)) * 255);
-        falseRgbImage(i, j, 3) = uint8(sample_cube(i, j, selectedTriBands(3)) * 255);
+        falseRgbImage(i, j, 1) = uint8(reflectanceCube.DataCube(i, j, selectedTriBands(1)) * 255);
+        falseRgbImage(i, j, 2) = uint8(reflectanceCube.DataCube(i, j, selectedTriBands(2)) * 255);
+        falseRgbImage(i, j, 3) = uint8(reflectanceCube.DataCube(i, j, selectedTriBands(3)) * 255);
     end
 end
 
-figure();
+% figure();
 
 rot_Image = imrotate(falseRgbImage, -90);
-imshow(rot_Image);
+% imshow(rot_Image);
 

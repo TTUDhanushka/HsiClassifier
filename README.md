@@ -1,20 +1,22 @@
-## HsiClassifier
+## HSI Classifier v1.0
 
-### Create spectral data library using BuildSpectralLibrary.m file
-In the working directory, it will create additional folder named "SpectralLibrary". This folder contains, datacubes, spectral distribution, 
-meta data and location of the sample data captured for each class.
+### Startup script : MainProgram.m
 
-The spectral data library folder is in the same working directory named as "SpectralLibrary". It contains spectral data for each class, image location where the samples taken, 
-spectral characteristic curve and meta data containing size of the sample. 
+Here are the steps to use the script.
+1. Collect training spectral data for each class into workspace. Then save them as workspace files with ".mat".  
 
-### Training various neural network architectures
-Various neural network architectures are implementd in "percepttron_nets.m" file.
-These networks can be trained using "nn_trainer.m" script. And the "nn_tester.m" has all the functions needed for classification.
-All the neural networks are based on multilayer perceptrons which are comprise of purelin activation functions. The only exception for the output layer which has softmax activation function.
+   The class names are unique and only 16 classes will be used in this project. They are listed in "HelperFunctions\Get_Label_Color.m".
 
-1. Two layer network
-2. Three layer network
-3. Four layer network
+2. Need to use MainProgram.m and CollectTrainingData.m to get the training data.
 
-### HSI scene classification pipeline
-This HSI classification pipeline built based on pre-recorded white reference images. All the images are stored in same directory where first image contains the white reference.
+3. The Mainprogram.m should run in section-by-section. 
+
+4. DatacubeTransformTo1D.m will convert the dataset into 1D CNN input arrays.
+
+5. Train the neural networks or other type of classifiers.
+    1D CNN
+    K Means clustering
+    SVM
+
+6. Display classification result.
+
