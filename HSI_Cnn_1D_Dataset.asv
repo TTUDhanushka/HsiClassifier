@@ -43,7 +43,7 @@ predictY = predict(deep_net, CNN_TestPixels);
 usedClassList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 classifiedImage = zeros(data_h, data_w, 3, 'uint8');
-groundTruth = zeros(data_h, data_w, 'uint8');
+groundTruth = zeros(data_h, data_w, 1, 'uint8');
 
 for n = 1: sampleSize
     [val, id] = max(predictY(n,:));
@@ -51,18 +51,11 @@ for n = 1: sampleSize
     row = fix(n/data_w) + 1;
     column = mod(n,data_w) + 1;
     classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
-    groundTruth(row, column) = id;
 end
 
-% figure()
-% 
-% imshow(classifiedImage)
+figure()
+imshow(classifiedImage)
 
-% Rotated classified image
-rot_ClassifiedImage = imrotate(classifiedImage, -90);
-
-% Rotated ground truth
-rot_groundTruth = imrotate(groundTruth, -90);
 
 % %% Output labels
 % 

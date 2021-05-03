@@ -5,6 +5,8 @@
 %% hard coded places.
 
 RGB_image_folder = 'G:\3. Hyperspectral\5. Matlab HSI\4. RGB Training Images\';
+Gt_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\5. Ground Truth from classification\';
+Image_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\6. Classification Images ALL BANDS\';
 
 
 %%
@@ -35,5 +37,21 @@ for nDataSet = 1: length(dataFilesList)
         generatedRgbPath = fullfile(RGB_image_folder, rgbImageFileName);
         
         imwrite(rot_Image, generatedRgbPath);
+        
+        % Classification of HSI using 
+        HSI_Cnn_1D_Dataset;
+        
+        % Save ground truth results. 
+        gtImageFileName = strcat(dataFilesList(nDataSet).name, '_gt.png');
+        generatedGtPath = fullfile(Gt_from_classification_folder, gtImageFileName);
+        
+        imwrite(rot_groundTruth, generatedGtPath);
+        
+        % Save classified image results.
+        gtImageLabelsFileName = strcat(dataFilesList(nDataSet).name, '_gt_labels.png');
+        generatedGtLabelsPath = fullfile(Image_from_classification_folder, gtImageLabelsFileName);
+        
+        imwrite(rot_ClassifiedImage, generatedGtLabelsPath);
+
     end
 end

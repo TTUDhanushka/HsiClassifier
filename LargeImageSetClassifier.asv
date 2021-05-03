@@ -2,6 +2,14 @@
 % folder and classification outcome into two folders. One of them contain 
 % class wise and the other will have the colored classification outcome.
 
+%% hard coded places.
+
+RGB_image_folder = 'G:\3. Hyperspectral\5. Matlab HSI\4. RGB Training Images\';
+Gt_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\5. Ground Truth from classification\';
+
+
+%%
+
 % Get all the folders in the HSI dataset folder.
 homeDirectory = uigetdir;
 homeDirectory = strcat(homeDirectory,'\');
@@ -23,7 +31,24 @@ for nDataSet = 1: length(dataFilesList)
         % Convert RGB images.
         CreateTrueColorImage;
         
-        % Save RGB images in RGB image folder.
+        % Save RGB images in RGB image folder. (rot_Image)
+        rgbImageFileName = strcat(dataFilesList(nDataSet).name, 'RGB.png');
+        generatedRgbPath = fullfile(RGB_image_folder, rgbImageFileName);
         
+        imwrite(rot_Image, generatedRgbPath);
+        
+        % Classification of HSI using 
+        HSI_Cnn_1D_Dataset;
+        
+        % Save classification results.
+        
+        gtImageFileName = strcat(dataFilesList(nDataSet).name, '_gt.png');
+        generatedRgbPath = fullfile(Gt_from_classification_folder, rgbImageFileName);
+        
+        imwrite(rot_Image, generatedRgbPath);
+        rot_ClassifiedImage = imrotate(classifiedImage, -90);
+
+% Rotated ground truth
+rot_groundTruth = imrotate(groundTruth, -90);
     end
 end
