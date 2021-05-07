@@ -20,7 +20,7 @@ clc;
 % Camera model: Specim IQ
 % Simultaneous capture and 
 
-    number_of_classes = 5;          % How many classes in the image
+    number_of_classes = 16;          % How many classes in the image
     samples_per_class = 1;          % How many training samples per class
     
     read_coords_from_file = false;  % True: Read training sample coordinates from file.
@@ -28,6 +28,8 @@ clc;
 
     
 %% Get HSI images into workspace and perform calculate relative reflectance.
+
+classifyingLargeDataSet = false;        % This is only applicable for classyfing full image folder contain more than 1 image.
 
 ReadSpecimData();               % Reads all the files into workspace.
 

@@ -59,12 +59,12 @@ hsi_file = '';
 
 rgb_image = imread(rgb_file);
 
-% % Display the RGB preview image
-% if ~(rgb_file == "")
-%     subplot(2,2,1), imshow(rgb_image)
-%     %set(gcf,'position',[10,10,1600,800]);
-%     title('PNG file from Specim');
-% end
+% Display the RGB preview image
+if ~(rgb_file == "")
+    subplot(2,2,1), imshow(rgb_image)
+    %set(gcf,'position',[10,10,1600,800]);
+    title('PNG file from Specim');
+end
 
 %% Get the datacube, white reference and dark reference cubes and calibrate.
 
@@ -105,13 +105,13 @@ reflectanceCube = hypercube(reflectance_cube);
 % RGB reconstruction from reflectance data cube. The bands were selected manually.
 rgb_from_ref = Construct_False_Rgb_Image(reflectanceCube.DataCube, 28, 58, 85);
 
-% rgb_from_corrected = imrotate(rgb_from_corrected, -90);
-% subplot(2,2,2), imshow(rgb_from_corrected);
-% title('Reconstructed image from white calib');
-% 
-% rgb_from_ref = imrotate(rgb_from_ref, -90);
-% subplot(2,2,3), imshow(rgb_from_ref);
-% title('Reconstructed image from reflectance');
+rgb_from_corrected = imrotate(rgb_from_corrected, -90);
+subplot(2,2,2), imshow(rgb_from_corrected);
+title('Reconstructed image from white calib');
+
+rgb_from_ref = imrotate(rgb_from_ref, -90);
+subplot(2,2,3), imshow(rgb_from_ref);
+title('Reconstructed image from reflectance');
 
 
 %% Get the ground truth image
@@ -126,10 +126,10 @@ for fileId = 1 : length(fileList)
         groundTruthFilePath = strcat(directory_path, groundTruthFileName);
         
         groundTruthImage = imread(groundTruthFilePath);
-%         groundTruthImageDisp = RotateRgbImage(groundTruthImage, -90);
-%         
-%         subplot(2,2,4), imshow(groundTruthImageDisp);
-%         title('Manually labeled ground truth.');
+        groundTruthImageDisp = RotateRgbImage(groundTruthImage, -90);
+        
+        subplot(2,2,4), imshow(groundTruthImageDisp);
+        title('Manually labeled ground truth.');
     end
 end
 
