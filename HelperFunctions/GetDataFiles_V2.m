@@ -1,6 +1,6 @@
 function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
      white_dark_cube, white_dark_hdr, reflectance_cube, reflectance_hdr,...
-     ground_truth_File, simul_white_ref] = GetDataFiles_V2(directory_path)
+     ground_truth_File, simul_white_ref, rgbHighRes] = GetDataFiles_V2(directory_path)
 
     % Specim IQ camera images contain white reference and dark reference
     % cube for simulataneos aquisition mode images. In this case, there 
@@ -102,6 +102,8 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
                     reflectance_hdr = strcat(str_temp, '\', results_file_struct(idx).name);
                 elseif (contains(results_file_struct(idx).name, '.dat'))
                     reflectance_cube = strcat(str_temp, '\', results_file_struct(idx).name);
+                elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND'))
+                    rgbHighRes = strcat(str_temp, '\', results_file_struct(idx).name);
                 end
                 
             end
@@ -113,7 +115,8 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
             if ~isfile(reflectance_cube)
                 fprintf("Reflectance cube doesn't exist.")
             end
-                     
+            
+                                 
         end
         
         

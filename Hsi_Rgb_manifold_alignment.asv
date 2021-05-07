@@ -76,15 +76,6 @@ end
 
 meanRgbVec = mean(vectorizedInputRgb);
 
-sqSumRgb = 0;
-
-for i = 1: clrChannels
-    sqSumRgb = sqSumRgb + (meanRgbVec(i) * meanRgbVec(i));
-end
-
-sigmaRgb = sqrt(sqSumRgb);
-
-
 %% Spectral angle calculation
 
 % Distance matrixa as spectral angles.
@@ -128,27 +119,22 @@ w_t = zeros(total_Pixels, total_Pixels);
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
         
-        eucDist = sqrt(((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
-            ((vectorizedInputRgb(pixelPosA, 2) - vectorizedInputRgb(pixelPosB, 2))^2) + ...
-            ((vectorizedInputRgb(pixelPosA, 3) - vectorizedInputRgb(pixelPosB, 3))^2));
-        dist_w_t(pixelPosA, pixelPosB) = eucDist;
+        dist_w_t(pixelPosA, pixelPosB) = ((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
+            
         
-        if (pixelPosA == pixelPosB)
-            w_t(pixelPosA, pixelPosB) = 0;
-        else
-            w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
-        end
     end
 end
 
 
-%%
 
-w_s_t = 
+for i = 1:length(w_s)
+    for j = 1:length(w_s)
+        w_s = 1;
+    end
+end
+w_t = zeros(n_t, n_t);
 
-
-
-
+weights = zeros(bands);
 
 
 

@@ -44,7 +44,7 @@ hsi_file = '';
 
 [rgb_file, header_file, hsi_file, dark_ref_file, dark_ref_hdr, ...
      white_ref_file, white_ref_hdr, reflectance_cube, reflectance_hdr,...
-     ground_truth_File, simul_white_ref] = GetDataFiles_V2(directory_path);
+     ground_truth_File, simul_white_ref, highResRgbPath] = GetDataFiles_V2(directory_path);
 
 % Get the header data
 [cols, lines, bands, wave] = ReadHeader(header_file, image_source);
