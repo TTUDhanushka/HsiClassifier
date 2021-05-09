@@ -29,7 +29,7 @@ no_Of_Pixel_Pairs = total_Pixels / 2;
 hsiCube = reflectanceCube.DataCube;
 
 
-vectorizedInputHsi = zeros(total_Pixels * total_Pixels, d);
+vectorizedInputHsi = zeros(total_Pixels, d);
 
 for i = 1:total_Pixels
     
@@ -66,7 +66,7 @@ higResRgb = imread(highResRgbPath);
 % Because hyperspectral image is rotated.
 higResRgbRot = imrotate(higResRgb, 90);
  
-vectorizedInputRgb = zeros(total_Pixels * total_Pixels, clrChannels);
+vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
     
@@ -90,6 +90,7 @@ sigmaRgb = sqrt(sqSumRgb);
 % Distance matrixa as spectral angles.
 dist_w_s = zeros(total_Pixels, total_Pixels);
 w_s = zeros(total_Pixels, total_Pixels);
+adj_w_s = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
@@ -110,21 +111,31 @@ for pixelPosA = 1:total_Pixels
         
         dist_w_s(pixelPosA, pixelPosB) = real(sa);
         
-%         if (pixelPosA == pixelPosB)
-%             w_s(pixelPosA, pixelPosB) = 0;
-%         else
-        w_s(pixelPosA, pixelPosB) = exp(-sa / sigmaHsi);
-%         end
+        if (pixelPosA == pixelPosB)
+            w_s(pixelPosA, pixelPosB) = 0;
+        else
+            w_s(pixelPosA, pixelPosB) = exp(-sa / sigmaHsi);
+        end
     end
 end
 
-W_s = max(w_s,[], 1);
+% This should be n x n matrix. Need correction.
+[val, id] = max(w_s,[], 1);
 
+for pixelPosA = 1:total_Pixels
+        
+    adj_w_s(pixelPosA, id(pixelPosA)) = 1;
+    adj_w_s( id(pixelPosA), pixelPosA) = 1;
+    
+end
+
+G_w_s = graph(adj_w_s);
 
 % Three color bands distace calculation.
 
 dist_w_t = zeros(total_Pixels, total_Pixels);
 w_t = zeros(total_Pixels, total_Pixels);
+adj_w_t = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
@@ -134,16 +145,25 @@ for pixelPosA = 1:total_Pixels
             ((vectorizedInputRgb(pixelPosA, 3) - vectorizedInputRgb(pixelPosB, 3))^2));
         dist_w_t(pixelPosA, pixelPosB) = eucDist;
         
-%         if (pixelPosA == pixelPosB)
-%             w_t(pixelPosA, pixelPosB) = 0;
-%         else
-        w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
-%         end
+        if (pixelPosA == pixelPosB)
+            w_t(pixelPosA, pixelPosB) = 0;
+        else
+            w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
+        end
     end
 end
-% This should be n x n matrix. Need correction.
-W_t = max(w_t,[], 1);
 
+% This should be n x n matrix. Need correction.
+[val, id] = max(w_t,[], 1);
+
+for pixelPosA = 1:total_Pixels
+        
+    adj_w_t(pixelPosA, id(pixelPosA)) = 1;
+    adj_w_t( id(pixelPosA), pixelPosA) = 1;
+    
+end
+
+G_w_t = graph(adj_w_t);
 
 %%
 al_1 = 1;
@@ -164,12 +184,14 @@ end
 
 w_s_t = eye(total_Pixels);
 
-W = [al_1 * w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * w_t];
+W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
 
+W_graph = graph(W);
+L = laplacian(W_graph);
 
+%% 
+dummyHsi = zeros(size(vectorizedInputHsi));
+dummyRgb = zeros(size(vectorizedInputRgb));
 
-
-
-
-
+Eigens = eig(left);
 

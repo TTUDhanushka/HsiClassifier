@@ -29,7 +29,7 @@ no_Of_Pixel_Pairs = total_Pixels / 2;
 hsiCube = reflectanceCube.DataCube;
 
 
-vectorizedInputHsi = zeros(total_Pixels * total_Pixels, d);
+vectorizedInputHsi = zeros(total_Pixels, d);
 
 for i = 1:total_Pixels
     
@@ -66,7 +66,7 @@ higResRgb = imread(highResRgbPath);
 % Because hyperspectral image is rotated.
 higResRgbRot = imrotate(higResRgb, 90);
  
-vectorizedInputRgb = zeros(total_Pixels * total_Pixels, clrChannels);
+vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
     
@@ -90,6 +90,7 @@ sigmaRgb = sqrt(sqSumRgb);
 % Distance matrixa as spectral angles.
 dist_w_s = zeros(total_Pixels, total_Pixels);
 w_s = zeros(total_Pixels, total_Pixels);
+adj_w_s = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
@@ -118,13 +119,23 @@ for pixelPosA = 1:total_Pixels
     end
 end
 
-W_s = max(w_s,[], 1);
+% This should be n x n matrix. Need correction.
+[val, id] = max(w_s,[], 1);
 
+for pixelPosA = 1:total_Pixels
+        
+    adj_w_s(pixelPosA, id(pixelPosA)) = 1;
+    adj_w_s( id(pixelPosA), pixelPosA) = 1;
+    
+end
+
+G_w_s = graph(adj_w_s);
 
 % Three color bands distace calculation.
 
 dist_w_t = zeros(total_Pixels, total_Pixels);
 w_t = zeros(total_Pixels, total_Pixels);
+adj_w_t = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
@@ -142,29 +153,45 @@ for pixelPosA = 1:total_Pixels
     end
 end
 
-W_t = max(w_t,[], 1);
+% This should be n x n matrix. Need correction.
+[val, id] = max(w_t,[], 1);
 
+for pixelPosA = 1:total_Pixels
+        
+    adj_w_t(pixelPosA, id(pixelPosA)) = 1;
+    adj_w_t( id(pixelPosA), pixelPosA) = 1;
+    
+end
+
+G_w_t = graph(adj_w_t);
 
 %%
-
-w_s_t = zeros(total_Pixels, total_Pixels);
-
-% for i = 1:total_Pixels
-%     for j = 1: total_Pixels
-%         if i == j
-%             w_s_t = 1;
-%         else
-%             w_s_t = 0;
-%         end
-%     end
-% end
-
-% W = [W_s w_s_t; w_s_t' W_t];
+al_1 = 1;
+al_2 = 100;
 
 
+w_s_t = zeros(total_Pixels, total_Pixels, 'double');
 
+for i = 1:total_Pixels
+    for j = 1: total_Pixels
+        if i == j
+            w_s_t = 1;
+        else
+            w_s_t = 0;
+        end
+    end
+end
 
+w_s_t = eye(total_Pixels);
 
+W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
+
+W_graph = graph(W);
+L = laplacian(W_graph);
+
+%% 
+dummyHsi = zeros(size(vectorizedInputHsi));
+dummyRgb = zeros(size(vectorizedInputHsi));
 
 
 
