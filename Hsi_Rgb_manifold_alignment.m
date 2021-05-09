@@ -110,14 +110,15 @@ for pixelPosA = 1:total_Pixels
         
         dist_w_s(pixelPosA, pixelPosB) = real(sa);
         
-        if (pixelPosA == pixelPosB)
-            w_s(pixelPosA, pixelPosB) = 0;
-        else
-            w_s(pixelPosA, pixelPosB) = exp(-sa / sigmaHsi);
-        end
+%         if (pixelPosA == pixelPosB)
+%             w_s(pixelPosA, pixelPosB) = 0;
+%         else
+        w_s(pixelPosA, pixelPosB) = exp(-sa / sigmaHsi);
+%         end
     end
 end
 
+W_s = max(w_s,[], 1);
 
 
 % Three color bands distace calculation.
@@ -133,19 +134,37 @@ for pixelPosA = 1:total_Pixels
             ((vectorizedInputRgb(pixelPosA, 3) - vectorizedInputRgb(pixelPosB, 3))^2));
         dist_w_t(pixelPosA, pixelPosB) = eucDist;
         
-        if (pixelPosA == pixelPosB)
-            w_t(pixelPosA, pixelPosB) = 0;
+%         if (pixelPosA == pixelPosB)
+%             w_t(pixelPosA, pixelPosB) = 0;
+%         else
+        w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
+%         end
+    end
+end
+% This should be n x n matrix. Need correction.
+W_t = max(w_t,[], 1);
+
+
+%%
+al_1 = 1;
+al_2 = 100;
+
+
+w_s_t = zeros(total_Pixels, total_Pixels, 'double');
+
+for i = 1:total_Pixels
+    for j = 1: total_Pixels
+        if i == j
+            w_s_t = 1;
         else
-            w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
+            w_s_t = 0;
         end
     end
 end
 
+w_s_t = eye(total_Pixels);
 
-%%
-
-w_s_t = 
-
+W = [al_1 * w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * w_t];
 
 
 
