@@ -9,18 +9,24 @@
 
 
 
-HSI_selectedpixels = [10, 10;
-                      16, 16;
-                      18, 18;
-                      22, 20;
-                      37, 40;
-                      45, 50;
-                      75, 15;
-                      80, 20;
-                      120, 25;
-                      126, 30;
-                      140, 100;
-                      146, 110];
+HSI_selectedpixels = [25, 25;
+                      46, 76;
+                      118, 118;
+                      220, 260;
+                      307, 420;
+                      405, 150;
+                      175, 156;
+                      80, 400;
+                      120, 285;
+                      126, 326;
+                      240, 300;
+                      346, 310;
+                      442, 80;
+                      378, 285;
+                      450, 450;
+                      476, 189;
+                      388, 364;
+                      224, 486];
                   
 
 total_Pixels = length(HSI_selectedpixels);
@@ -29,11 +35,11 @@ no_Of_Pixel_Pairs = total_Pixels / 2;
 hsiCube = reflectanceCube.DataCube;
 
 
-vectorizedInputHsi = zeros(total_Pixels, d);
+vectorizedInputHsi = zeros(total_Pixels, bands);
 
 for i = 1:total_Pixels
     
-    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :);
+    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :) * 255;
     
 end
 
@@ -58,7 +64,7 @@ clrChannels = 3;
 rgb_selectedpixels = zeros(total_Pixels, 2);
 
 for n = 1:length(HSI_selectedpixels)
-     rgb_selectedpixels(n,:) = uint8(HSI_selectedpixels(n, :) * scaleVal);
+     rgb_selectedpixels(n,:) = round(HSI_selectedpixels(n, :) * scaleVal);
 end
 
 higResRgb = imread(highResRgbPath);
@@ -70,7 +76,7 @@ vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
     
-    vectorizedInputRgb(i, :) = higResRgbRot(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :);
+    vectorizedInputRgb(i, :) = double(higResRgbRot(rgb_selectedpixels(i, 1), rgb_selectedpixels(i, 2), :));
     
 end
 
@@ -79,7 +85,7 @@ meanRgbVec = mean(vectorizedInputRgb);
 sqSumRgb = 0;
 
 for i = 1: clrChannels
-    sqSumRgb = sqSumRgb + (meanRgbVec(i) * meanRgbVec(i));
+    sqSumRgb = sqSumRgb + ((meanRgbVec(i) * meanRgbVec(i)));
 end
 
 sigmaRgb = sqrt(sqSumRgb);
@@ -107,14 +113,14 @@ for pixelPosA = 1:total_Pixels
             input_ef_mul = input_ef_mul + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosB, n));
         end
         
-        sa =  acos(input_ef_mul / (sqrt(refSq) * sqrt(inputSq)));
+        sa =  real(acos(input_ef_mul / (sqrt(refSq) * sqrt(inputSq))));
         
         dist_w_s(pixelPosA, pixelPosB) = real(sa);
         
         if (pixelPosA == pixelPosB)
             w_s(pixelPosA, pixelPosB) = 0;
         else
-            w_s(pixelPosA, pixelPosB) = exp(-sa / sigmaHsi);
+            w_s(pixelPosA, pixelPosB) = real(exp(-sa / sigmaHsi));
         end
     end
 end
@@ -139,8 +145,8 @@ adj_w_t = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
-        
-        eucDist = sqrt(((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
+%         sqrt
+        eucDist = (((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
             ((vectorizedInputRgb(pixelPosA, 2) - vectorizedInputRgb(pixelPosB, 2))^2) + ...
             ((vectorizedInputRgb(pixelPosA, 3) - vectorizedInputRgb(pixelPosB, 3))^2));
         dist_w_t(pixelPosA, pixelPosB) = eucDist;
@@ -148,7 +154,7 @@ for pixelPosA = 1:total_Pixels
         if (pixelPosA == pixelPosB)
             w_t(pixelPosA, pixelPosB) = 0;
         else
-            w_t(pixelPosA, pixelPosB) = exp(-eucDist / sigmaRgb);
+            w_t(pixelPosA, pixelPosB) = real(exp(-eucDist / sigmaRgb));
         end
     end
 end
@@ -167,31 +173,97 @@ G_w_t = graph(adj_w_t);
 
 %%
 al_1 = 1;
-al_2 = 100;
+al_2 = 900;
 
-
-w_s_t = zeros(total_Pixels, total_Pixels, 'double');
-
-for i = 1:total_Pixels
-    for j = 1: total_Pixels
-        if i == j
-            w_s_t = 1;
-        else
-            w_s_t = 0;
-        end
-    end
-end
+% w_s_t = zeros(total_Pixels, total_Pixels, 'double');
+% 
+% for i = 1:total_Pixels
+%     for j = 1: total_Pixels
+%         if i == j
+%             w_s_t = 1;
+%         else
+%             w_s_t = 0;
+%         end
+%     end
+% end
 
 w_s_t = eye(total_Pixels);
 
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
+% W = [al_1 * w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * w_t];
+
 
 W_graph = graph(W);
-L = laplacian(W_graph);
+% L = laplacian(W_graph);
 
 %% 
 dummyHsi = zeros(size(vectorizedInputHsi));
 dummyRgb = zeros(size(vectorizedInputRgb));
 
-Eigens = eig(left);
+%%
+D = zeros(size(W));
 
+for i = 1: length(W)
+    D(i, i) = sum(W(i, :), 2);
+end
+
+L = D - W;
+
+X = [vectorizedInputHsi', dummyHsi';
+    dummyRgb', vectorizedInputRgb'];
+
+left = X * L * X';
+right = X * D * X';
+
+[Eigens, Vec] = eig(left, right);
+
+%% Eigen values list
+eigenValues = zeros(1, length(Vec));
+
+for i = 1:length(Vec)
+    eigenValues(i) = real(Vec(i, i));
+end
+
+[p, q] = sort(eigenValues, 'ascend');
+
+selectedEigenVal = zeros(1, 3);
+
+% for n = 1:3
+%     selectedEigenVal(n) = q(n);  
+% end
+
+selectedEigenVal = [2 1 41];
+
+selectedEigenVectors =  zeros(207, 3);
+
+for n = 1:3
+    selectedEigenVectors(:, n) = real(Eigens * Vec(: , selectedEigenVal(n)));
+end
+
+%%
+F_s = selectedEigenVectors(1:204, :);
+F_t = selectedEigenVectors(205:207, :);
+
+inv_F_t = inv(F_t);
+
+%%
+
+linePx = zeros(bands, 1);
+imageGen = zeros(cols, lines, 3, 'uint8');
+
+for i = 1: cols
+    for j = 1:lines
+        linePx(:, 1) = hsiCube(i, j, :);
+        Srgb = inv_F_t' * F_s' * linePx;
+        colorValue = uint8(Srgb * 255);
+        
+        imageGen(i, j, 1) = colorValue(1);
+        imageGen(i, j, 2) = colorValue(2);
+        imageGen(i, j, 3) = colorValue(3);
+    end
+end
+
+figure();
+imshow(imageGen)
+
+Evaluation = selectedEigenVectors' * left * selectedEigenVectors

@@ -1,0 +1,19 @@
+% plot the circles on image
+
+function varargout = OverlayPoints(higResRgbRot, pixelList)
+ 
+
+ =
+    r = 5;
+    xunit = uint8(r * cos(th) + x);
+    yunit = uint8(r * sin(th) + y);
+
+
+
+    for i = 1:length(xunit)
+        higResRgbRot(xunit(i), yunit(i), :) = [255, 0, 0];
+    end
+    
+    figure();
+    imshow(higResRgbRot)
+end
