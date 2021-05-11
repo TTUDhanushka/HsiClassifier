@@ -1,0 +1,19 @@
+% Minimum band image construction
+
+function reducedCube = ReducedBandImage(hsiCube, bandsList)
+
+    [h, w, d] = size(hsiCube);
+
+    nBands = length(bandsList);
+    
+    reducedCube = zeros(h, w, nBands);
+    
+    for i = 1: h
+        for j = 1: w
+            for k = 1:nBands
+                reducedCube(:, :, k) = hsiCube(i, j, bandsList(k));
+            end
+        end
+    end
+
+end

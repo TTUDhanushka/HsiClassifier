@@ -32,10 +32,12 @@ HSI_selectedpixels = [25, 25;
 total_Pixels = length(HSI_selectedpixels);
 no_Of_Pixel_Pairs = total_Pixels / 2;
 
-hsiCube = reflectanceCube.DataCube;
+% hsiCube = reflectanceCube.DataCube;
+hsiCube = reduceImage;
+[hs_H, hs_W, hs_D] = size(hsiCube);
 
 
-vectorizedInputHsi = zeros(total_Pixels, bands);
+vectorizedInputHsi = zeros(total_Pixels, hs_D);
 
 for i = 1:total_Pixels   
     vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :) * 255;    
@@ -114,7 +116,7 @@ for pixelPosA = 1:total_Pixels
         inputSq = 0;
         input_ef_mul = 0;
         
-        for n = 1:bands
+        for n = 1:hs_D
             refSq =  refSq + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosA, n));
             
             inputSq =  inputSq + (vectorizedInputHsi(pixelPosB, n) * vectorizedInputHsi(pixelPosB, n));
@@ -140,7 +142,7 @@ end
 for pixelPosA = 1:total_Pixels
         
     adj_w_s(pixelPosA, id(pixelPosA)) = 1;
-    adj_w_s( id(pixelPosA), pixelPosA) = 1;
+    adj_w_s(id(pixelPosA), pixelPosA) = 1;
     
 end
 
@@ -154,8 +156,8 @@ adj_w_t = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
-%         sqrt
-        eucDist = (((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
+        
+        eucDist = sqrt(((vectorizedInputRgb(pixelPosA, 1) - vectorizedInputRgb(pixelPosB, 1))^2) + ...
             ((vectorizedInputRgb(pixelPosA, 2) - vectorizedInputRgb(pixelPosB, 2))^2) + ...
             ((vectorizedInputRgb(pixelPosA, 3) - vectorizedInputRgb(pixelPosB, 3))^2));
         dist_w_t(pixelPosA, pixelPosB) = eucDist;
@@ -182,7 +184,7 @@ G_w_t = graph(adj_w_t);
 
 %%
 al_1 = 1;
-al_2 = 620;
+al_2 = 520;
 
 % w_s_t = zeros(total_Pixels, total_Pixels, 'double');
 % 
@@ -208,6 +210,7 @@ W_graph = graph(W);
 %% 
 dummyHsi = zeros(size(vectorizedInputHsi));
 dummyRgb = zeros(size(vectorizedInputRgb));
+
 
 %%
 D = zeros(size(W));
@@ -238,42 +241,60 @@ end
 
 selectedEigenVal = zeros(1, 3);
 
-for n = 1:3
-    selectedEigenVal(n) = q(n);  
-end
+% for n = 1:3
+%     selectedEigenVal(n) = q(n);  
+% end
 
-%  selectedEigenVal = [5 197 6];
+%% Optimization 
 
-selectedEigenVectors =  zeros(207, 3);
+Evaluation = 0;
+iteration = 1;
 
-for n = 1:3
-    selectedEigenVectors(:, n) = real(Eigens * Vec(: , selectedEigenVal(n)));
-end
+Optimum = zeros(4, hs_D^3);
 
-%%
-F_s = selectedEigenVectors(1:204, :);
-F_t = selectedEigenVectors(205:207, :);
+for n1 = 1: hs_D
+    for n2 = 1:hs_D
+        for n3 = 1:hs_D
+            selectedEigenVal = [q(n1), q(n2), q(n3)]
 
-inv_F_t = inv(F_t);
 
-%%
+            %  selectedEigenVal = [5 197 6];
 
-linePx = zeros(bands, 1);
-imageGen = zeros(cols, lines, 3, 'uint8');
+            selectedEigenVectors =  zeros(hs_D + clrChannels, 3);
 
-for i = 1: cols
-    for j = 1:lines
-        linePx(:, 1) = hsiCube(i, j, :) * 255;
-        Srgb = inv_F_t' * F_s' * linePx;
-        colorValue = uint8(Srgb);
-        
-        imageGen(i, j, 1) = colorValue(1);
-        imageGen(i, j, 2) = colorValue(2);
-        imageGen(i, j, 3) = colorValue(3);
+            for n = 1:3
+                selectedEigenVectors(:, n) = real(Eigens * Vec(: , selectedEigenVal(n)));
+            end
+
+            %
+            F_s = selectedEigenVectors(1:hs_D, :);
+            F_t = selectedEigenVectors(hs_D + 1:hs_D + clrChannels, :);
+
+            inv_F_t = inv(F_t);
+
+            %
+
+            linePx = zeros(hs_D, 1);
+            imageGen = zeros(cols, lines, 3, 'uint8');
+
+            for i = 1: cols
+                for j = 1:lines
+                    linePx(:, 1) = hsiCube(i, j, :) * 255;
+                    Srgb = inv_F_t' * F_s' * linePx;
+                    colorValue = uint8(Srgb);
+
+                    imageGen(i, j, 1) = colorValue(1);
+                    imageGen(i, j, 2) = colorValue(2);
+                    imageGen(i, j, 3) = colorValue(3);
+                end
+            end
+
+            figure();
+            imshow(imageGen)
+
+            Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
+            Optimum(:, iteration) = [q(n1), q(n2), q(n3), Evaluation];
+            iteration = iteration + 1;
+        end
     end
 end
-
-figure();
-imshow(imageGen)
-
-Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors)
