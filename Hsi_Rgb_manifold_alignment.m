@@ -37,22 +37,24 @@ hsiCube = reflectanceCube.DataCube;
 
 vectorizedInputHsi = zeros(total_Pixels, bands);
 
-for i = 1:total_Pixels
-    
-    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :) * 255;
-    
+for i = 1:total_Pixels   
+    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :) * 255;    
 end
 
 meanHsiVec = mean(vectorizedInputHsi);
 
 sqSumHsi = 0;
 
-for i = 1: bands
-    sqSumHsi = sqSumHsi + (meanHsiVec(i) * meanHsiVec(i));
+% for i = 1: bands
+%     sqSumHsi = sqSumHsi + (meanHsiVec(i) * meanHsiVec(i));
+% end
+
+for i = 1: total_Pixels
+    sqSumHsi = sqSumHsi + (vectorizedInputHsi(i, :) - meanHsiVec).^2;
 end
 
-sigmaHsi = sqrt(sqSumHsi);
-
+kHsi = mean2(sqSumHsi / total_Pixels);
+sigmaHsi = sqrt(kHsi);
 
 %% RGB image details
 
@@ -84,11 +86,18 @@ meanRgbVec = mean(vectorizedInputRgb);
 
 sqSumRgb = 0;
 
-for i = 1: clrChannels
-    sqSumRgb = sqSumRgb + ((meanRgbVec(i) * meanRgbVec(i)));
+% for i = 1: clrChannels
+%     sqSumRgb = sqSumRgb + ((meanRgbVec(i) * meanRgbVec(i)));
+% end
+
+
+for i = 1: total_Pixels
+    sqSumRgb = sqSumRgb + ((vectorizedInputRgb(i, :) - meanRgbVec).^2);
 end
 
-sigmaRgb = sqrt(sqSumRgb);
+kRgb = mean2(sqSumRgb / total_Pixels);
+
+sigmaRgb = sqrt(kRgb);
 
 
 %% Spectral angle calculation
@@ -173,7 +182,7 @@ G_w_t = graph(adj_w_t);
 
 %%
 al_1 = 1;
-al_2 = 900;
+al_2 = 620;
 
 % w_s_t = zeros(total_Pixels, total_Pixels, 'double');
 % 
@@ -212,6 +221,7 @@ L = D - W;
 X = [vectorizedInputHsi', dummyHsi';
     dummyRgb', vectorizedInputRgb'];
 
+
 left = X * L * X';
 right = X * D * X';
 
@@ -228,21 +238,21 @@ end
 
 selectedEigenVal = zeros(1, 3);
 
-% for n = 1:3
-%     selectedEigenVal(n) = q(n);  
-% end
+for n = 1:3
+    selectedEigenVal(n) = q(n);  
+end
 
-selectedEigenVal = [2 1 41];
+%  selectedEigenVal = [5 197 6];
 
-selectedEigenVectors =  zeros(207, 3);
+selectedEigenVectors =  zeros(bands + clrChannels, 3);
 
 for n = 1:3
     selectedEigenVectors(:, n) = real(Eigens * Vec(: , selectedEigenVal(n)));
 end
 
 %%
-F_s = selectedEigenVectors(1:204, :);
-F_t = selectedEigenVectors(205:207, :);
+F_s = selectedEigenVectors(1:bands, :);
+F_t = selectedEigenVectors(bands + 1:bands + clrChannels, :);
 
 inv_F_t = inv(F_t);
 
@@ -253,9 +263,9 @@ imageGen = zeros(cols, lines, 3, 'uint8');
 
 for i = 1: cols
     for j = 1:lines
-        linePx(:, 1) = hsiCube(i, j, :);
+        linePx(:, 1) = hsiCube(i, j, :) * 255;
         Srgb = inv_F_t' * F_s' * linePx;
-        colorValue = uint8(Srgb * 255);
+        colorValue = uint8(Srgb);
         
         imageGen(i, j, 1) = colorValue(1);
         imageGen(i, j, 2) = colorValue(2);
@@ -266,4 +276,4 @@ end
 figure();
 imshow(imageGen)
 
-Evaluation = selectedEigenVectors' * left * selectedEigenVectors
+Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors)

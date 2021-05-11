@@ -1,4 +1,4 @@
-% plot the circles on image
+% plot the circles on image.
 
 function varargout = OverlayPoints(higResRgbRot, pixelList)
  
