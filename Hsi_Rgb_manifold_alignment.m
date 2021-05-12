@@ -1,36 +1,67 @@
 %%  Taking portion of both HSI and RGB images to make manifold alignment. Manifold 
 %   alignment method for HSI image visualization in RGB.
 
-% take top left quarter of the image
-
 % LPP - Locality Preserving Projections
 
 %% Create input data vector of quarter of the image
 
 
+HSI_selectedpixels = [25, 25;           % 1
+                      150, 30;
+                      30, 480;
+                      35, 270;
+                      160, 270;         % 5
+                      165, 185;
+                      160, 370;
+                      180, 480;
+                      220, 240;
+                      320, 240;         % 10
+                      100, 115;
+                      495, 300;
+                      495, 495;
+                      332, 380;
+                      130, 430;         % 15
+                      336, 145;
+                      336, 115;
+                      120, 30;
+                      500, 12;
+                      30, 400;          % 20
+%                       45, 170;
+%                       90, 95;
+%                       55, 85;
+                      75, 215];                 
 
-HSI_selectedpixels = [25, 25;
-                      46, 76;
-                      118, 118;
-                      220, 260;
-                      307, 420;
-                      405, 150;
-                      175, 156;
-                      80, 400;
-                      120, 285;
-                      126, 326;
-                      240, 300;
-                      346, 310;
-                      442, 80;
-                      378, 285;
-                      450, 450;
-                      476, 189;
-                      388, 364;
-                      224, 486];
-                  
+RGB_selectedpixels = [35, 35;           % 1
+                      180, 35;
+                      35, 620;
+                      35, 292;
+                      180, 292;         % 5
+                      180, 180;
+                      180, 392;
+                      210, 620;
+                      230, 250;
+                      390, 250;         % 10
+                      140, 95;
+                      630, 330;
+                      630, 630;
+                      400, 430;
+                      170, 520;         % 15
+                      410, 150;
+                      410, 110;
+                      150, 30;
+                      635, 15;
+                      35, 450;          % 20
+%                       35, 145;
+%                       120, 85;
+%                       80, 80;
+                      80, 210];         
+
+OverlayPoints(higResRgbRot, reflectanceCube.DataCube, RGB_selectedpixels, HSI_selectedpixels);
 
 total_Pixels = length(HSI_selectedpixels);
 no_Of_Pixel_Pairs = total_Pixels / 2;
+
+%%
 
 % hsiCube = reflectanceCube.DataCube;
 hsiCube = reduceImage;
@@ -59,17 +90,15 @@ kHsi = mean2(sqSumHsi / total_Pixels);
 sigmaHsi = sqrt(kHsi);
 
 %% RGB image details
+rgb_size = size(higResRgbRot);
 
-scaleVal = 645 / 512;
+clrChannels = rgb_size(3);
 
-rgb_size = [645, 645];
-clrChannels = 3;
-
-rgb_selectedpixels = zeros(total_Pixels, 2);
-
-for n = 1:length(HSI_selectedpixels)
-     rgb_selectedpixels(n,:) = round(HSI_selectedpixels(n, :) * scaleVal);
-end
+% rgb_selectedpixels = zeros(total_Pixels, 2);
+% 
+% for n = 1:length(HSI_selectedpixels)
+%      rgb_selectedpixels(n,:) = round(RGB_selectedpixels(n, :));
+% end
 
 higResRgb = imread(highResRgbPath);
 
@@ -80,7 +109,7 @@ vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
     
-    vectorizedInputRgb(i, :) = double(higResRgbRot(rgb_selectedpixels(i, 1), rgb_selectedpixels(i, 2), :));
+    vectorizedInputRgb(i, :) = double(higResRgbRot(RGB_selectedpixels(i, 1), RGB_selectedpixels(i, 2), :));
     
 end
 
@@ -182,37 +211,26 @@ end
 
 G_w_t = graph(adj_w_t);
 
-%%
-al_1 = 1;
-al_2 = 350;
 
-% w_s_t = zeros(total_Pixels, total_Pixels, 'double');
-% 
-% for i = 1:total_Pixels
-%     for j = 1: total_Pixels
-%         if i == j
-%             w_s_t = 1;
-%         else
-%             w_s_t = 0;
-%         end
-%     end
-% end
+%%
+al_1 = 0.5;
+al_2 = 200;
+
 
 w_s_t = eye(total_Pixels);
 
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
-% W = [al_1 * w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * w_t];
-
 
 W_graph = graph(W);
-% L = laplacian(W_graph);
+
 
 %% 
 dummyHsi = zeros(size(vectorizedInputHsi));
 dummyRgb = zeros(size(vectorizedInputRgb));
 
 
-%%
+%% Prepare L, D, X matrices.
+
 D = zeros(size(W));
 
 for i = 1: length(W)
@@ -229,6 +247,7 @@ left = X * L * X';
 right = X * D * X';
 
 [Eigens, Vec] = eig(left, right);
+
 
 %% Eigen values list
 eigenValues = zeros(1, length(Vec));
@@ -290,6 +309,7 @@ Evaluation = 0;
             end
 
             figure();
+            imageGen = imrotate(imageGen, -90);
             imshow(imageGen)
 
             Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
