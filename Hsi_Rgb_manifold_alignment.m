@@ -6,60 +6,13 @@
 %% Create input data vector of quarter of the image
 
 
-HSI_selectedpixels = [25, 25;           % 1
-                      150, 30;
-                      30, 480;
-                      35, 270;
-                      160, 270;         % 5
-                      165, 185;
-                      160, 370;
-                      180, 480;
-                      220, 240;
-                      320, 240;         % 10
-                      100, 115;
-                      495, 300;
-                      495, 495;
-                      332, 380;
-                      130, 430;         % 15
-                      336, 145;
-                      336, 115;
-                      120, 30;
-                      500, 12;
-                      30, 400;          % 20
-%                       45, 170;
-%                       90, 95;
-%                       55, 85;
-                      75, 215];                 
-
-RGB_selectedpixels = [35, 35;           % 1
-                      180, 35;
-                      35, 620;
-                      35, 292;
-                      180, 292;         % 5
-                      180, 180;
-                      180, 392;
-                      210, 620;
-                      230, 250;
-                      390, 250;         % 10
-                      140, 95;
-                      630, 330;
-                      630, 630;
-                      400, 430;
-                      170, 520;         % 15
-                      410, 150;
-                      410, 110;
-                      150, 30;
-                      635, 15;
-                      35, 450;          % 20
-%                       35, 145;
-%                       120, 85;
-%                       80, 80;
-                      80, 210];         
+[RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
+       
 
 OverlayPoints(higResRgbRot, reflectanceCube.DataCube, RGB_selectedpixels, HSI_selectedpixels);
 
 total_Pixels = length(HSI_selectedpixels);
-no_Of_Pixel_Pairs = total_Pixels / 2;
+
 
 %%
 
@@ -78,9 +31,6 @@ meanHsiVec = mean(vectorizedInputHsi);
 
 sqSumHsi = 0;
 
-% for i = 1: bands
-%     sqSumHsi = sqSumHsi + (meanHsiVec(i) * meanHsiVec(i));
-% end
 
 for i = 1: total_Pixels
     sqSumHsi = sqSumHsi + (vectorizedInputHsi(i, :) - meanHsiVec).^2;
@@ -89,16 +39,12 @@ end
 kHsi = mean2(sqSumHsi / total_Pixels);
 sigmaHsi = sqrt(kHsi);
 
+clear kHsi;
+
 %% RGB image details
 rgb_size = size(higResRgbRot);
 
 clrChannels = rgb_size(3);
-
-% rgb_selectedpixels = zeros(total_Pixels, 2);
-% 
-% for n = 1:length(HSI_selectedpixels)
-%      rgb_selectedpixels(n,:) = round(RGB_selectedpixels(n, :));
-% end
 
 higResRgb = imread(highResRgbPath);
 
@@ -117,19 +63,15 @@ meanRgbVec = mean(vectorizedInputRgb);
 
 sqSumRgb = 0;
 
-% for i = 1: clrChannels
-%     sqSumRgb = sqSumRgb + ((meanRgbVec(i) * meanRgbVec(i)));
-% end
-
 
 for i = 1: total_Pixels
     sqSumRgb = sqSumRgb + ((vectorizedInputRgb(i, :) - meanRgbVec).^2);
 end
 
 kRgb = mean2(sqSumRgb / total_Pixels);
-
 sigmaRgb = sqrt(kRgb);
 
+clear kRgb;
 
 %% Spectral angle calculation
 
@@ -213,8 +155,8 @@ G_w_t = graph(adj_w_t);
 
 
 %%
-al_1 = 0.5;
-al_2 = 200;
+al_1 = 1;
+al_2 = 400;
 
 
 w_s_t = eye(total_Pixels);
@@ -222,11 +164,6 @@ w_s_t = eye(total_Pixels);
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
 
 W_graph = graph(W);
-
-
-%% 
-dummyHsi = zeros(size(vectorizedInputHsi));
-dummyRgb = zeros(size(vectorizedInputRgb));
 
 
 %% Prepare L, D, X matrices.
@@ -239,6 +176,10 @@ end
 
 L = D - W;
 
+dummyHsi = zeros(size(vectorizedInputHsi));
+dummyRgb = zeros(size(vectorizedInputRgb));
+
+
 X = [vectorizedInputHsi', dummyHsi';
     dummyRgb', vectorizedInputRgb'];
 
@@ -250,6 +191,7 @@ right = X * D * X';
 
 
 %% Eigen values list
+
 eigenValues = zeros(1, length(Vec));
 
 for i = 1:length(Vec)

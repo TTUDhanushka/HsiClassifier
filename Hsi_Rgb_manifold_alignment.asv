@@ -26,8 +26,10 @@ HSI_selectedpixels = [25, 25;           % 1
                       120, 30;
                       500, 12;
                       30, 400;          % 20
-                      45, 150;
-                      90, 95];                 
+                      45, 170;
+                      90, 95;
+                      55, 85;
+                      75, 215];                 
 
 RGB_selectedpixels = [35, 35;           % 1
                       180, 35;
@@ -49,13 +51,16 @@ RGB_selectedpixels = [35, 35;           % 1
                       150, 30;
                       635, 15;
                       35, 450;          % 20
-                      35, 135;
-                      140, 95];         
+                      35, 145;
+                      120, 85;
+                      80, 80;
+                      80, 210];         
 
 OverlayPoints(higResRgbRot, reflectanceCube.DataCube, RGB_selectedpixels, HSI_selectedpixels);
 
 total_Pixels = length(HSI_selectedpixels);
 no_Of_Pixel_Pairs = total_Pixels / 2;
+
 
 %%
 
@@ -67,7 +72,7 @@ hsiCube = reduceImage;
 vectorizedInputHsi = zeros(total_Pixels, hs_D);
 
 for i = 1:total_Pixels   
-    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :);    
+    vectorizedInputHsi(i, :) = hsiCube(HSI_selectedpixels(i, 1), HSI_selectedpixels(i, 2), :) * 255;    
 end
 
 meanHsiVec = mean(vectorizedInputHsi);
@@ -207,9 +212,10 @@ end
 
 G_w_t = graph(adj_w_t);
 
+
 %%
-al_1 = 2;
-al_2 = 600;
+al_1 = 1;
+al_2 = 500;
 
 
 w_s_t = eye(total_Pixels);
@@ -217,11 +223,6 @@ w_s_t = eye(total_Pixels);
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
 
 W_graph = graph(W);
-
-
-%% 
-dummyHsi = zeros(size(vectorizedInputHsi));
-dummyRgb = zeros(size(vectorizedInputRgb));
 
 
 %% Prepare L, D, X matrices.
@@ -234,6 +235,10 @@ end
 
 L = D - W;
 
+dummyHsi = zeros(size(vectorizedInputHsi));
+dummyRgb = zeros(size(vectorizedInputRgb));
+
+
 X = [vectorizedInputHsi', dummyHsi';
     dummyRgb', vectorizedInputRgb'];
 
@@ -243,7 +248,9 @@ right = X * D * X';
 
 [Eigens, Vec] = eig(left, right);
 
+
 %% Eigen values list
+
 eigenValues = zeros(1, length(Vec));
 
 for i = 1:length(Vec)
