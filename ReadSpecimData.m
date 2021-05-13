@@ -133,6 +133,8 @@ for fileId = 1 : length(fileList)
     end
 end
 
+higResRgb = imread(highResRgbPath);
+higResRgbRot = imrotate(higResRgb, 90);
 
 %%
 % figure()

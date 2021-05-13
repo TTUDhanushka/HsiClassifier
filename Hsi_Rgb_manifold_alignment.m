@@ -3,7 +3,14 @@
 
 % LPP - Locality Preserving Projections
 
+%%
+bandsList = [18, 26, 35, 51, 56,70, 75, 87, 99];
+
+reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
+
+
 %% Create input data vector of quarter of the image
+
 
 
 [RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
@@ -39,7 +46,7 @@ end
 kHsi = mean2(sqSumHsi / total_Pixels);
 sigmaHsi = sqrt(kHsi);
 
-clear kHsi;
+clear meanHsiVec kHsi sqSumHsi;
 
 %% RGB image details
 rgb_size = size(higResRgbRot);
@@ -71,7 +78,7 @@ end
 kRgb = mean2(sqSumRgb / total_Pixels);
 sigmaRgb = sqrt(kRgb);
 
-clear kRgb;
+clear meanRgbVec kRgb sqSumRgb;
 
 %% Spectral angle calculation
 
@@ -117,7 +124,6 @@ for pixelPosA = 1:total_Pixels
     
 end
 
-G_w_s = graph(adj_w_s);
 
 % Three color bands distace calculation.
 
@@ -151,8 +157,6 @@ for pixelPosA = 1:total_Pixels
     
 end
 
-G_w_t = graph(adj_w_t);
-
 
 %%
 al_1 = 1;
@@ -163,8 +167,7 @@ w_s_t = eye(total_Pixels);
 
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
 
-W_graph = graph(W);
-
+clear adj_w_s adj_w_t w_s_t;
 
 %% Prepare L, D, X matrices.
 
@@ -206,6 +209,7 @@ for n = 1:3
     selectedEigenVal(n) = q(n);  
 end
 
+
 %% Optimization 
 
 Evaluation = 0;
@@ -224,17 +228,16 @@ Evaluation = 0;
             selectedEigenVectors =  zeros(hs_D + clrChannels, 3);
 
             for n = 1:3
-                selectedEigenVectors(:, n) = real(Eigens * Vec(: , selectedEigenVal(n)));
+                selectedEigenVectors(:, n) = Eigens * Vec(: , selectedEigenVal(n));
             end
 
-            %
+            % Projection functions.
             F_s = selectedEigenVectors(1:hs_D, :);
             F_t = selectedEigenVectors(hs_D + 1:hs_D + clrChannels, :);
 
             inv_F_t = inv(F_t);
 
-            %
-
+            % Image generation
             linePx = zeros(hs_D, 1);
             imageGen = zeros(cols, lines, 3, 'uint8');
 
@@ -242,11 +245,9 @@ Evaluation = 0;
                 for j = 1:lines
                     linePx(:, 1) = hsiCube(i, j, :);
                     Srgb = inv_F_t' * F_s' * linePx;
+                    
                     colorValue = uint8(Srgb);
-
-                    imageGen(i, j, 1) = colorValue(1);
-                    imageGen(i, j, 2) = colorValue(2);
-                    imageGen(i, j, 3) = colorValue(3);
+                    imageGen(i, j, :) = colorValue;
                 end
             end
 
