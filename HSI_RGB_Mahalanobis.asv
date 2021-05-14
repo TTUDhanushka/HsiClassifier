@@ -1,7 +1,8 @@
 %%  Taking portion of both HSI and RGB images to make manifold alignment. Manifold 
 %   alignment method for HSI image visualization in RGB.
 
-% LPP - Locality Preserving Projections
+% Mahalanobis distance as the du=istance matrice for HSI graph
+% construction.
 
 %%
 bandsList = [18, 26, 35, 51, 56,70, 75, 87, 99];
@@ -79,39 +80,47 @@ end
 kRgb = mean2(sqSumRgb / total_Pixels);
 sigmaRgb = sqrt(kRgb);
 
-
+clear meanRgbVec kRgb sqSumRgb;
 
 %% Spectral angle calculation
 
-% Distance matrixa as spectral angles.
-dist_w_s = zeros(total_Pixels, total_Pixels);
-w_s = zeros(total_Pixels, total_Pixels);
-adj_w_s = zeros(total_Pixels, total_Pixels);
+% % Distance matrixa as spectral angles.
+% dist_w_s = zeros(total_Pixels, total_Pixels);
+% w_s = zeros(total_Pixels, total_Pixels);
+% adj_w_s = zeros(total_Pixels, total_Pixels);
+% 
+% for pixelPosA = 1:total_Pixels
+%     for pixelPosB = 1:total_Pixels
+%         
+%         refSq = 0;
+%         inputSq = 0;
+%         input_ef_mul = 0;
+%         
+%         for n = 1:hs_D
+%             refSq =  refSq + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosA, n));
+%             
+%             inputSq =  inputSq + (vectorizedInputHsi(pixelPosB, n) * vectorizedInputHsi(pixelPosB, n));
+%             
+%             input_ef_mul = input_ef_mul + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosB, n));
+%         end
+%         
+%         sa =  real(acos(input_ef_mul / (sqrt(refSq) * sqrt(inputSq))));
+%         
+%         dist_w_s(pixelPosA, pixelPosB) = real(sa);
+%         
+%         if (pixelPosA == pixelPosB)
+%             w_s(pixelPosA, pixelPosB) = 0;
+%         else
+%             w_s(pixelPosA, pixelPosB) = real(exp(-sa / sigmaHsi));
+%         end
+%     end
+% end
 
+cov_identity = eye(total_Pixels);
+dist_w_s = zeros(total_Pixels, total_Pixels);
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
-        
-        refSq = 0;
-        inputSq = 0;
-        input_ef_mul = 0;
-        
-        for n = 1:hs_D
-            refSq =  refSq + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosA, n));
-            
-            inputSq =  inputSq + (vectorizedInputHsi(pixelPosB, n) * vectorizedInputHsi(pixelPosB, n));
-            
-            input_ef_mul = input_ef_mul + (vectorizedInputHsi(pixelPosA, n) * vectorizedInputHsi(pixelPosB, n));
-        end
-        
-        sa =  real(acos(input_ef_mul / (sqrt(refSq) * sqrt(inputSq))));
-        
-        dist_w_s(pixelPosA, pixelPosB) = real(sa);
-        
-        if (pixelPosA == pixelPosB)
-            w_s(pixelPosA, pixelPosB) = 0;
-        else
-            w_s(pixelPosA, pixelPosB) = real(exp(-sa / sigmaHsi));
-        end
+        mahal_Dist = 
     end
 end
 
@@ -168,7 +177,7 @@ w_s_t = eye(total_Pixels);
 
 W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
 
-
+clear adj_w_s adj_w_t w_s_t;
 
 %% Prepare L, D, X matrices.
 
