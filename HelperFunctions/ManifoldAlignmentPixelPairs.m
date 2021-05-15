@@ -24,8 +24,10 @@ function [Rgb_pixels, Hsi_pixels] = ManifoldAlignmentPixelPairs()
                       90, 95;
                       55, 85;
                       75, 215;
-                      415, 240;
-                      415, 290];                 
+                      415, 240;         % 25
+                      415, 290;
+                      180, 290;
+                      150, 95];                 
 
         Rgb_pixels = [35, 35;           % 1
                       180, 35;
@@ -51,6 +53,8 @@ function [Rgb_pixels, Hsi_pixels] = ManifoldAlignmentPixelPairs()
                       120, 85;
                       80, 80;
                       80, 210;
-                      520, 250;
-                      520, 310];  
+                      520, 250;         % 25
+                      520, 310;
+                      200, 305;
+                      170, 85];  
 end

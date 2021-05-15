@@ -4,7 +4,7 @@
 % LPP - Locality Preserving Projections
 
 %%
-bandsList = [18, 26, 35, 51, 56,70, 75, 87, 99];
+bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
 reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
@@ -161,7 +161,7 @@ end
 
 %%
 al_1 = 1;
-al_2 = 400;
+al_2 = 200;
 
 
 w_s_t = eye(total_Pixels);

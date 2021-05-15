@@ -5,7 +5,7 @@
 % construction.
 
 %%
-bandsList = [18, 26, 35, 51, 56,70, 75, 87, 99];
+bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
 reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
@@ -176,7 +176,7 @@ end
 
 %%
 al_1 = 1;
-al_2 = 500;
+al_2 = 200;
 
 
 w_s_t = eye(total_Pixels);
@@ -221,22 +221,22 @@ end
 
 selectedEigenVal = zeros(1, 3);
 
-for n = 1:3
-    selectedEigenVal(n) = q(n);  
-end
+% for n = 1:3
+%     selectedEigenVal(n) = q(n);  
+% end
 
 
 %% Optimization 
 
 Evaluation = 0;
-% iteration = 1;
-% 
-% Optimum = zeros(4, hs_D^3);
-% 
-% for n1 = 1: hs_D
-%     for n2 = 1:hs_D
-%         for n3 = 1:hs_D
-%             selectedEigenVal = [q(n1), q(n2), q(n3)]
+iteration = 1;
+
+Optimum = zeros(4, hs_D^3);
+
+for n1 = 1: hs_D
+    for n2 = 1:hs_D
+        for n3 = 1:hs_D
+            selectedEigenVal = [q(n1), q(n2), q(n3)]
 
 
             %  selectedEigenVal = [5 197 6];
@@ -272,8 +272,8 @@ Evaluation = 0;
             imshow(imageGen)
 
             Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
-%             Optimum(:, iteration) = [q(n1), q(n2), q(n3), Evaluation];
-%             iteration = iteration + 1;
-%         end
-%     end
-% end
+            Optimum(:, iteration) = [q(n1), q(n2), q(n3), Evaluation];
+            iteration = iteration + 1;
+        end
+    end
+end

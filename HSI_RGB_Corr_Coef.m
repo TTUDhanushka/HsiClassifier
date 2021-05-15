@@ -80,7 +80,7 @@ end
 kRgb = mean2(sqSumRgb / total_Pixels);
 sigmaRgb = sqrt(kRgb);
 
-clear meanRgbVec kRgb sqSumRgb;
+
 
 %% Spectral angle calculation
 
@@ -98,8 +98,8 @@ corr_Dist = zeros(total_Pixels, total_Pixels);
 
 for pixelPosA = 1:total_Pixels
     for pixelPosB = 1:total_Pixels
-        correlationR =  corrcoef(vectorizedInputHsi(pixelPosA, :) - vectorizedInputHsi(pixelPosB, :));
-        corr_Dist(pixelPosA, pixelPosB) = correlationR;
+        correlationR =  corrcoef(vectorizedInputHsi(pixelPosA, :), vectorizedInputHsi(pixelPosB, :));
+        corr_Dist(pixelPosA, pixelPosB) = correlationR(1, 2);
     end
 end
 
@@ -149,13 +149,13 @@ end
 
 
 %%
-al_1 = 1;
-al_2 = 20;
-
+al_1 = 2;
+al_2 = 200;
+al_3 = 5;
 
 w_s_t = eye(total_Pixels);
 
-W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_1 * adj_w_t];
+W = [al_1 * adj_w_s, al_2 * w_s_t; al_2 * w_s_t', al_3 * adj_w_t];
 
 
 
