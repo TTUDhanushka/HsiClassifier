@@ -33,9 +33,7 @@ for i = 1:total_Pixels
 end
 
 meanHsiVec = mean(vectorizedInputHsi);
-
 sqSumHsi = 0;
-
 
 for i = 1: total_Pixels
     sqSumHsi = sqSumHsi + (vectorizedInputHsi(i, :) - meanHsiVec).^2;
@@ -44,7 +42,7 @@ end
 kHsi = mean2(sqSumHsi / total_Pixels);
 sigmaHsi = sqrt(kHsi);
 
-clear meanHsiVec kHsi sqSumHsi;
+
 
 %% RGB image details
 rgb_size = size(higResRgbRot);
@@ -58,16 +56,12 @@ higResRgbRot = imrotate(higResRgb, 90);
  
 vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
-for i = 1:total_Pixels
-    
-    vectorizedInputRgb(i, :) = double(higResRgbRot(RGB_selectedpixels(i, 1), RGB_selectedpixels(i, 2), :));
-    
+for i = 1:total_Pixels    
+    vectorizedInputRgb(i, :) = double(higResRgbRot(RGB_selectedpixels(i, 1), RGB_selectedpixels(i, 2), :));   
 end
 
 meanRgbVec = mean(vectorizedInputRgb);
-
 sqSumRgb = 0;
-
 
 for i = 1: total_Pixels
     sqSumRgb = sqSumRgb + ((vectorizedInputRgb(i, :) - meanRgbVec).^2);
@@ -122,6 +116,6 @@ for pixelPosA = 1:total_Pixels
 end
 
 
+%% Optimization
 
-
-npw_W = zeros(total_Pixels, total_Pixels);
+npw_W = ones(total_Pixels, total_Pixels);
