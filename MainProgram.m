@@ -12,7 +12,7 @@ clc;
 
 %% Add necessary folders to path
 
-    addpath HelperFunctions NN_Library
+    addpath HelperFunctions NN_Library BandSelectionMethods HsiToRgb
 
 
 %% Parameters
@@ -62,6 +62,11 @@ end
 
 DatacubeTransformTo1D();
 
+%% Band selection methods
+
+reduced_bands_count = 9;
+
+selectedPoolingBands = Min_Max_Pooling(training_Data', reduced_bands_count);
 
 %% Training
 height = 1;
