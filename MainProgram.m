@@ -12,8 +12,8 @@ clc;
 
 %% Add necessary folders to path
 
-    addpath HelperFunctions
-    addpath NN_Library
+    addpath HelperFunctions NN_Library
+
 
 %% Parameters
 

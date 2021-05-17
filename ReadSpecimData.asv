@@ -137,7 +137,7 @@ higResRgb = imread(highResRgbPath);
 higResRgbRot = imrotate(higResRgb, 90);
 
 
-clear image_source  header_file fileId fileList
+clear image_source  header_file
 
 %%
 % figure()
