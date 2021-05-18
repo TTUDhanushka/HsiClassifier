@@ -82,16 +82,10 @@ pixelPairs = zeros(10 * classesCount, 2);
 pixeCnt = 1;
 
 for class = 1: classesCount
-
     rand_idx = randperm(pointsPerClass(class), pointsPerClass(class));
     
     for n = 1: length(rand_idx)
-        augClassPoints(n, class, :) = tempClassPoints(rand_idx(n), class, :);
-    end
-    
-    for pixel = 1:10
-        pixelPairs(((class - 1) * 10) + pixel, :) = augClassPoints(pixel, class, :);
-        pixeCnt = pixeCnt + 1;
+        augClassPoints()
     end
 end
 

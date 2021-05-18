@@ -34,7 +34,6 @@ for n = 1: length(predictedLabels)
 end
 
 detectedClasses = categorical(predictedLabels);
-classesCount = length(categories(detectedClasses));
 
 figure()
 imshow(classifiedImage)
