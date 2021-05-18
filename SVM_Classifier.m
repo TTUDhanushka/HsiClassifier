@@ -3,7 +3,9 @@ clc;
 %% SVM classifier
 
 % InputData preperation
-X = training_Data_Aug.';
+% X = training_Data_Aug.';
+
+X = rData.';
 Y = training_Labels_Aug.';
 
 %% Multiclass classifier training
@@ -12,7 +14,9 @@ model = fitcecoc(X,Y);
 
 %% Predict
 
-testInputs = inputData.';
+% testInputs = inputData.';
+tempInputs = GetReducedBandData1D(inputData, bSet);
+testInputs = tempInputs.';
 
 predictedLabels = predict(model, testInputs);
 

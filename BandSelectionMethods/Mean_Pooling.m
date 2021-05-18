@@ -35,7 +35,7 @@ function layer_ids = Mean_Pooling(vec_hsi, filter_size)
                         previous_pxl_refl = current_pxl_refl;
                         cell_id = i + m;                     
                     end
-                    layer_ids(layer_x, layer_y) = cell_id; %current_pxl_refl;  % 
+                    layer_ids(layer_x, layer_y) = cell_id; % current_pxl_refl;  % 
                 end
             end
             

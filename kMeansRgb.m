@@ -1,6 +1,6 @@
 %% k-Means
 % Define the k parameter which is number of classes in the image (clusters).
-    kClasses = 5;
+    kClasses = 8;
     [colsRGB, linesRGB, channels] = size(higResRgb);
     
 % Unfold the datacube with samples on rows and spectral data on columns.
@@ -17,7 +17,7 @@
     [idx, C] = kmeans(kInputRGB, kClasses);
     
     %%
-        usedClassList = [2 6 7 10 13];
+        usedClassList = [3, 4, 5, 7, 8, 9, 10, 13];
 
     classifiedImage = zeros(cols, lines, 3, 'uint8');
 

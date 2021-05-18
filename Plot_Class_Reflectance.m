@@ -1,5 +1,5 @@
 
-class_cube = water_cube_Ref;
+class_cube = tree_cube_Ref;
 
 %%
 
@@ -56,7 +56,7 @@ if exist('bSet')
     plot( bSet, class_avg_FewBands, 'LineWidth', 2, 'Color', [0, 0, 1]);
 end
 
-title("Reflectance characteristics of Water class.");     % Change the class name
+title("Reflectance characteristics of Tree class.");     % Change the class name
 xlabel('Bands');
 xlim([0 204]);
 ylim([0 1]);

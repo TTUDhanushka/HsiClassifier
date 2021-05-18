@@ -7,7 +7,7 @@
 % bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
-bandsList = bSet;
+
 
 reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
 

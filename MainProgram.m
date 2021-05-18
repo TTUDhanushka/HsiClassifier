@@ -64,9 +64,12 @@ DatacubeTransformTo1D();
 
 %% Band selection methods
 
-reduced_bands_count = 9;
+reduced_bands_count = 16;
 
-selectedPoolingBands = Min_Max_Pooling(training_Data', reduced_bands_count);
+bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
+
+layer_ids = Mean_Pooling(training_Data', round(204 / reduced_bands_count));
+
 
 %% Training
 height = 1;
