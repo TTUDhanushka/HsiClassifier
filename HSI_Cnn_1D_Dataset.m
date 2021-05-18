@@ -1,29 +1,9 @@
 %% CNN for spectral classification
 
-%% Get HSI data and make white / dark correction
-
-%
-%   Note: Add "HelperFunctions" to the path.
-%
-
-%   ReadSpecimData();
-%%
-% Get input data from workspace.
-% [data_h, data_w, data_d] = size(correctd_hsi_cube);
-[data_h, data_w, data_d] = size(reflectanceCube.DataCube);
-
-%% Unfold the datacube and get spectral data into rows
-inputData = zeros(data_d, data_h * data_w);
-
-for a = 1:data_h
-    for b = 1:data_w
-        inputData(:, ((a-1) * data_h) + b) = reflectanceCube.DataCube(a, b, :);
-        %inputData(:, ((a-1) * data_w) + b) = correctd_hsi_cube(a, b, :);
-    end
-end
-
 
 %% Transform data into CNN usable format
+
+inputData = ConvertHsiImageTo1D(reflectanceCube.DataCube);
 
 height = 1;
 width = data_d;

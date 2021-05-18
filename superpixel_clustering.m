@@ -1,10 +1,13 @@
 % Super pixel clustering.
 
-no_Of_Superpixels = 5;
+imgCopy = higResRgb;
 
-[L,N] = superpixels(higResRgb, no_Of_Superpixels);
+no_Of_Superpixels = 100;
+
+
+[L,N] = superpixels(imgCopy, no_Of_Superpixels);
 
 figure
 BW = boundarymask(L);
-imshow(imoverlay(higResRgb,BW,'cyan'),'InitialMagnification',67)
+imshow(imoverlay(imgCopy,BW,'cyan'),'InitialMagnification',67)
 

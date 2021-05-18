@@ -58,9 +58,10 @@ for nFile = 1:length(matFilesList)
 end
 
 
-%%
+% Convert training data into 1-D array with n-samples.
 
-DatacubeTransformTo1D();
+TrainingPixelClassesTo1D();
+
 
 %% Band selection methods
 
