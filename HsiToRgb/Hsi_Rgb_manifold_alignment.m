@@ -16,8 +16,9 @@ reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
 
 
 
-[RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
-       
+% [RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
+%        RGB_selectedpixels = pixelPairs;
+%        HSI_selectedpixels = extractedHsiPixels;
 
 OverlayPoints(higResRgbRot, reflectanceCube.DataCube, RGB_selectedpixels, HSI_selectedpixels);
 

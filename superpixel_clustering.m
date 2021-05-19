@@ -1,6 +1,6 @@
 % Super pixel clustering.
 
-imgCopy = higResRgb;
+imgCopy = imrotate(higResRgb, 90);
 
 no_Of_Superpixels = 200;
 

@@ -8,18 +8,15 @@ function varargout = OverlayPoints(higResRgbRot, hsiCube, pixelListRgb, pixelLis
 
     for n = 1:length(pixelListRgb)
  
-%         scaleVal = 1.2598;
-        r = 10;
+        r = 3;
         th = 0:pi/50:2*pi;
         xunit = round((r * cos(th)) + pixelListRgb(n, 1));
         yunit = round((r * sin(th)) + pixelListRgb(n, 2));
 
-
         
-        for i = 1:length(xunit)
-            higResRgbRot(xunit(i), yunit(i), :) = [0, 0, 255];
-
-        end
+%         for i = 1:length(xunit)
+%             higResRgbRot(xunit(i), yunit(i), :) = [0, 0, 255];
+%         end
         
         higResRgbRot = insertText(higResRgbRot, [pixelListRgb(n, 2), pixelListRgb(n, 1)], point);
         point = point + 1;
@@ -39,9 +36,9 @@ function varargout = OverlayPoints(higResRgbRot, hsiCube, pixelListRgb, pixelLis
         yunit = round((r * sin(th)) + pixelListHsi(n, 2));
 
 
-        for i = 1:length(xunit)
-            hsiImage(xunit(i), yunit(i), :) = [255, 200, 0];
-        end
+%         for i = 1:length(xunit)
+%             hsiImage(xunit(i), yunit(i), :) = [255, 200, 0];
+%         end
         
         hsiImage = insertText(hsiImage, [pixelListHsi(n, 2), pixelListHsi(n, 1)], pointHs);
         pointHs = pointHs + 1;
