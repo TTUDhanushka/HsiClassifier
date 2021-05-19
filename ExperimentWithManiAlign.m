@@ -1,4 +1,5 @@
-% Script to shuffle the pixels for rgb
+% Script to shuffle the pixels for rgb. The RGB pixels were extracted using
+% superpixel classification which isn't correctly clustering the image.
 
 bushPx = 41;
 mudPx = 51;
