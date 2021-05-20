@@ -45,10 +45,10 @@ function varargout = OverlayPoints(higResRgbRot, hsiCube, pixelListRgb, pixelLis
     end
     
     figure();
-    subplot(2,1,1);
+    subplot(1,2,1);
     imshow(hsiImage);
     
-    subplot(2,1,2);
+    subplot(1,2,2);
     imshow(higResRgbRot);
     
 end

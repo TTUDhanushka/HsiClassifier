@@ -50,6 +50,7 @@ end
 figure()
 imshow(classifiedImage)
 
+
 %% Extract 10 pixels from each class
 
 classesCount = 0;

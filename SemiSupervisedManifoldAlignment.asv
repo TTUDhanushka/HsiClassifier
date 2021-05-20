@@ -4,7 +4,7 @@
 fb_HSI_Image = RotateHsiImage(reflectanceCube.DataCube, -90);
 rgbFromHsi = GetTriBandRgbImage(fb_HSI_Image);
 
-classesInHsi = 7;
+classesInHsi = 4;
 noOfSample = 10;
 
 % Positions in [height, width] format.
@@ -68,10 +68,9 @@ for nId = 1: classesInHsi
     randIds = randperm(totalSamples);
     
     for px = 1: noOfSample
-        extractedRgbVector(px, :) = coordList(randIds(px), :);
+        extractedHsiVector(px, :) = coordList(randIds(px), :);
     end
     
-    extractedRgbPixels((((nId - 1) * noOfSample) + 1): (((nId - 1) * noOfSample) + noOfSample), :) = extractedRgbVector(:,:);
+    extractedHsiPixels((((nId - 1) * noOfSample) + 1): (((nId - 1) * noOfSample) + noOfSample), :) = extractedHsiVector(:,:);
     
 end
-

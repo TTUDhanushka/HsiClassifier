@@ -7,19 +7,25 @@
 % bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
+bandsList = bSet;
 
+rotatedHsiCube = RotateHsiImage(reflectanceCube.DataCube, -90);
 
-reduceImage = ReducedBandImage(reflectanceCube.DataCube, bandsList);
+reduceImage = ReducedBandImage(rotatedHsiCube, bandsList);
 
 
 %% Create input data vector of quarter of the image
 
 
 
-[RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
-       
+% [RGB_selectedpixels, HSI_selectedpixels] = ManifoldAlignmentPixelPairs();
+%        RGB_selectedpixels = pixelPairs;
+%        HSI_selectedpixels = extractedHsiPixels;
 
-OverlayPoints(higResRgbRot, reflectanceCube.DataCube, RGB_selectedpixels, HSI_selectedpixels);
+HSI_selectedpixels = extractedHsiPixels;
+RGB_selectedpixels = 
+
+OverlayPoints(higResRgb, rotatedHsiCube, RGB_selectedpixels, HSI_selectedpixels);
 
 total_Pixels = length(HSI_selectedpixels);
 
@@ -65,7 +71,7 @@ vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
     
-    vectorizedInputRgb(i, :) = double(higResRgbRot(RGB_selectedpixels(i, 1), RGB_selectedpixels(i, 2), :));
+    vectorizedInputRgb(i, :) = double(higResRgb(RGB_selectedpixels(i, 1), RGB_selectedpixels(i, 2), :));
     
 end
 
@@ -255,7 +261,7 @@ Evaluation = 0;
             end
 
             figure();
-            imageGen = imrotate(imageGen, -90);
+            %imageGen = imrotate(imageGen, -90);
             imshow(imageGen)
 
             Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
