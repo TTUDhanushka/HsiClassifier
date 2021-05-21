@@ -10,7 +10,7 @@ pixelListHsi = HSI_selectedpixels;
     point = 1;
     
 higResRgbRotA = higResRgbRot;
-     higResRgbRotA = imrotate(higResRgbRotA, -90);
+%     higResRgbRotA = imrotate(higResRgbRotA, -90);
     
     for n = 1:length(pixelListRgb)
  

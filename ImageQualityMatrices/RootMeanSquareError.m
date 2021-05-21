@@ -23,3 +23,4 @@ function rmse = RootMeanSquareError(image1, image2)
     end
     
 end
+

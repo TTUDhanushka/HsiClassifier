@@ -157,7 +157,7 @@ for pixelPosA = 1:total_Pixels
 end
 
 % This should be n x n matrix. Need correction.
-[val, id] = max(w_t,[], 1);
+[val, id] = min(w_t,[], 1);
 
 for pixelPosA = 1:total_Pixels
         
