@@ -21,13 +21,13 @@ higResRgbRotA = higResRgbRot;
         yunit = round((r * sin(th)) + pixelListRgb(n, 2));
 
 
-        
-        for i = 1:length(xunit)
-            higResRgbRotA(yunit(i), xunit(i), :) = [0, 0, 255];
+%         
+%         for i = 1:length(xunit)
+%             higResRgbRotA(yunit(i), xunit(i), :) = [0, 0, 255];
+% 
+%         end
 
-        end
-
-        higResRgbRotA = insertText(higResRgbRotA, [645 - pixelListRgb(n, 1), pixelListRgb(n, 2)], point);
+        higResRgbRotA = insertText(higResRgbRotA, [pixelListRgb(n, 2), pixelListRgb(n, 1)], point);
         point = point + 1;
 
     end
@@ -50,11 +50,11 @@ higResRgbRotA = higResRgbRot;
         yunit = round((r * sin(th)) + pixelListHsi(n, 2));
 
 
-        for i = 1:length(xunit)
-            hsiImageA(yunit(i), xunit(i),  :) = [255, 200, 0];
-        end
+%         for i = 1:length(xunit)
+%             hsiImageA(yunit(i), xunit(i),  :) = [255, 200, 0];
+%         end
 
-        hsiImageA = insertText(hsiImageA, [512 - pixelListHsi(n, 1), pixelListHsi(n, 2)], pointHs);
+        hsiImageA = insertText(hsiImageA, [pixelListHsi(n, 2), pixelListHsi(n, 1)], pointHs);
         pointHs = pointHs + 1;
     end
     
