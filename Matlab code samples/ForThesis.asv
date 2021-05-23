@@ -84,8 +84,8 @@ imshow(scaledImgOriginal);
 
 %% Correlation coefficient
 
-imgSl1 = imgOutR(:,:, 1);
+imgSl1 = imageGen1(:,:, 1);
 imgSl2 = scaledImgOriginal(:,:, 1);
 
-R = corr2(imgSl1, imgSl2)
+
 

@@ -1,4 +1,4 @@
-function rmse = RootMeanSquareError(image1, image2)
+function [r_rmse, g_rmse, b_rmse, rmse] = RootMeanSquareError(image1, image2)
     [h1, w1, d1] = size(image1);
     [h2, w2, d2] = size(image2);
     
@@ -13,6 +13,13 @@ function rmse = RootMeanSquareError(image1, image2)
     if (h1 == h2) && (w1 == w2)
         for i = 1:h1
             for j = 1:w1
+                
+                r_rmse = sqrt(((image1(i, j, 1) - image2(i, j, 1))^2) / (h1 * w1));
+                
+                g_rmse = sqrt(((image1(i, j, 2) - image2(i, j, 2))^2) / (h1 * w1));
+                
+                b_rmse = sqrt(((image1(i, j, 3) - image2(i, j, 3))^2) / (h1 * w1));
+                
                 rmse = sqrt((((image1(i, j, 1) - image2(i, j, 1))^2) +...
                     ((image1(i,j, 2) - image2(i,j, 2))^2) +...
                     ((image1(i,j, 3) - image2(i,j, 3))^2)) / (h1 * w1));
