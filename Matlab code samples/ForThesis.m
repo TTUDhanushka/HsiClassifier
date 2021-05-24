@@ -129,4 +129,6 @@ ylabel('Correlation coefficient');
 
 line([9, 9], [-0.2, 0.8419]);
 
+legend('Red channel','','Green channel','', 'Blue channel', '')
+
 hold off;
