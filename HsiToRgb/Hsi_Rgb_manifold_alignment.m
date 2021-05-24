@@ -7,7 +7,22 @@
 % bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
-bandsList = bSet;
+visibleLightOnly = false;
+
+bandsList = [];
+
+
+if visibleLightOnly
+    for nBandId = 1:length(bSet)
+        if(bSet(nBandId) < 121)                 % 121 Band is at 750nm.
+            bandsList = [bandsList, bSet(nBandId)];
+        end
+    end
+else
+    bandsList = bSet;
+end
+
+
 
 rotatedHsiCube = RotateHsiImage(reflectanceCube.DataCube, -90);
 

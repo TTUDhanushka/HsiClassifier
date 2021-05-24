@@ -82,10 +82,51 @@ imshow(scaledImgOriginal);
 [aa, bb, cc, dd] = RootMeanSquareError(imageGen, scaledImgOriginal)
 
 
-%% Correlation coefficient
+%% Correlation coefficient for images 
 
-imgSl1 = imgOutR(:,:, 1);
-imgSl2 = scaledImgOriginal(:,:, 1);
+imgSl1 = imageGen;                      % From manifold alignment
+imgSl2 = scaledImgOriginal;             % Scaled down RGB 645 x 645
 
-R = corr2(imgSl1, imgSl2)
 
+R_coff = corr2(imgSl1(:,:, 1), imgSl2(:,:, 1));
+
+G_coff = corr2(imgSl1(:,:, 2), imgSl2(:,:, 2));
+
+B_coff = corr2(imgSl1(:,:, 3), imgSl2(:,:, 3));
+
+[R_coff, G_coff, B_coff]
+
+
+%% Graph for bands number selection using manifold alignment
+
+coffs = [0.6603, 0.7326, 0.671,	0.6673,	0.6404,	0.677,	0.509,	-0.0662; 
+         0.7756, 0.7848, 0.7343, 0.7288, 0.7003, 0.7116, 0.4667, -0.0613;
+         0.8339, 0.8419, 0.8228, 0.8252, 0.8031, 0.7967, 0.4341, -0.0481]
+     
+noOfBandsHsi = [4, 9, 16, 25, 36, 49, 64, 81];
+     
+
+figure()
+hold on;
+
+xx = 1:1:81;
+coffs_r = spline(noOfBandsHsi, coffs(1,:), xx);
+coffs_g = spline(noOfBandsHsi, coffs(2,:), xx);
+coffs_b = spline(noOfBandsHsi, coffs(3,:), xx);
+
+plot(noOfBandsHsi, coffs(1,:), 'o', xx, coffs_r, 'Color',[1, 0, 0], 'LineWidth',2);
+plot(noOfBandsHsi, coffs(2,:), 'o', xx, coffs_g, 'Color',[0, 1, 0], 'LineWidth',2);
+plot(noOfBandsHsi, coffs(3,:), 'o', xx, coffs_b, 'Color',[0, 0, 1], 'LineWidth',2);
+
+xlim([1 100]);
+% ylim([-0.5 1]);
+
+grid on;
+
+title('Pearson corelation coefficient for number of HSI bands to form RGB image');
+xlabel('Number of selected spectral bands');
+ylabel('Correlation coefficient');
+
+line([9, 9], [-0.2, 0.8419]);
+
+hold off;

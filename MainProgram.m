@@ -65,7 +65,7 @@ TrainingPixelClassesTo1D();
 
 %% Band selection methods
 
-reduced_bands_count = 25;
+reduced_bands_count = 100;
 
 bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
 

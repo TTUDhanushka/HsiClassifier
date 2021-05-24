@@ -7,7 +7,17 @@
 % bandsList = [10, 18, 26, 35, 51, 56,70, 75, 87, 99];
 % bandsList = [120, 126, 135, 151, 156, 170, 175, 187, 199];
 
-bandsList = bSet;
+visibleLightOnly = true;
+
+if visibleLightOnly
+    for nBandId = 1:length(bSet)
+        
+    end
+else
+    bandsList = bSet;
+end
+
+
 
 rotatedHsiCube = RotateHsiImage(reflectanceCube.DataCube, -90);
 
@@ -23,7 +33,7 @@ reduceImage = ReducedBandImage(rotatedHsiCube, bandsList);
 %        HSI_selectedpixels = extractedHsiPixels;
 
 HSI_selectedpixels = extractedHsiPixels;
-RGB_selectedpixels = 
+RGB_selectedpixels = extractedRgbPixels;
 
 OverlayPoints(higResRgb, rotatedHsiCube, RGB_selectedpixels, HSI_selectedpixels);
 
@@ -157,7 +167,7 @@ for pixelPosA = 1:total_Pixels
 end
 
 % This should be n x n matrix. Need correction.
-[val, id] = max(w_t,[], 1);
+[val, id] = min(w_t,[], 1);
 
 for pixelPosA = 1:total_Pixels
         
