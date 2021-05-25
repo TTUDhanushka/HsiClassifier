@@ -12,8 +12,8 @@ clc;
 
 %% Add necessary folders to path
 
-    addpath HelperFunctions NN_Library BandSelectionMethods HsiToRgb
-
+    addpath HelperFunctions ClassificationMethods BandSelectionMethods 
+    addpath HsiToRgb ImageQualityMatrices
 
 %% Parameters
 
