@@ -1,1 +1,17 @@
-site_name: My Docs
+site_name: HSI classifier v1.0 Documentation
+nav:
+    - Home: index.md
+    - Getting started: howtobegin.md
+    - Band Selection: bandselection.md
+    - Classification Methods: classificationmethods.md
+    - HSI to RGB Conversion: hsitorgb.md
+    - Helper Functions: helperfun.md
+
+theme: 
+    name: material
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - rust
+        - matlab
+        - python

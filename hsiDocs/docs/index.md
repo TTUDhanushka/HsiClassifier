@@ -6,29 +6,36 @@ Author [Dhanushka](http://dhanushkaliyanage.com/).
 
 * Use anaconda promt and change directory into the "hsiDocs" folder on HSI classifier v1.0.
 
+    ```
+        cd "G:\3. Hyperspectral\5. Matlab HSI\1. HSI classifier v1.0\hsiDocs"
+    ```
+
 * `mkdocs serve` - Start the live-reloading docs server.
 
-* Open "http://127.0.0.1:8000/" on browser.
+* Open ```http://127.0.0.1:8000/``` on browser.
 
 * `mkdocs help` - Print this help message.
 
 
 
-## HSI classifier v1.0
+## Structure
 
 | Folder | Description |
 | ----------- | ----------- |
 | BandSelectionMethods | Contains all the band selection methods tested in this project. |
 | ClassificationMethods | SVM, kNN, 1D CNN, MLP and other classification methods. |
+| HelperFunctions |<ul><li>Calibrate spectral images</li><li>Get label color</li><li>Get data files</li><li>Get single band grayscale image</li><li>Get tri band RGB image</li><li>Rotate HSi image</li><li>Overlay points</li><li>Reduced band image</li></ul>|
+| HsiToRgb | Hyperspectral image visualization in RGB color space and export as RGB image. |
+| ImageQualityMatrices | RGB visualization quality estimation matrices. |
+| Old | Old MATLAB scripts which are no longer in use. |
+| AdditionalMatlabScripts | Some experimental scripts. (Not required) |
+| hsiDocs | Complete documentation. |
+| Root | All the other scripts and functions are on root folder. |
 
 
-## BandSelectionMethods
+## Source Code
+The code is on [github](https://github.com/TTUDhanushka/HsiClassifier.git)
 
 
-#### Min-Max Pooling
+> The documentation is continuously updating.
 
-        function selected_bands = Min_Max_Pooling(vec_hsi, reduced_bands_count)
-
-        Parameters: 'vec_hsi, reduced_bands_count'
-            vec_hsi - the unfolded hyperspectral data. 
-            reduced_bands_count - number of desired bands count from band selection.

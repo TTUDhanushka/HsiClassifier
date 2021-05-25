@@ -13,7 +13,7 @@ clc;
 %% Add necessary folders to path
 
     addpath HelperFunctions ClassificationMethods BandSelectionMethods 
-    addpath HsiToRgb ImageQualityMatrices
+    addpath AdditionalMatlabScripts HsiToRgb ImageQualityMatrices
 
 %% Parameters
 
