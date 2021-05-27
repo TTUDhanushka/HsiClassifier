@@ -1,10 +1,12 @@
-%% 1D CNN for 16 classes.
+%% 1D CNN for 25 bands spectral data in 16 classes.
 
-InputLayer = imageInputLayer([height,width,channels]); %'DataAugmentation', 'none'); %'Normalization', 'none');
-c1 = convolution2dLayer([1 6], 64, 'stride', [1 6]); %Filter window size = [1 6], No of filters = 16, stride = [1 6].
+InputLayer = imageInputLayer([height,width,channels]); 
+
+c1 = convolution2dLayer([1 5], 16, 'stride', [1 5]); %Filter window size = [1 65], No of filters = 16, stride = [1 5].
 
 % We use a max pooling layer as Downsampling layer. An alternative might be
 % to use an average pooling layer e.g. AveragePooling2dLayer or a reluLayer
+
 r1 = reluLayer();
 p1 = maxPooling2dLayer([1 3],'stride',[1 3]); %PoolSize = [1 20], Stride = [1 20]
 

@@ -1,4 +1,4 @@
-function image = Display_Classified_Image(image, posx, posy, color)
+function image = RectangleAreaOverlay(image, posx, posy, color)
     
     % Image has been captured from left to right.
     y_1 = fix (posx(1,1));

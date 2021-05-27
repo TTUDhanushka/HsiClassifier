@@ -1,4 +1,4 @@
-function rgb_Out = ConstructRgbImage(hsi_cube, redBand,greenBand, blueBand)
+function rgb_Out = ConstructRgbImage(hsi_cube, redBand, greenBand, blueBand)
 
     [h, w, d] = size(hsi_cube);
     

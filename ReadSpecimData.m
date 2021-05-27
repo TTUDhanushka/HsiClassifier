@@ -98,12 +98,12 @@ else
 end
 
 % RGB reconstruction from HSI data cube. The bands were selected manually.
-rgb_from_corrected = Construct_False_Rgb_Image(correctd_hsi_cube, 28, 58, 85);
+rgb_from_corrected = ConstructRgbImage(correctd_hsi_cube, 28, 58, 85);
 
 reflectanceCube = hypercube(reflectance_cube);
 
 % RGB reconstruction from reflectance data cube. The bands were selected manually.
-rgb_from_ref = Construct_False_Rgb_Image(reflectanceCube.DataCube, 28, 58, 85);
+rgb_from_ref = ConstructRgbImage(reflectanceCube.DataCube, 28, 58, 85);
 
 rgb_from_corrected = imrotate(rgb_from_corrected, -90);
 subplot(2,2,2), imshow(rgb_from_corrected);

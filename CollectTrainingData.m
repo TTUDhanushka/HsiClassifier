@@ -38,7 +38,7 @@ rgb_image = imrotate(rgb_image, 90);
 
 [im, im_x, im_y] = Select_Pixel_Class(rgb_image, false);
 
-rgb_image = Display_Classified_Image(rgb_image, im_x, im_y, masking_color);
+rgb_image = RectangleAreaOverlay(rgb_image, im_x, im_y, masking_color);
 
 sampleHeight = im_y(1) - im_x(1);
 sampleWidth = im_y(2) - im_x(2);

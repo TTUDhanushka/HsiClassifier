@@ -86,6 +86,19 @@ deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, convnet_2, opts);
 %% Prediction
 % call HSI_Cnn_1D_Dataset.m file. This should run section by section.
 
+
+
+%% Display classification
+% Classificationn method.
+
+% Spectral Angle Mapper
+resultVec = SamClassification(reflectanceCube.DataCube);
+
+classifiedImage = DisplayClassificationResult(resultVec, cols, lines);
+
+figure();
+imshow(classifiedImage)
+
 %% Classification  accuracy
 
 Classification_Accuracy();
