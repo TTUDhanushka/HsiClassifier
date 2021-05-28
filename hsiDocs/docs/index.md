@@ -1,6 +1,6 @@
 # HSI Classification Code Documentation
 
-Author [Dhanushka](http://dhanushkaliyanage.com/).
+Author [Dhanushka Liyanage](http://dhanushkaliyanage.com/).
 
 ## Getting Docs Online
 
@@ -34,7 +34,7 @@ Author [Dhanushka](http://dhanushkaliyanage.com/).
 
 
 ## Source Code
-The code is on [github](https://github.com/TTUDhanushka/HsiClassifier.git)
+The code is on [github](https://github.com/TTUDhanushka/HsiClassifier.git) as a private repository. Request access if needed.
 
 
 > The documentation is continuously updating.

@@ -22,7 +22,7 @@ Method was proposed in [article](https://ieeexplore.ieee.org/abstract/document/8
 
 |Args||
 |--------|----------|
-|`hsiDataCube` | Full data cube containing all the spectral bands without unfolding.|
+|`hsiDataCube` | Full data cube containing all the spectral bands .|
 |`partitions`| Number of partitions in the spectral axis.|
 |`bandsPerPartition`| Number of bands in the selected partition.|         
       

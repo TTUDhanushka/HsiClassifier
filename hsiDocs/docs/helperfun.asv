@@ -91,12 +91,3 @@ Specim hyperspectral images are rotated 90 degrees counterclockwise.
 
 ### Unfold Hyperspectral Data Cube
 
-    function outputVectors = UnfoldHsiCube(dataCube)
-
-|Args||
-|--------|----------|
-|`dataCube` | HSI data cube. This can be any number of spectral bands.| 
-        
-|Returns||
-|--------|----------|
-|`outputVectors` | Unfolded HSI image with[bands, columns * lines] matrix.|

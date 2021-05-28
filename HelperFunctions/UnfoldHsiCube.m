@@ -1,4 +1,4 @@
-function outputVectors = ConvertHsiImageTo1D(dataCube)
+function outputVectors = UnfoldHsiCube(dataCube)
 
     [data_h, data_w, data_d] = size(dataCube);
 
