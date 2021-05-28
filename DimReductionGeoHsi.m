@@ -16,7 +16,7 @@ title('KSC image slice 10');
 
 %% Band reduction with pooling
 
-linear_image = Convert_to_1d_Spectral(KSC);
+linear_image = UnfoldHsiCube(KSC);
 
 pool_layers = Max_Pooling(linear_image, 10);
 
@@ -30,7 +30,7 @@ end
 
 %% Band reduced image
 
-reduced_hsi_image = Create_Min_Band_Image(KSC, selected_bands);
+reduced_hsi_image = ReducedBandImage(KSC, selected_bands);
 
 reduced_slice = reduced_hsi_image(:,:,6);
 
@@ -57,7 +57,7 @@ figure();
 
 %% Display segmented image according to the classes
 
-seg_image = Display_Classified_Image(h, w, im_x, im_y);
+seg_image = RectangleAreaOverlay(h, w, im_x, im_y);
 
 figure();
 imshow(seg_image);

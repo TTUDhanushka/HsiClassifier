@@ -67,10 +67,11 @@ TrainingPixelClassesTo1D();
 
 reduced_bands_count = 100;
 
-bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
+% bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
+% 
+% layer_ids = Mean_Pooling(training_Data', round(204 / reduced_bands_count));
 
-layer_ids = Mean_Pooling(training_Data', round(204 / reduced_bands_count));
-
+bSetDd = DistanceDensityBandSelection(reflectanceCube.DataCube, 4, 50);
 
 %% Training
 height = 1;

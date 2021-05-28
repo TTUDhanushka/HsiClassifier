@@ -65,6 +65,7 @@ function selected_bands = DistanceDensityBandSelection(hsiDataCube, partitions, 
         end        
     end
     
+    
     %% Bands list
     
     totalDistanceDensities = sum(dd);
@@ -73,8 +74,7 @@ function selected_bands = DistanceDensityBandSelection(hsiDataCube, partitions, 
     reqBands = 50;
     
     for l = 1:partitions
-        nd(1, l) =  round((dd(1, l) / totalDistanceDensities) * reqBands);
-        
+        nd(1, l) =  round((dd(1, l) / totalDistanceDensities) * reqBands);        
     end
     
     
@@ -98,14 +98,14 @@ function selected_bands = DistanceDensityBandSelection(hsiDataCube, partitions, 
         end
         
         %     bandIds = finalBands;
-        
-        for cnt = 1: cube_d
-            for id = 1: length(bandIds)
-                if(cnt == bandIds(id))
-                    newCube(:, :, cnt) = hsiDataCube(:,:, cnt);
-                end
-            end
-        end
+        newCube = ReducedBandImage(hsiCube, bandIds);
+%         for cnt = 1: cube_d
+%             for id = 1: length(bandIds)
+%                 if(cnt == bandIds(id))
+%                     newCube(:, :, cnt) = hsiDataCube(:,:, cnt);
+%                 end
+%             end
+%         end
         
         
 %% Unfold the datacube and get spectral data into rows
@@ -128,17 +128,19 @@ function selected_bands = DistanceDensityBandSelection(hsiDataCube, partitions, 
         
         predictY = predict(deep_net, DD_TestPixels);
         
-        usedClassList = [2 6 7 10 13];
-        
-        classifiedImage = zeros(data_h, data_w, 3, 'uint8');
-        
-        for n = 1: sampleSize
-            [val, id] = max(predictY(n,:));
-            
-            row = fix(n/data_w) + 1;
-            column = mod(n,data_w) + 1;
-            classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
-        end
+%         usedClassList = [2 6 7 10 13];
+%         
+%         classifiedImage = zeros(data_h, data_w, 3, 'uint8');
+%         
+%         for n = 1: sampleSize
+%             [val, id] = max(predictY(n,:));
+%             
+%             row = fix(n/data_w) + 1;
+%             column = mod(n,data_w) + 1;
+%             classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
+%         end
+
+        classifiedImage = DisplayClassificationResult(predictY, data_h, data_w);
         
         figure()
         imshow(classifiedImage)
