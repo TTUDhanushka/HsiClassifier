@@ -126,7 +126,7 @@ function selected_bands = DistanceDensityBandSelection(hsiDataCube, partitions, 
         
         DD_TestPixels = reshape(reshapedData,[height, width, channels, sampleSize]);
         
-        predictY = predict(deep_net, DD_TestPixels);
+        predictY = predict(distance_dens_net, DD_TestPixels);
         
 %         usedClassList = [2 6 7 10 13];
 %         

@@ -15,3 +15,12 @@ The SAM classifier requires training data from all 16 classes. These data must b
 |Returns||
 |--------|----------|
 |`resultsVector` | Classification result as a vector which is same as unfolded HSI cube .|
+
+### Support Vector Machines Classifier
+
+
+### k - Means Clustering
+
+
+### 1-D Convolutional Neural Networks
+

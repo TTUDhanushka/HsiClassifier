@@ -1,0 +1,50 @@
+%% CNN for spectral classification
+
+
+%% Transform data into CNN usable format
+[data_h, data_w, data_d] = size(reflectanceCube.DataCube);
+inputData = UnfoldHsiCube(reflectanceCube.DataCube);
+
+height = 1;
+width = data_d;
+channels = 1;
+sampleSize = data_h * data_w;
+
+CNN_TestPixels = reshape(inputData,[height, width, channels, sampleSize]);
+
+
+%% Call NN and perform the test
+
+% predictY = predict(deep_net, CNN_TestPixels);
+
+predictY = predict(distance_dens_net, CNN_TestPixels);
+
+%% Create result classification
+
+% usedClassList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+% 
+% classifiedImage = zeros(data_h, data_w, 3, 'uint8');
+% groundTruth = zeros(data_h, data_w, 'uint8');
+% 
+% for n = 1: sampleSize
+%     [val, id] = max(predictY(n,:));
+%     
+%     row = fix(n/data_w) + 1;
+%     column = mod(n,data_w) + 1;
+%     classifiedImage(row, column, :) = Get_Label_Color(usedClassList(id));
+%     groundTruth(row, column) = id;
+% end
+
+classifiedImage = DisplayClassificationResult(predictY, data_h, data_w);
+
+figure()
+
+imshow(classifiedImage)
+
+% Rotated classified image
+% rot_ClassifiedImage = imrotate(classifiedImage, -90);
+
+% Rotated ground truth
+% rot_groundTruth = imrotate(groundTruth, -90);
+
+%% Perform accuracy / precision test
