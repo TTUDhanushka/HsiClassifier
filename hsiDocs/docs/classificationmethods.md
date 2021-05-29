@@ -24,3 +24,4 @@ The SAM classifier requires training data from all 16 classes. These data must b
 
 ### 1-D Convolutional Neural Networks
 
+CNN was created according to the Distance Density Band Selection article.

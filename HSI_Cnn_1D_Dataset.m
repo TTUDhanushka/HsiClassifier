@@ -29,7 +29,4 @@ figure()
 imshow(classifiedImage)
 
 
-% Rotated ground truth
-% rot_groundTruth = imrotate(groundTruth, -90);
-
 %% Perform accuracy / precision test

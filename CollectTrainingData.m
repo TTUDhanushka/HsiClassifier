@@ -34,7 +34,7 @@ rgb_image = rgb_from_ref;
         
 masking_color = Get_Label_Color( class);
 
-rgb_image = imrotate(rgb_image, 90);
+% rgb_image = imrotate(rgb_image, -90);
 
 [im, im_x, im_y] = Select_Pixel_Class(rgb_image, false);
 
@@ -58,3 +58,4 @@ for idI = 1: sampleWidth + 1
 end
 
 
+clear im_x im_y idI idJ class pointsInSample sampleWidth sampleHeight
