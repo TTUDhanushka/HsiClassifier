@@ -39,8 +39,11 @@ ReadSpecimData();               % Reads all the files into workspace.
 
 %% get training data for each class. This step need to be done class-by-class.
 
+
+[tree_cube_Ref, tree_labels] = CollectObjectClassData("tree", reflectanceCube.DataCube);
+
 % Run the script directly from source.
-CollectTrainingData();
+% CollectTrainingData();
 
 % Save data using UtilityFunctions.m
 
