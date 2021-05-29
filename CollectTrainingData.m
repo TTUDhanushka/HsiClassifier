@@ -43,11 +43,9 @@ rgb_image = RectangleAreaOverlay(rgb_image, im_x, im_y, masking_color);
 sampleHeight = im_y(1) - im_x(1);
 sampleWidth = im_y(2) - im_x(2);
 
-pointsInSample = sampleWidth * sampleHeight;
-
 % Extract the HSI pixels from calibrated hsi image datacube.
 tree_cube_Ref = Extract_Training_Pixels(reflectanceCube.DataCube, im_x, im_y);  % CHANGE
-tree_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
+% tree_cube_Calib = Extract_Training_Pixels(correctd_hsi_cube, im_x, im_y);         % CHANGE
 
 tree_labels = zeros(sampleWidth, sampleHeight, 'uint8');                    % CHANGE
 
@@ -58,4 +56,5 @@ for idI = 1: sampleWidth + 1
 end
 
 
-clear im_x im_y idI idJ class pointsInSample sampleWidth sampleHeight
+clear im im_x im_y idI idJ class sampleWidth sampleHeight
+

@@ -89,7 +89,7 @@ width = bands;
 channels = 1;
 
 % Get neural network
-Cnn_Distance_Density();
+[cnn_distance_density, opts] = CnnDistanceDensityNetwork(height, width, channels);
 
 deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density, opts);
 
