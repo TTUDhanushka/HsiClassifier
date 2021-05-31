@@ -1,22 +1,14 @@
 ## HSI Classifier v1.0
 
-### Startup script : MainProgram.m
+Documentation is available in "hsiDocs" folder.
 
-Here are the steps to use the script.
-1. Collect training spectral data for each class into workspace. Then save them as workspace files with ".mat".  
+* Use anaconda promt and change directory into the "hsiDocs" folder on HSI classifier v1.0.
 
-   The class names are unique and only 16 classes will be used in this project. They are listed in "HelperFunctions\Get_Label_Color.m".
+    ```
+        cd "G:\3. Hyperspectral\5. Matlab HSI\1. HSI classifier v1.0\hsiDocs"
+    ```
 
-2. Need to use MainProgram.m and CollectTrainingData.m to get the training data.
+* `mkdocs serve` - Start the live-reloading docs server.
 
-3. The Mainprogram.m should run in section-by-section. 
-
-4. DatacubeTransformTo1D.m will convert the dataset into 1D CNN input arrays.
-
-5. Train the neural networks or other type of classifiers.
-    1D CNN
-    K Means clustering
-    SVM
-
-6. Display classification result.
+* Open ```http://127.0.0.1:8000/``` on browser.
 
