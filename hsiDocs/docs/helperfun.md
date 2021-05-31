@@ -100,3 +100,17 @@ Specim hyperspectral images are rotated 90 degrees counterclockwise.
 |Returns||
 |--------|----------|
 |`outputVectors` | Unfolded HSI image with[bands, columns * lines] matrix.|
+
+### Collect Spectral Training and Testing Data
+
+    function [classDataCube, classLabels] =  CollectObjectClassData(className, dataCube)
+
+|Args||
+|--------|----------|
+|`className` | Class name as a string.|
+|`dataCube` | HSI data cube. This can be any number of spectral bands.| 
+        
+|Returns||
+|--------|----------|
+|`classDataCube` | Collected data cube containing same number of spectral bands as the original HSI cube.|
+|`classLabels` | Class labels.| 

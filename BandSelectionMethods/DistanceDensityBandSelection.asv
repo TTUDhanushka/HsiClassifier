@@ -1,4 +1,4 @@
-function [selectedBands, max_accuracy] = DistanceDensityBandSelection(hsiData1D, labels1D, partitions, bandsPerPartition, reqBands)
+function selected_bands = DistanceDensityBandSelection(hsiData1D, labels1D, partitions, bandsPerPartition, reqBands)
 
 %   Distance density method based on IEEE article "Hyperspectral Band 
 %   Selection Based on Deep Convolutional Neural Network and Distance 
@@ -21,7 +21,6 @@ function [selectedBands, max_accuracy] = DistanceDensityBandSelection(hsiData1D,
     
     noOfTestData = length(hsiData1D);
        
-    selectedBands = zeros(1, reqBands);
     
     dd = zeros(1, partitions);                                      % Distance densities.
 
@@ -68,7 +67,7 @@ function [selectedBands, max_accuracy] = DistanceDensityBandSelection(hsiData1D,
     
     %% Select bands
     
-    max_accuracy = 5;                  % Minimum 5% accuracy
+    max_accuracy = 20;                  % Minimum 20% accuracy
     
     selectedIds = [];
     
@@ -106,13 +105,11 @@ function [selectedBands, max_accuracy] = DistanceDensityBandSelection(hsiData1D,
             end
         end
 
-        accuracy = (correct / length(predictY)) * 100
-        
-
+        accuracy = correct / 
         
         if (max_accuracy < accuracy)
             max_accuracy = accuracy;
-            selectedBands = bandIds;
+            selected_bands = bandIds;
         end
         
     end

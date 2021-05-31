@@ -39,11 +39,12 @@ ReadSpecimData();               % Reads all the files into workspace.
 
 %% get training data for each class. This step need to be done class-by-class.
 
-% Run the script directly from source.
-CollectTrainingData();
+% Keep the same format as [tree_cube_Ref, tree_labels]
+[rocks_cube_test_Ref, rocks_test_labels] = CollectObjectClassData("rocks", reflectanceCube.DataCube);
 
 % Save data using UtilityFunctions.m
 
+% save('june10','A','B')
 
 %% Read all the training data MAT files into workspace.
 
@@ -81,7 +82,7 @@ Cnn_Distance_Density();
 
 distance_dens_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density, opts);
 
-bSetDd = DistanceDensityBandSelection(reflectanceCube.DataCube, 4, 50);
+bSetDd = DistanceDensityBandSelection(testDataCnn, 4, 50);
 
 %% Training
 height = 1;
@@ -89,7 +90,7 @@ width = bands;
 channels = 1;
 
 % Get neural network
-Cnn_Distance_Density();
+[cnn_distance_density, opts] = CnnDistanceDensityNetwork(height, width, channels);
 
 deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density, opts);
 

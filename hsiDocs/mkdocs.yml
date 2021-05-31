@@ -1,7 +1,8 @@
 site_name: HSI classifier v1.0 Documentation
 nav:
     - Home: index.md
-    - Getting started: howtobegin.md
+    - Getting Started: howtobegin.md
+    - Class Definitions: labelInfo.md
     - Band Selection: bandselection.md
     - Classification Methods: classificationmethods.md
     - HSI to RGB Conversion: hsitorgb.md
