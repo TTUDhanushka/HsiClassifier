@@ -17,7 +17,7 @@ function resultsVector = SamClassification(hsiCube)
                 "gravel_cube_Ref", "objects_cube_Ref", "person_cube_Ref"];
 
     % Spectral angles.
-    resultsVector = zeros(no_classes, cols * lines, 'double');
+    resultsVector = zeros(cols * lines, no_classes, 'double');
 
     for nClass = 1:no_classes
         class_name = class_ref_cubes(nClass);
@@ -59,7 +59,7 @@ function resultsVector = SamClassification(hsiCube)
 
                 sa =  acos(input_ef_mul / (sqrt(refSq) * sqrt(inputSq)));
 
-                resultsVector(nClass, ((id_H - 1) * lines) + id_W) = sa;
+                resultsVector((((id_H - 1) * lines) + id_W), nClass) = sa;
 
             end
         end
