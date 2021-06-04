@@ -1,4 +1,4 @@
-function fig = PlotSpectralCharacteristics(classCube, className, bSet)
+function fig = PlotSpectralCharacteristics(classCube, className, bandsList)
 
     [sam_h, sam_w, sam_d] = size(classCube);
 
@@ -14,22 +14,19 @@ function fig = PlotSpectralCharacteristics(classCube, className, bSet)
     end
 
     % Create a temprary datacube using selected bands
-    if exist('bSet')
-
-        % Cube with selected bands
-        class_temp_cube_FewBands = zeros(totalSamples, length(bSet));
-        class_avg_FewBands = zeros(1, length(bSet));
-
-        for i = 1: sam_h
-            for j = 1:sam_w
-                for bandId = 1:length(bSet)
-                    class_temp_cube_FewBands((i-1) * sam_h + j, bandId) = classCube(i,j,bSet(bandId));
-                end
+    class_temp_cube_FewBands = zeros(totalSamples, length(bandsList));
+    class_avg_FewBands = zeros(1, length(bandsList));
+    
+    for i = 1: sam_h
+        for j = 1:sam_w
+            for bandId = 1:length(bandsList)
+                class_temp_cube_FewBands((i-1) * sam_h + j, bandId) = classCube(i,j,bandsList(bandId));
             end
         end
-
-        class_avg_FewBands(1, :) = mean(class_temp_cube_FewBands, 1);
     end
+    
+    class_avg_FewBands(1, :) = mean(class_temp_cube_FewBands, 1);
+
 
     % Select 25 random samples
     randomSamples = 25;
@@ -54,9 +51,9 @@ function fig = PlotSpectralCharacteristics(classCube, className, bSet)
     end
 
     % Plot the average curve with selected bands.
-    if exist('bSet')
-        plot( bSet, class_avg_FewBands, 'LineWidth', 2, 'Color', [0, 0, 1]);
-    end
+    
+    plot( bandsList, class_avg_FewBands, 'LineWidth', 2, 'Color', [0, 0, 0]);
+    
 
     strTitle = "Reflectance characteristics of ";
     strTitle = strcat(strTitle, className, " class");

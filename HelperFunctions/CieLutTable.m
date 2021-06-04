@@ -4,7 +4,7 @@
 % https://www.ies.org/definitions/table-t-5a-color-matching-functions-and-chromaticity-coordinates-of-cie-1931-standard-colorimetric-observer/
 
 %% Table
-function [returnVector] = GetCieLutValues(band)
+function [returnVector] = CieLutTable(band)
 
 returnVector = [];
 

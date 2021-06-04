@@ -66,10 +66,10 @@ if exist('snow_cube_Ref','var')
     samples = samples + (snow_h * snow_w);
 end
 
-if exist('ice_cube_Ref','var')
-    [ice_h, ice_w, d] = size(ice_cube_Ref);
-    samples = samples + (ice_h * ice_w);
-end
+% if exist('ice_cube_Ref','var')
+%     [ice_h, ice_w, d] = size(ice_cube_Ref);
+%     samples = samples + (ice_h * ice_w);
+% end
 
 if exist('dirt_cube_Ref','var')
     [dirt_h, dirt_w, d] = size(dirt_cube_Ref);
@@ -228,17 +228,17 @@ if exist('snow_cube_Ref','var')
     sample_pos = sample_pos + (snow_h * snow_w);
 end
 
-% Get the data from ice class.
-if exist('ice_cube_Ref','var')
-    for i = 1:ice_h
-        for j = 1: ice_w
-            training_Data(:, sample_pos + ((i - 1) * ice_w) + j) = ice_cube_Ref(i, j, :);
-            training_Labels(1, sample_pos + ((i - 1) * ice_w) + j) = ice_labels(i, j);
-        end
-    end
-
-    sample_pos = sample_pos + (ice_h * ice_w);
-end
+% % Get the data from ice class.
+% if exist('ice_cube_Ref','var')
+%     for i = 1:ice_h
+%         for j = 1: ice_w
+%             training_Data(:, sample_pos + ((i - 1) * ice_w) + j) = ice_cube_Ref(i, j, :);
+%             training_Labels(1, sample_pos + ((i - 1) * ice_w) + j) = ice_labels(i, j);
+%         end
+%     end
+% 
+%     sample_pos = sample_pos + (ice_h * ice_w);
+% end
 
 % Get the data from dirt class.
 if exist('dirt_cube_Ref','var')

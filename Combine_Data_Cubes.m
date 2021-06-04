@@ -1,11 +1,9 @@
-function combined_cube = Combine_Data_Cubes(hsi_cube1, hsi_cube2, hsi_cube3, hsi_cube4)
+function combined_cube = Combine_Data_Cubes(hsi_cube1, hsi_cube2)
     % Combine training data cubes to prepare final traing data sets for
     % each class.
     
     [cube_1_h, cube_1_w, cube_1_d] = size(hsi_cube1);
     [cube_2_h, cube_2_w, cube_2_d] = size(hsi_cube2);   
-    [cube_3_h, cube_3_w, cube_3_d] = size(hsi_cube3);
-    [cube_4_h, cube_4_w, cube_4_d] = size(hsi_cube4); 
 
     
     no_of_samples = ((cube_1_h * cube_1_w) + (cube_2_h * cube_2_w) + (cube_3_h * cube_3_w)+ (cube_4_h * cube_4_w));
@@ -28,19 +26,5 @@ function combined_cube = Combine_Data_Cubes(hsi_cube1, hsi_cube2, hsi_cube3, hsi
         end
     end
     
-    for i = 1:cube_3_h 
-        for j = 1:cube_3_w
-            for k = 1:cube_3_d
-                combined_cube(1,((cube_1_h * cube_1_w) + (cube_2_h * cube_2_w) + (cube_3_h * cube_3_w) + (i * cube_3_h) + cube_3_w), k) = hsi_cube3(i, j, k);
-            end
-        end
-    end
-    
-    for i = 1:cube_4_h 
-        for j = 1:cube_4_w
-            for k = 1:cube_4_d
-                combined_cube(1,((cube_1_h * cube_1_w) + (cube_2_h * cube_2_w) + (i * cube_4_h) + cube_4_w), k) = hsi_cube4(i, j, k);
-            end
-        end
-    end
+
 end

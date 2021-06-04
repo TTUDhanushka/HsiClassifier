@@ -26,6 +26,7 @@ testInputs = tempInputs.';
 
 predictedLabels = predict(model, testInputs);
  
+
 %% Classification outcome
 
 imageResult = zeros(h, w,3, 'uint8');

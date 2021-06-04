@@ -114,3 +114,18 @@ Specim hyperspectral images are rotated 90 degrees counterclockwise.
 |--------|----------|
 |`classDataCube` | Collected data cube containing same number of spectral bands as the original HSI cube.|
 |`classLabels` | Class labels.| 
+
+### Plot Spectral Characteristic Curves
+
+    function fig = PlotSpectralCharacteristics(classCube, className, bandsList)
+
+|Args||
+|--------|----------|
+|`classCube` | HSI sample data cube for a terrain object class.| 
+|`className` | Class name as a string.|
+|`bandsList` | List of spectral bands as a vector.|
+        
+|Returns||
+|--------|----------|
+|`fig` | Spectral characteristic figure as gcf.|
+

@@ -47,6 +47,7 @@ function [classDataCube, classLabels] =  CollectObjectClassData(className, dataC
     % Extract the HSI pixels from calibrated hsi image datacube.
     classDataCube = Extract_Training_Pixels(dataCube, im_x, im_y);  % CHANGE
 
+
     classLabels = zeros(sampleWidth, sampleHeight, 'uint8');                   
 
     for idI = 1: sampleWidth + 1
