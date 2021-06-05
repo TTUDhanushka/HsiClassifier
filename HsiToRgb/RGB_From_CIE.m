@@ -1,5 +1,7 @@
 function [rgbImage] = RGB_From_CIE(dataCube, selectedBands)
 
+% https://www.oceanopticsbook.info/view/photometry-and-visibility/from-xyz-to-rgb
+
     rotDataCube = RotateHsiImage(dataCube, -90);
     
     % Get the sizes of HSI data cube.
@@ -57,8 +59,8 @@ function [rgbImage] = RGB_From_CIE(dataCube, selectedBands)
     
     brightness = 550;
     
-    rgbImage(:, :, 1) = ((rgbTempImage(:, :, 1) - redMin) / (redMax - redMin)) * brightness;
-    rgbImage(:, :, 2) = ((rgbTempImage(:, :, 2) - greenMin) / (greenMax - greenMin)) * brightness;
+    rgbImage(:, :, 1) = ((rgbTempImage(:, :, 1) - redMin) / (redMax - redMin)) * brightness * 1.068;
+    rgbImage(:, :, 2) = ((rgbTempImage(:, :, 2) - greenMin) / (greenMax - greenMin)) * brightness * 1.147;
     rgbImage(:, :, 3) = ((rgbTempImage(:, :, 3) - blueMin) / (blueMax - blueMin)) * brightness;
     
     figure();
