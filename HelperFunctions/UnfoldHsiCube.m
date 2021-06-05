@@ -7,7 +7,7 @@ function outputVectors = UnfoldHsiCube(dataCube)
 
     for a = 1:data_h
         for b = 1:data_w
-            outputVectors(:, ((a-1) * data_h) + b) = dataCube(a, b, :);
+            outputVectors(:, ((a-1) * data_w) + b) = dataCube(a, b, :);
         end
     end
 end

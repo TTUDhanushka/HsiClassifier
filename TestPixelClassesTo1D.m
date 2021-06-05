@@ -12,8 +12,8 @@
 samples = 0;
 
 if exist('undefined_cube_test_Ref','var')
-    [undefined_h, undefined_w, d] = size(undefined_cube_test_Ref);
-    samples = samples + (undefined_h * undefined_w);
+    [d, undefined_h] = size(undefined_cube_test_Ref); %, undefined_w,  * undefined_w
+    samples = samples + (undefined_h);
 end
 
 if exist('grass_cube_test_Ref','var')

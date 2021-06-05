@@ -129,3 +129,21 @@ Specim hyperspectral images are rotated 90 degrees counterclockwise.
 |--------|----------|
 |`fig` | Spectral characteristic figure as gcf.|
 
+### Update Class Datasets in Workspace
+
+This is only for combining different class datacubes in the workspace.
+
+    function [classCube, classLabels] = UpdateClassSampleCubes(className, dataCubeSample, dataLabels, existOnWs)
+
+|Args||
+|--------|----------|
+|`className` | Class name as a string.|
+|`dataCubeSample` | HSI sample data cube for a terrain object class.| 
+|`dataLabels` | List of spectral bands as a vector.|
+|`existOnWs` | List of spectral bands as a vector.|
+        
+|Returns||
+|--------|----------|
+|`classCube` | Spectral characteristic figure as gcf.|
+|`classLabels` | Spectral characteristic figure as gcf.|
+

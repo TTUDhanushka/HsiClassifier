@@ -1,3 +1,4 @@
+HSI terrain classes are listed as below.
 
 |Index|Class name| Red|Green|Blue|Hex|Sample|Remarks|
 |--|--|--|--|--|--|--|--|
@@ -14,3 +15,15 @@
 |11|person| 204|153|255|#cc99ff<td style="background-color:#cc99ff"></td>|Human|
 |12|dirt| 230|230|30|#e6e61e<td style="background-color:#e6e61e"></td>|Combined with mud|
 |13|mud| 99|66|340|#634222<td style="background-color:#634222"></td>|Mud : wet terrain|
+
+>Note:
+><p>Whenever update the above classes, following scripts/functions should be updated accordingly. </p>
+
+#### Functions
+
+* function [classDataCube, classLabels] =  CollectObjectClassData(className, dataCube)
+* function [label_color] = Get_Label_Color(class_id)
+
+#### Scripts
+* TestPixelClassesTo1D.m
+* TrainingPixelClassesTo1D.m

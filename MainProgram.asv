@@ -40,7 +40,11 @@ ReadSpecimData();               % Reads all the files into workspace.
 %% get training data for each class. This step need to be done class-by-class.
 
 % Keep the same format as [tree_cube_Ref, tree_labels]
-[water_cube_Ref, water_labels] = CollectObjectClassData("water", reflectanceCube.DataCube);
+[sm_cube_Ref, sm_labels] = CollectObjectClassData("dirt", reflectanceCube.DataCube);
+
+[classCube, classLabels] = UpdateClassSampleCubes("dirt", sm_cube_Ref, sm_labels, false);
+
+clear sm_cube_Ref sm_labels classCube classLabels;
 
 % Save data using UtilityFunctions.m
 
@@ -58,7 +62,7 @@ for nFile = 1:length(matFilesList)
     end
 end
 
-clear trainingDataFolder nFile;
+clear trainingDataFolder nFile matFilesList path;
 %% Convert training data into 1-D array with n-samples.
 
 TrainingPixelClassesTo1D();

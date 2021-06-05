@@ -40,7 +40,11 @@ ReadSpecimData();               % Reads all the files into workspace.
 %% get training data for each class. This step need to be done class-by-class.
 
 % Keep the same format as [tree_cube_Ref, tree_labels]
-[undefined_cube_Ref, undefined_labels] = CollectObjectClassData("undefined", reflectanceCube.DataCube);
+[sm_cube_Ref, sm_labels] = CollectObjectClassData("sky", reflectanceCube.DataCube);
+
+[classCube, classLabels] = UpdateClassSampleCubes("sky", sm_cube_Ref, sm_labels, false);
+
+clear sm_cube_Ref sm_labels classCube classLabels;
 
 % Save data using UtilityFunctions.m
 

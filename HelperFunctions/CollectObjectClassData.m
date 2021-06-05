@@ -14,10 +14,10 @@ function [classDataCube, classLabels] =  CollectObjectClassData(className, dataC
                 "grass"; ...            % 2
                 "concrete"; ...         % 3
                 "asphalt"; ...          % 4
-                "tree"; ...             % 5                "bush"; ...             % 3
+                "tree"; ...             % 5                 "bush"; ...             % 3
                 "rocks"; ...            % 6
-                "water"; ...            % 7                "ice"; ...              % 12
-                "sky"; ...              % 8               "snow"; ...             % 11
+                "water"; ...            % 7                 "ice"; ...              % 12
+                "sky"; ...              % 8                 "snow"; ...             % 11
                 "gravel"; ...           % 9    
                 "objects"; ...          % 10
                 "person"; ...           % 11
@@ -43,14 +43,17 @@ function [classDataCube, classLabels] =  CollectObjectClassData(className, dataC
     sampleWidth = im_y(2) - im_x(2);
 
     % Extract the HSI pixels from calibrated hsi image datacube.
-    classDataCube = Extract_Training_Pixels(dataCube, im_x, im_y);  % CHANGE
+    extractedDataCube = Extract_Training_Pixels(dataCube, im_x, im_y);  % CHANGE
 
-    classLabels = zeros(sampleWidth, sampleHeight, 'uint8');                   
+    classDataCube = UnfoldHsiCube(extractedDataCube);
+    
+    % Total number of pixels extracted from the datacube as samples.
+    totalSamples = (sampleWidth + 1) * (sampleHeight + 1);
+    
+    classLabels = zeros(1, totalSamples, 'uint8');                   
 
-    for idI = 1: sampleWidth + 1
-        for idJ = 1:sampleHeight + 1
-           classLabels(idI, idJ) = class;
-        end
+    for idI = 1:totalSamples        
+        classLabels(1, idI) = class;        
     end
 
 end
