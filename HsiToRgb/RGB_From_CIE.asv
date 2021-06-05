@@ -27,21 +27,16 @@ function [rgbImage] = RGB_From_CIE(dataCube, selectedBands)
         for j = 1:w
             
             pixel(1, :) = lowBandImage(i, j, :);
-            pixelColor = zeros(3, 1, 'double');
             
             for nBand = 1:length(bandsInVisRegion)
                 xyz = CieLutTable(bandsInVisRegion(nBand));
 
                 rgbColor = (XYZ_to_RGB * xyz(2:4)') .* pixel(1, nBand);
                 
-                pixelColor = pixelColor + rgbColor;
+                rgbColor = rgbColor
             end
-            
-            rgbImage(i, j, :) = (pixelColor / nBand) .* 255;
-            
         end
     end
     
-    figure();
-    imshow(rgbImage);
+    
 end
