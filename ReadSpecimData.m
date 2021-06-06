@@ -136,40 +136,14 @@ higResRgb = imread(highResRgbPath);
 higResRgbRot = imrotate(higResRgb, 90);
 
 
-clear image_source  header_file fileId fileList
+%% Clean up workspace.
 
-%%
-% figure()
+clear image_source  header_file fileId fileList white_ref_cube white_ref_file white_ref_hdr ...
+    dark_ref_cube dark_ref_file dark_ref_hdr
 
-% %%
-% 
-% desired_bands = 25;
-% 
-% %%
-% % % Principle component analysis
-% pca_bands = HsiCubePca (hsi_cube, desired_bands);
-% % 
-% % pca_cube = zeros(512, 512, 204);
-% % 
-% % GG = G * F;
-% % 
-% % [len, d] = size(G);
-% % 
-% % mod_in = 1;
-% % div_in = 1;
-% % 
-% % for index = 1: len
-% %     
-% %     for dd = 1: 204
-% %         pca_cube(div_in, mod_in, dd) = GG(index, dd);
-% %     end
-% %     
-% %     mod_in = (mod (index, 512)) + 1;
-% %     div_in = int16((index / 512) + 1);
-% % end
-% % 
-% % imshow(pca_cube(:,:,1));
-% 
+
+
+
 
 
 

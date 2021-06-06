@@ -15,17 +15,6 @@ clc;
     addpath HelperFunctions ClassificationMethods BandSelectionMethods 
     addpath AdditionalMatlabScripts HsiToRgb ImageQualityMatrices FilterMethods
 
-%% Parameters
-
-% Camera model: Specim IQ
-% Simultaneous capture and 
-
-    number_of_classes = 16;          % How many classes in the image
-    samples_per_class = 1;          % How many training samples per class
-    
-    read_coords_from_file = false;  % True: Read training sample coordinates from file.
-                                    % False: Capture manually.
-
     
 %% Get HSI images into workspace and perform calculate relative reflectance.
 
@@ -40,9 +29,9 @@ ReadSpecimData();               % Reads all the files into workspace.
 %% get training data for each class. This step need to be done class-by-class.
 
 % Keep the same format as [tree_cube_Ref, tree_labels]
-[sm_cube_Ref, sm_labels] = CollectObjectClassData("sky", reflectanceCube.DataCube);
+[sm_cube_Ref, sm_labels] = CollectObjectClassData("tree", reflectanceCube.DataCube);
 
-[classCube, classLabels] = UpdateClassSampleCubes("sky", sm_cube_Ref, sm_labels, false);
+[classCube, classLabels] = UpdateClassSampleCubes("tree", sm_cube_Ref, sm_labels, true);
 
 clear sm_cube_Ref sm_labels classCube classLabels;
 
@@ -50,7 +39,7 @@ clear sm_cube_Ref sm_labels classCube classLabels;
 
 % save('june10','A','B')
 
-%% Read all the training data MAT files into workspace.
+%% Read all the training / testing data MAT files into workspace.
 
 trainingDataFolder = 'G:\3. Hyperspectral\5. Matlab HSI\3. TrainingData Mat Files\'; 
 matFilesList = dir(trainingDataFolder);
