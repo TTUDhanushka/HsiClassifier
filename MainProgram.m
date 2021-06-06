@@ -20,7 +20,7 @@ clc;
 
 classifyingLargeDataSet = false;        % This is only applicable for classyfing full image folder contain more than 1 image.
 
-ReadSpecimData();               % Reads all the files into workspace.
+ReadSpecimData();                       % Reads all the files into workspace.
 
 
 %% Save RGB images to image folder.
@@ -29,9 +29,9 @@ ReadSpecimData();               % Reads all the files into workspace.
 %% get training data for each class. This step need to be done class-by-class.
 
 % Keep the same format as [tree_cube_Ref, tree_labels]
-[sm_cube_Ref, sm_labels] = CollectObjectClassData("tree", reflectanceCube.DataCube);
+[sm_cube_Ref, sm_labels] = CollectObjectClassData("objects", reflectanceCube.DataCube);
 
-[classCube, classLabels] = UpdateClassSampleCubes("tree", sm_cube_Ref, sm_labels, true);
+[classCube, classLabels] = UpdateClassSampleCubes("objects", sm_cube_Ref, sm_labels, false);
 
 clear sm_cube_Ref sm_labels classCube classLabels;
 
@@ -59,21 +59,21 @@ TrainingPixelClassesTo1D();
 
 %% Band selection methods
 
-reduced_bands_count = 100;
+reduced_bands_count = 9;
 
-% bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
-% 
+bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
+
 % layer_ids = Mean_Pooling(training_Data', round(204 / reduced_bands_count));
 
-% Distance density method needs first time full network training.
-height = 1;
-width = bands;
-channels = 1;
-
-% Get neural network
-Cnn_Distance_Density();
-
-distance_dens_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density, opts);
+% % Distance density method needs first time full network training.
+% height = 1;
+% width = bands;
+% channels = 1;
+% 
+% % Get neural network
+% Cnn_Distance_Density();
+% 
+% distance_dens_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density, opts);
 
 
 %%
