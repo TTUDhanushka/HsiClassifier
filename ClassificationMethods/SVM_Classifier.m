@@ -35,7 +35,12 @@ for n = 1: length(predictedLabels)
     lbl_id = predictedLabels(n);
     
     row = fix(n/w) + 1;
-    column = mod(n,w) + 1;
+    column = mod(n,w);
+    
+    if (mod(n,w) == 0)
+        row = fix(n/w);
+        column = w;
+    end
     
     imageResult(row, column, :) = Get_Label_Color(lbl_id);
 end

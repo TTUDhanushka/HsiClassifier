@@ -59,7 +59,7 @@ TrainingPixelClassesTo1D();
 
 %% Band selection methods
 
-reduced_bands_count = 9;
+reduced_bands_count = 16;
 
 bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
 
@@ -97,7 +97,7 @@ deep_net = trainNetwork(trainingDataCnn, trainingLabelCnn, cnn_distance_density,
 
 
 %% Display classification
-% Classificationn method.
+
 
 % Spectral Angle Mapper
 resultVec = SamClassification(reflectanceCube.DataCube);
@@ -109,5 +109,5 @@ imshow(classifiedImage)
 
 %% Classification  accuracy
 
-Classification_Accuracy();
+accuracy = ClassificationAccuracy(groundTruthImage, imageResult)
 
