@@ -5,14 +5,19 @@ function imageResult = DisplayClassificationResult(resultsVector, colsRgb, lines
     for n = 1: length(resultsVector) - 1
 
         row = fix(n/linesRgb) + 1;
-        column = mod(n,linesRgb) + 1;
+        column = mod(n,linesRgb);
 
+        if (mod(n,linesRgb) == 0)
+            row = fix(n/linesRgb);
+            column = linesRgb;
+        end
+        
         [val, id] = max(resultsVector(n, :));
 
         if(id == 0)
             disp('Zeros detected');
             imageResult(row, column, :) = [0, 0, 0];
-        elseif (id > 16)
+        elseif (id > 13)
             disp(id);
             imageResult(row, column, :) = [0, 0, 0];
         else

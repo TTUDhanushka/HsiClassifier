@@ -85,55 +85,37 @@ channels = 1;
 % [cnn_distance_density, opts] = CnnDistanceDensityNetwork(height, width, channels);
 [network, options] = Cnn1D16bands(height, width, channels);
 
-reducedBandData = GetReducedBandData1D(training_Data_Aug, bSet);
+reducedBandData = ReducedBandImage(trainingDataCnn, bSet);
 
-trainingDataSet = reshape(reducedBandData,[1, width, 1, length(training_Data_Aug)]);
-
-trainedNet = trainNetwork(trainingDataSet, trainingLabelCnn, network, options);
+trainedNet = trainNetwork(reducedBandData, trainingLabelCnn, network, options);
 
 
 %% Prediction
+% call HSI_Cnn_1D_Dataset.m file. This should run section by section.
 
-method = 'cnn';
+method = 'svm';
 
 switch (method)
     case 'svm'
         SVM_Classifier();
     case 'cnn'
-        
-        % Transform data into CNN usable format
-        rotatedCube = RotateHsiImage(reflectanceCube.DataCube, -90);
-        
-        % Band reduction
-        reducedCube = ReducedBandImage(rotatedCube, bSet);
-        
-        [data_h, data_w, data_d] = size(reducedCube);
-        inputData = UnfoldHsiCube(reducedCube);
-        
-        height = 1;
-        width = data_d;
-        channels = 1;
-        sampleSize = data_h * data_w;
-        
-        CNN_TestPixels = reshape(inputData,[height, width, channels, sampleSize]);
-        
         predictY = predict(trainedNet, CNN_TestPixels);
         
     case 'sam'
         % Spectral Angle Mapper
-        predictY = SamClassification(reflectanceCube.DataCube);
+resultVec = SamClassification(reflectanceCube.DataCube);
 end
-
-
 %% Display classification
 
-classifiedImage = DisplayClassificationResult(predictY, cols, lines);
+
+
+
+classifiedImage = DisplayClassificationResult(resultVec, cols, lines);
 
 figure();
 imshow(classifiedImage)
 
-
-%% Performance Matrices - Accuracy
+%% Classification  accuracy
 
 accuracy = ClassificationAccuracy(groundTruthImage, classifiedImage ) % imageResult
 
