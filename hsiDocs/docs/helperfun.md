@@ -147,3 +147,19 @@ This is only for combining different class datacubes in the workspace.
 |`classCube` | Spectral characteristic figure as gcf.|
 |`classLabels` | Spectral characteristic figure as gcf.|
 
+### Bands Reduced Training Data for CNNs
+
+    function reducedBandData = GetReducedBandData1D(trainingData, bandsList)
+
+The purpose of the above function is to extract the necessary bands from the collected HSI training data for classification and band selection. The input for this method should be unfolded HSI data with all the bands (204 bands).
+
+|Args||
+|--------|----------|
+|`trainingData` | The unfolded hyperspectral data as mentioned in the above description.|
+|`bandsList`| Vector of selected hyperspectral image bands.|       
+      
+|Returns||
+|--------|----------|
+|`reducedBandData`| Only selected bands will be available in the output data matrix.| 
+
+

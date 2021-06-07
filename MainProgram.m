@@ -99,6 +99,8 @@ method = 'cnn';
 switch (method)
     case 'svm'
         SVM_Classifier();
+        
+        
     case 'cnn'
         
         % Transform data into CNN usable format
