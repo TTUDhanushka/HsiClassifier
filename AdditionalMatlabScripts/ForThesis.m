@@ -123,7 +123,7 @@ xlim([1 100]);
 
 grid on;
 
-title('Pearson corelation coefficient for number of HSI bands to form RGB image');
+title('Pearson correlation coefficient for number of HSI bands to form RGB image');
 xlabel('Number of selected spectral bands');
 ylabel('Correlation coefficient');
 
@@ -133,3 +133,4 @@ legend('Red channel','','Green channel','', 'Blue channel', '')
 
 hold off;
 
+saveas(gcf, 'PCC.png');

@@ -64,6 +64,6 @@ function [rgbImage] = RGB_From_CIE(dataCube, selectedBands)
     rgbImage(:, :, 3) = ((rgbTempImage(:, :, 3) - blueMin) / (blueMax - blueMin)) * brightness;
     
     figure();
-%     imshow(rgbImage)
-    imshow(rgbTempImage);
+    imshow(rgbImage)
+    imshow(rgbTempImage
 end
