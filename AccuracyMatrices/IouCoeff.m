@@ -1,4 +1,4 @@
-function iouAccuracy = IoU(groundTruthImage, classificationResult)
+function iouAccuracy = IouCoeff(groundTruthImage, classificationResult)
     % Read result image and ground truth image
     noOfClasses = 13;
 
@@ -51,5 +51,5 @@ function iouAccuracy = IoU(groundTruthImage, classificationResult)
     
     union = gtPixelsCount + resultPixelsCount - intersect;
     
-    iouAccuracy = *intersect ./ union) * 100;
+    iouAccuracy = (intersect ./ union) * 100;
 end
