@@ -1,6 +1,6 @@
 % Custom layers
 
-classdef customLayer << nnet.layer.Layer
+classdef customLayer < nnet.layer.Layer
     
     properties
         % Layer properties

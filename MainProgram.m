@@ -132,7 +132,7 @@ end
 classifiedImage = DisplayClassificationResult(predictY, cols, lines);
 
 figure();
-imshow(classifiedImage)
+imshow(imageResult)
 
 
 %% Performance Matrices - Accuracy
