@@ -1,5 +1,6 @@
 function classId = GetPixelClassId(color)
     % Color should be 1 x 3 row vector.
+    classId = 1;
     
     % Convert colors into pixel classes.
     colorList =    [0, 0, 0;...           % Black (undefined classes)
@@ -20,6 +21,10 @@ function classId = GetPixelClassId(color)
     for nClass = 1:length(colorList)
         if isequal(color, colorList(nClass, :))
             classId = nClass;
+            return;
+%         else
+%             disp(color);
+%             classId = 1;
         end
     end
 end
