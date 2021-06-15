@@ -4,7 +4,9 @@ nav:
     - Getting Started: howtobegin.md
     - Class Definitions: labelInfo.md
     - Band Selection: bandselection.md
-    - Classification Methods: classificationmethods.md
+    - Spectral Classification Methods: classificationmethods.md
+    - RGB Segmentation Methods: rgbSegmentation.md
+    - Spectral-Spatial Classification Methods: spectralspatialclassify.md
     - HSI to RGB Conversion: hsitorgb.md
     - Helper Functions: helperfun.md
 

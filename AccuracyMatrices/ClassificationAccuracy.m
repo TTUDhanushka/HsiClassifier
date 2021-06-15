@@ -1,4 +1,5 @@
 function [accuracy] = ClassificationAccuracy(groundTruthImage, classificationResult)
+    % This function calculates pixel accuracy. 
 
     % Read result image and ground truth image
     noOfClasses = 13;
