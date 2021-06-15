@@ -14,7 +14,7 @@ clc;
 
     addpath HelperFunctions SpectralClassificationMethods BandSelectionMethods SpectralSpatialClassificationMethods
     addpath AdditionalMatlabScripts HsiToRgb ImageQualityMatrices FilterMethods AccuracyMatrices hsiDocs
-
+    addpath RgbSegmentation
     
 %% Get HSI images into workspace and perform calculate relative reflectance.
 

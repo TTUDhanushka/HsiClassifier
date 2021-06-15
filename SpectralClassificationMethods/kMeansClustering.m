@@ -7,7 +7,7 @@
 
 %% k-Means
 % Define the k parameter which is number of classes in the image (clusters).
-    kClasses = 5;
+    kClasses = 13;
     
     
 % Unfold the datacube with samples on rows and spectral data on columns.

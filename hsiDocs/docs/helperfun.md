@@ -2,7 +2,7 @@
 
     function reducedCube = ReducedBandImage(hsiCube, bandsList)
 
-This function extracts all the selected band data from HSI image.
+This function extracts all the selected bands from HSI image.
 
 |Args||
 |--------|----------|
@@ -32,7 +32,7 @@ This project uses 16 terrain classes. The class labels are defined in this funct
 
     function imgOut = GetTriBandRgbImage(data_cube)
 
-Create RGB visualization using three selected spectral bands from red, green and blue wavelength regions.
+Create RGB visualization using three pre-defined spectral bands from red, green and blue wavelength regions. The bands are 26, 51 and 99.
 
 |Args||
 |--------|----------|
@@ -62,6 +62,8 @@ Create RGB visualization using three selected spectral bands from red, green and
 ### Create Grayscale Image of a Selected Band
 
     imgGrayOut = GetSingleBandGrayscaleImage(data_cube, band)
+
+Visualize any band in grayscale.
 
 |Args||
 |--------|----------|
