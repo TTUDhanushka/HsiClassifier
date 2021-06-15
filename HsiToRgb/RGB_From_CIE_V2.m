@@ -1,4 +1,4 @@
-function RgbImage = ConvertFalseRgb(correctd_hsi_cube, white_ref_cube)
+function RgbImage = RGB_From_CIE_V2(correctd_hsi_cube, white_ref_cube)
 
     % XYZ to sRGB conversion
 

@@ -4,9 +4,9 @@ clc;
 %
 % Author: Dhanushka
 %
-
-%% Program execution guide.
-
+%
+% Program execution guide:
+%
 % Depending on the application needs, the necesary parts of the program
 % should be executed using "Run Section" command in the main toolbar.
 
