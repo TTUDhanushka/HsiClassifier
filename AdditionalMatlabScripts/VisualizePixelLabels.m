@@ -1,3 +1,7 @@
+% This is only for the PixelLabelData created using ImageLabeller.
+
+% The ImageLabeller generated gTruth variable in the workspace
+
 
 labelImg = imread(string(gTruth.LabelData{:,:}));
 

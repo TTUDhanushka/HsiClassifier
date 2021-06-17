@@ -12,19 +12,27 @@ I = readimage(imds,1);
 I = histeq(I);
 imshow(I)
 
+%% classes, labels
+
 classes = [
-    "Swamp"
-    "Building"
-    "DenseTrees"
-    "Water"
-    "Roads"
-    "OpenTerrain"
+            "undefined"
+            "grass"
+            "concrete"
+            "asphalt"
+            "trees"
+            "rocks"
+            "water"
+            "sky"
+            "gravel"
+            "objects"
+            "person"
+            "dirt"
+            "mud"
     ];
 
 
+noOfClasses = length(classes);
 
-%%
-noOfClasses = 13;
 cmap = zeros(noOfClasses, 3);
 
 for nColor = 1:noOfClasses
@@ -53,7 +61,7 @@ pxds = pixelLabelDatastore(labelDir,classes,labelIDs);
 %%
 
 C = readimage(pxds,1);
-%cmap = camvidColorMap;
+
 B = labeloverlay(I,C,'ColorMap',cmap);
 imshow(B)
 pixelLabelColorbar(cmap,classes);
