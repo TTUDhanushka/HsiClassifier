@@ -15,7 +15,7 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
     
     hdr_ext = '.hdr'; 
     raw_ext = '.raw';
-    reflectance_data_ext = '.dat';
+    reflectance_ext = '.dat';
     
     darkref_name = 'DARKREF_';
     white_dark_ref_name = 'WHITEDARKREF_';
@@ -98,9 +98,9 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
             for idx = 1:length(results_file_struct)
                 results_file_list(idx) = results_file_struct(idx).name;
                 
-                if (contains(results_file_struct(idx).name, hdr_ext))
+                if (contains(results_file_struct(idx).name, '.hdr'))
                     reflectance_hdr = strcat(str_temp, '\', results_file_struct(idx).name);
-                elseif (contains(results_file_struct(idx).name, reflectance_data_ext))
+                elseif (contains(results_file_struct(idx).name, '.dat'))
                     reflectance_cube = strcat(str_temp, '\', results_file_struct(idx).name);
                 elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND'))
                     rgbHighRes = strcat(str_temp, '\', results_file_struct(idx).name);
@@ -115,7 +115,8 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
             if ~isfile(reflectance_cube)
                 fprintf("Reflectance cube doesn't exist.")
             end
-                                             
+            
+                                 
         end
         
         
