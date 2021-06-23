@@ -43,7 +43,7 @@ for nFiles = 1: length(filesList)
         
         rgbDataPath = fullfile(root, RGB_Dataset_specim);
         
-        if (~bRGBFolder || contains(filesList(nFiles).name, RGB_Dataset_specim))
+        if (~bRGBFolder && contains(filesList(nFiles).name, RGB_Dataset_specim))
             bRGBFolder = true;
             rgbDataList = dir(rgbDataPath);
             
@@ -74,7 +74,7 @@ for nFiles = 1: length(filesList)
             
             bRGBFolder = true;
             bRGB_images_labels = true;
-            break;
+
         end
       
         % Go into the datacube folder and pick the dataCubes.
@@ -107,12 +107,12 @@ for nFiles = 1: length(filesList)
 
                             hsi_labels = strcat(str_temp, '\', results_file_struct(idx).name);
 
-                        elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
+                        elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && contains(results_file_struct(idx).name, png_ext) && (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
 
                             rgbLabels = strcat(str_temp, '\', results_file_struct(idx).name);
                             copyfile (rgbLabels, rgbLabelsFolder625_625, 'f');
                             
-                        elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
+                        elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && contains(results_file_struct(idx).name, png_ext) && (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
 
                             rgbHighRes = strcat(str_temp, '\', results_file_struct(idx).name);
                             
