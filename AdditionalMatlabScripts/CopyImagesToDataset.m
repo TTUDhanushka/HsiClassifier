@@ -55,6 +55,7 @@ for nFiles = 1: length(filesList)
                     bRGB_images_labels = true;
                     
                     rgbImageFolder625_625 = fullfile(rgbDataPath, imageFolder);
+                    rgbLabelsFolder625_625 = fullfile(rgbDataPath, labelsFolder);
                 end
                 
                 if bRGB_images_labels
@@ -71,6 +72,7 @@ for nFiles = 1: length(filesList)
             mkdir(rgbDataPath, labelsFolder);
             
             rgbImageFolder625_625 = fullfile(rgbDataPath, imageFolder);
+            rgbLabelsFolder625_625 = fullfile(rgbDataPath, labelsFolder);
             
             bRGBFolder = true;
             bRGB_images_labels = true;
@@ -88,6 +90,7 @@ for nFiles = 1: length(filesList)
 %             elseif (contains(file_list(i).name, '.png') && ((contains(file_list(i).name, 'gt')) || (contains(file_list(i).name, 'GT'))))
 %                 ground_truth_File = file_list(i).name;
 %             end
+
             datacubePath = fullfile(dataSetPath, dataCubesList(cubeId).name);
             resultsList = dir(datacubePath);
             
@@ -103,11 +106,7 @@ for nFiles = 1: length(filesList)
                     for idx = 1:length(results_file_struct)
                         results_file_list(idx) = results_file_struct(idx).name;
 
-                        if (contains(results_file_struct(idx).name, png_ext) && contains(results_file_struct(idx).name, 'gt'))
-
-                            hsi_labels = strcat(str_temp, '\', results_file_struct(idx).name);
-
-                        elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && contains(results_file_struct(idx).name, png_ext) && (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
+                        if (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && contains(results_file_struct(idx).name, png_ext) && (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
 
                             rgbLabels = strcat(str_temp, '\', results_file_struct(idx).name);
                             copyfile (rgbLabels, rgbLabelsFolder625_625, 'f');
