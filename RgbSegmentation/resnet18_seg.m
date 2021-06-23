@@ -5,7 +5,7 @@
 datasetFolder = uigetdir;
 
 % Raw images folder which contain sliced images of 625 x 625 px
-imgDir = fullfile(datasetFolder, 'Images 625');
+imgDir = fullfile(datasetFolder, 'images');
 imds = imageDatastore(imgDir);
 
 I = readimage(imds,1);
@@ -39,22 +39,21 @@ for nColor = 1:noOfClasses
     cmap(nColor, :) = Get_Label_Color(nColor);
 end
 
-cmap = cmap ./ 255;
-
-labels = zeros(noOfClasses, 1);
+% Convert labels to cell array.
+labelIDs = {};
 
 for n = 1:length(cmap)
-    tempColor = reshape(cmap(n), [], 1);
-    labels(n, 1) = tempColor;
+    
+    labelIDs = [labelIDs; {[cmap(n, 1) cmap(n, 2) cmap(n, 3)]}];
 end
 
-labelIDs = num2cell(labels);
+cmap = cmap ./ 255;
 
-clear labels n tempColor nColor
+clear nColor
   
-  %%
+%%
   
-labelDir = fullfile(datasetFolder,'Labels 625');
+labelDir = fullfile(datasetFolder,'labels');
 pxds = pixelLabelDatastore(labelDir,classes,labelIDs);
 
 
@@ -79,7 +78,7 @@ ylabel('Frequency')
 
 % Split the datastore
 
-[imdsTrain, imdsVal, imdsTest, pxdsTrain, pxdsVal, pxdsTest] = partitionCamVidData(imds,pxds);
+[imdsTrain, imdsVal, imdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitDataset(imds,pxds, classes, labelIDs);
 
 numTrainingImages = numel(imdsTrain.Files)
 
