@@ -18,11 +18,10 @@ function [classDataCube, classLabels] =  CollectObjectClassData(className, dataC
                 "rocks"; ...            % 6
                 "water"; ...            % 7                 "ice"; ...              % 12
                 "sky"; ...              % 8                 "snow"; ...             % 11
-                "gravel"; ...           % 9    
-                "objects"; ...          % 10
-                "person"; ...           % 11
-                "dirt"; ...             % 12
-                "mud"; ...              % 13
+                "gravel"; ...           % 9                 
+                "objects"; ...          % 10                "person"; ...           % 11
+                "dirt"; ...             % 11
+                "mud"; ...              % 12
                 ];
 
     for nClass = 1:length(classList)

@@ -18,13 +18,17 @@ HSI terrain classes are listed as below.
 >Note:
 ><p>Whenever update the above classes, following scripts/functions should be updated accordingly. </p>
 
-<p>|11|person| 204|153|255|#cc99ff<td style="background-color:#cc99ff"></td>|Human -  to be removed|</p>
+person class with RGB (204, 153, 255), #cc99ff removed
 
 #### Functions
 
 * function [classDataCube, classLabels] =  CollectObjectClassData(className, dataCube)
 * function [label_color] = Get_Label_Color(class_id)
+* function classId = GetPixelClassId(color)
 
 #### Scripts
 * TestPixelClassesTo1D.m
 * TrainingPixelClassesTo1D.m
+
+##### classifiers
+* resnet18_seg.m
