@@ -23,7 +23,8 @@ Author [Dhanushka Liyanage](http://dhanushkaliyanage.com/).
 | Folder | Description |
 | ----------- | ----------- |
 | BandSelectionMethods | Contains all the band selection methods tested in this project. |
-| ClassificationMethods | SVM, kNN, 1D CNN, MLP and other classification methods. |
+| SpectralClassificationMethods | SVM, kNN, 1D CNN, MLP and other classification methods. |
+| SpectralSpatialClassificationMethods | CNN classification methods for both spectral-spatial combined classification. |
 | HelperFunctions |<ul><li>Calibrate spectral images</li><li>Get label color</li><li>Get data files</li><li>Get single band grayscale image</li><li>Get tri band RGB image</li><li>Rotate HSi image</li><li>Overlay points</li><li>Reduced band image</li></ul>|
 | HsiToRgb | Hyperspectral image visualization in RGB color space and export as RGB image. |
 | ImageQualityMatrices | RGB visualization quality estimation matrices. |

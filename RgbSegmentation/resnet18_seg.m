@@ -25,7 +25,6 @@ classes = [
             "sky"
             "gravel"
             "objects"
-            "person"
             "dirt"
             "mud"
     ];
@@ -88,7 +87,7 @@ numTestingImages = numel(imdsTest.Files)
 
 %% Network
 % Specify the network image size. This is typically the same as the traing image sizes.
-imageSize = [625 625 3];
+imageSize = [645 645 3];
 
 % Specify the number of classes.
 numClasses = numel(classes);

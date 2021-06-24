@@ -86,10 +86,10 @@ if exist('objects_cube_test_Ref','var')
     samples = samples + (objects_h * objects_w);
 end
 
-if exist('person_cube_test_Ref','var')
-    [person_h, person_w, d] = size(person_cube_test_Ref);
-    samples = samples + (person_h * person_w);
-end
+% if exist('person_cube_test_Ref','var')
+%     [person_h, person_w, d] = size(person_cube_test_Ref);
+%     samples = samples + (person_h * person_w);
+% end
 
 test_Data = zeros(d, samples);
 test_Labels = zeros(1, samples);
@@ -276,17 +276,17 @@ if exist('objects_cube_test_Ref','var')
     sample_pos = sample_pos + (objects_h * objects_w);
 end
 
-% Get the data from person class.
-if exist('person_cube_test_Ref','var')
-    for i = 1:person_h
-        for j = 1: person_w
-            test_Data(:, sample_pos + ((i - 1) * person_w) + j) = person_cube_Ref(i, j, :);
-            test_Labels(1, sample_pos + ((i - 1) * person_w) + j) = person_labels(i, j);
-        end
-    end
-
-    sample_pos = sample_pos + (person_h * person_w);
-end
+% % Get the data from person class.
+% if exist('person_cube_test_Ref','var')
+%     for i = 1:person_h
+%         for j = 1: person_w
+%             test_Data(:, sample_pos + ((i - 1) * person_w) + j) = person_cube_Ref(i, j, :);
+%             test_Labels(1, sample_pos + ((i - 1) * person_w) + j) = person_labels(i, j);
+%         end
+%     end
+% 
+%     sample_pos = sample_pos + (person_h * person_w);
+% end
 
 
 %% This sample_pos should be as same as sample number.

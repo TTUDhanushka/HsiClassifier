@@ -86,10 +86,10 @@ if exist('objects_cube_Ref','var')
     samples = samples + (objects_h);
 end
 
-if exist('person_cube_Ref','var')
-    [d, person_h] = size(person_cube_Ref);
-    samples = samples + (person_h);
-end
+% if exist('person_cube_Ref','var')
+%     [d, person_h] = size(person_cube_Ref);
+%     samples = samples + (person_h);
+% end
 
 training_Data = zeros(d, samples);
 training_Labels = zeros(1, samples);
@@ -250,15 +250,15 @@ if exist('objects_cube_Ref','var')
     sample_pos = sample_pos + (objects_h);
 end
 
-% Get the data from person class.
-if exist('person_cube_Ref','var')
-    for i = 1:person_h
-            training_Data(:, sample_pos + i) = person_cube_Ref(:, i);
-            training_Labels(1, sample_pos + i) = person_labels(1, i);
-    end
-
-    sample_pos = sample_pos + (person_h);
-end
+% % Get the data from person class.
+% if exist('person_cube_Ref','var')
+%     for i = 1:person_h
+%             training_Data(:, sample_pos + i) = person_cube_Ref(:, i);
+%             training_Labels(1, sample_pos + i) = person_labels(1, i);
+%     end
+% 
+%     sample_pos = sample_pos + (person_h);
+% end
 
 
 %% This sample_pos should be as same as sample number.
