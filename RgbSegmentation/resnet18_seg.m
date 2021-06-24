@@ -1,6 +1,8 @@
 %% Semantic segmentation using resnet18.
 % net = resnet18;
 
+imgType = 'RGB'; % Either RGB or HSI
+
 % Get dataset folder 
 datasetFolder = uigetdir;
 
@@ -87,7 +89,16 @@ numTestingImages = numel(imdsTest.Files)
 
 %% Network
 % Specify the network image size. This is typically the same as the traing image sizes.
-imageSize = [645 645 3];
+
+switch(imgType)
+    case 'RGB'
+        % For RGB Images
+        imageSize = [645 645 3];
+
+    case 'HSI'
+        % For HSI images.
+        imageSize = [512 512 3];
+end
 
 % Specify the number of classes.
 numClasses = numel(classes);

@@ -5,76 +5,61 @@
 datasetFolder = uigetdir;
 
 % Raw images folder which contain sliced images of 625 x 625 px
-imgDir = fullfile(datasetFolder, 'Images 625');
+imgDir = fullfile(datasetFolder, 'images');
 imds = imageDatastore(imgDir);
 
 I = readimage(imds,1);
 I = histeq(I);
 imshow(I)
 
+%% classes, labels
+
 classes = [
-    "Swamp"
-    "Building"
-    "DenseTrees"
-    "Water"
-    "Roads"
-    "OpenTerrain"
+            "undefined"
+            "grass"
+            "concrete"
+            "asphalt"
+            "trees"
+            "rocks"
+            "water"
+            "sky"
+            "gravel"
+            "objects"
+            "dirt"
+            "mud"
     ];
 
-%%
 
-labelIDs = { ...
-      % "Swamp"
-      [
-      160 128 064; ... % "Swamp"
-      ]
-      % "Building" 
-      [
-      099 004 096; ... % "Building"
-      ]
-      % "Dense trees"
-      [
-      000 114 054; ... % "Dense trees"
-      ]
-      % "Water"
-      [
-      045 216 199; ... % "Water"
-      ]
-      % Roads
-      [
-      128 064 128; ... % "Roads"
-      ]
-      % Sand
-      [
-      255 240 000; ... % OpenTerrain
-      ]
-      };
+noOfClasses = length(classes);
 
-  %% 
-  
-for n = 1:length(cmap)  
-  tempColor = reshape(cmap(n), ;
-end
-  
-  %%
-labelDir = fullfile(datasetFolder,'Labels 625');
-pxds = pixelLabelDatastore(labelDir,classes,labelIDs);
-
-%%
-noOfClasses = 13;
 cmap = zeros(noOfClasses, 3);
 
 for nColor = 1:noOfClasses
     cmap(nColor, :) = Get_Label_Color(nColor);
 end
 
+% Convert labels to cell array.
+labelIDs = {};
+
+for n = 1:length(cmap)
+    
+    labelIDs = [labelIDs; {[cmap(n, 1) cmap(n, 2) cmap(n, 3)]}];
+end
+
 cmap = cmap ./ 255;
 
 clear nColor
+  
+%%
+  
+labelDir = fullfile(datasetFolder,'labels');
+pxds = pixelLabelDatastore(labelDir,classes,labelIDs);
+
+
 %%
 
 C = readimage(pxds,1);
-%cmap = camvidColorMap;
+
 B = labeloverlay(I,C,'ColorMap',cmap);
 imshow(B)
 pixelLabelColorbar(cmap,classes);
@@ -92,7 +77,7 @@ ylabel('Frequency')
 
 % Split the datastore
 
-[imdsTrain, imdsVal, imdsTest, pxdsTrain, pxdsVal, pxdsTest] = partitionCamVidData(imds,pxds);
+[imdsTrain, imdsVal, imdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitDataset(imds,pxds, classes, labelIDs);
 
 numTrainingImages = numel(imdsTrain.Files)
 
@@ -102,7 +87,12 @@ numTestingImages = numel(imdsTest.Files)
 
 %% Network
 % Specify the network image size. This is typically the same as the traing image sizes.
-imageSize = [625 625 3];
+
+% For RGB Images
+imageSize = [645 645 3];
+
+% For HSI images.
+imageSize = [512 645 3];
 
 % Specify the number of classes.
 numClasses = numel(classes);
