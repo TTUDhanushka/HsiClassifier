@@ -99,8 +99,8 @@ for nFiles = 1: length(filesList)
                     
                     bHsiRgb_images_labels = true;
                     
-                    hsiToRgbImageFolder512_512 = fullfile(hsiToRgbDataPath, imageFolder);
-                    hsiToRgbLabelsFolder512_512 = fullfile(hsiToRgbDataPath, labelsFolder);
+                    hsiToRgbImageFolder512_512 = fullfile(rgbDataPath, imageFolder);
+                    rgbLabelsFolder625_625 = fullfile(rgbDataPath, labelsFolder);
                 end
                 
                 if bHsiRgb_images_labels
@@ -112,12 +112,12 @@ for nFiles = 1: length(filesList)
             disp("No RGB dataset folder");
             
             % Create directory if it doesnt exist.
-            mkdir(root, RGB_Dataset_Hsi);
+            mkdir(root, RGB_Dataset_specim);
             mkdir(hsiToRgbDataPath, imageFolder);
             mkdir(hsiToRgbDataPath, labelsFolder);
             
             hsiToRgbImageFolder512_512 = fullfile(hsiToRgbDataPath, imageFolder);
-            hsiToRgbLabelsFolder512_512 = fullfile(hsiToRgbDataPath, labelsFolder);
+            rgbLabelsFolder625_625 = fullfile(hsiToRgbDataPath, labelsFolder);
             
             bHsiRgbFolder = true;
             bHsiRgb_images_labels = true;
