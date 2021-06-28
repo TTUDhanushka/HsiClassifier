@@ -7,9 +7,9 @@ HsiDatasetFolderName = 'HSI Dataset';
 RGB_Dataset_specim = 'RGB_625_625';
 RGB_Dataset_Hsi = 'HSI_RGB';
 
-Hsi_9_bands = '';
-Hsi_16_bands = '';
-Hsi_25_bands = '';
+Hsi_9_Folder = 'HSI_9_Bands';
+Hsi_16_Folder = 'HSI_16_Bands';
+Hsi_25_Folder = 'HSI_25_Bands';
 
 imageFolder = 'images';
 labelsFolder = 'labels';
@@ -18,7 +18,7 @@ png_ext = '.png';
 reflectance_data_ext = '.dat';
 
 bDatasetFolder = false;
-bRGBFolder = false;
+bRGBFolder = false;                         % For 645x645 px RGB images from specim RGB sensor.
 bRGB_images_labels = false;
 bHsiRgbFolder = false;                      % For HSI to RGB conversion and NN training
 bHsiRgb_images_labels = false;
@@ -30,6 +30,16 @@ rgbLabelsFolder625_625 = '';
 
 hsiToRgbImageFolder512_512 = '';
 hsiToRgbLabelsFolder512_512 = '';
+
+Hsi_9_bandImageFolder = '';
+Hsi_9_bandLabelsFolder = '';
+
+Hsi_16_bandImageFolder = '';
+Hsi_16_bandLabelsFolder = '';
+
+Hsi_25_bandImageFolder = '';
+Hsi_25_bandLabelsFolder = '';
+
 
 if (root == "")
     disp("Root folder not selected.");
@@ -48,7 +58,7 @@ for nFiles = 1: length(filesList)
         rgbDataPath = fullfile(root, RGB_Dataset_specim);
         hsiToRgbDataPath = fullfile(root, RGB_Dataset_Hsi);
                 
-        %% 
+        %% RGB Folders with training images / labels
         
         if (~bRGBFolder && contains(filesList(nFiles).name, RGB_Dataset_specim))
             bRGBFolder = true;
@@ -109,7 +119,7 @@ for nFiles = 1: length(filesList)
             end
             
         else
-            disp("No RGB dataset folder");
+            disp("No RGB from HSI dataset folder");
             
             % Create directory if it doesnt exist.
             mkdir(root, RGB_Dataset_Hsi);
@@ -124,20 +134,15 @@ for nFiles = 1: length(filesList)
 
         end
         
+        %% HSI 9 band images
+        
+        
         %% 
         
         % Go into the datacube folder and pick the dataCubes.
         
         for cubeId = 1 : length(dataCubesList)
             
-%             % get the ground truth of RGB scene
-%             if (contains(file_list(i).name, '.png') && ~(contains(file_list(i).name, 'gt'))&& ~(contains(file_list(i).name, 'GT')))
-%                 rgb_file_name = file_list(i).name;
-%                 rgb_file = fullfile (directory_path, rgb_file_name);
-%             elseif (contains(file_list(i).name, '.png') && ((contains(file_list(i).name, 'gt')) || (contains(file_list(i).name, 'GT'))))
-%                 ground_truth_File = file_list(i).name;
-%             end
-
             datacubePath = fullfile(dataSetPath, dataCubesList(cubeId).name);
             resultsList = dir(datacubePath);
             
@@ -184,7 +189,7 @@ end
 
 %% Clear variables
 
-vars = {'root','nFiles','filesList', 'bDatasetFolder', 'rgbHighRes'};
+vars = {'nFiles','filesList', 'bDatasetFolder', 'rgbHighRes'};
 
 clear(vars{:})
 

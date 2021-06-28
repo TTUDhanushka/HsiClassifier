@@ -9,6 +9,7 @@ nav:
     - Spectral-Spatial Classification Methods: spectralspatialclassify.md
     - HSI to RGB Conversion: hsitorgb.md
     - Helper Functions: helperfun.md
+    - Performance Matrices: segmetationaccuracy.md
 
 theme: 
     name: material
