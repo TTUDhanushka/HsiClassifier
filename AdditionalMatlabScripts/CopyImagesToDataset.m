@@ -22,6 +22,12 @@ bRGBFolder = false;                         % For 645x645 px RGB images from spe
 bRGB_images_labels = false;
 bHsiRgbFolder = false;                      % For HSI to RGB conversion and NN training
 bHsiRgb_images_labels = false;
+bHsi_9_Folder = false;
+bHsi_16_Folder = false;
+bHsi_25_Folder = false;
+bHsi_9_images_labels = false;
+bHsi_16_images_labels = false;
+bHsi_25_images_labels = false;
 
 root = uigetdir;
 
@@ -57,7 +63,10 @@ for nFiles = 1: length(filesList)
         
         rgbDataPath = fullfile(root, RGB_Dataset_specim);
         hsiToRgbDataPath = fullfile(root, RGB_Dataset_Hsi);
-                
+        hsi_9_bandsDataPath = fullfile(root, Hsi_9_Folder);
+        hsi_16_bandsDataPath = fullfile(root, Hsi_16_Folder);
+        hsi_25_bandsDataPath = fullfile(root, Hsi_25_Folder);
+        
         %% RGB Folders with training images / labels
         
         if (~bRGBFolder && contains(filesList(nFiles).name, RGB_Dataset_specim))
@@ -136,6 +145,116 @@ for nFiles = 1: length(filesList)
         
         %% HSI 9 band images
         
+        if (~bHsi_9_Folder && contains(filesList(nFiles).name, Hsi_9_Folder))
+           bHsi_9_Folder = true; 
+           
+           bHsi_9_DirList = dir(hsi_9_bandsDataPath);
+           
+           for nHsi_9_Folder = 1: length(bHsi_9_DirList)
+               if (~contains(nHsi_9_Folder(nHsi_9_Folder).name, imageFolder) || (~bHsi_9_images_labels))
+                   mkdir(hsi_9_bandsDataPath, imageFolder);
+                   mkdir(hsi_9_bandsDataPath, labelsFolder);
+                   
+                   bHsi_9_images_labels = true;
+                   
+                   Hsi_9_bandImageFolder = fullfile(hsi_9_bandsDataPath, imageFolder);
+                   Hsi_9_bandLabelsFolder = fullfile(hsi_9_bandsDataPath, labelsFolder);
+               end
+               
+               if bHsi_9_images_labels
+                   break;
+               end
+           end
+           
+        else
+            disp("No data folders for 9 band HSI dataset.")
+           
+            mkdir(root, Hsi_9_Folder);
+            mkdir(hsi_9_bandsDataPath, imageFolder);
+            mkdir(hsi_9_bandsDataPath, labelsFolder);
+            
+            bHsi_9_Folder = true;
+            bHsi_9_images_labels = true;
+            
+            Hsi_9_bandImageFolder = fullfile(hsi_9_bandsDataPath, imageFolder);
+            Hsi_9_bandLabelsFolder = fullfile(hsi_9_bandsDataPath, labelsFolder);
+        end
+        
+        %% HSI 16 band images
+        
+        if (~bHsi_16_Folder && contains(filesList(nFiles).name, Hsi_16_Folder))
+           bHsi_16_Folder = true; 
+           
+           bHsi_16_DirList = dir(hsi_16_bandsDataPath);
+           
+           for nHsi_16_Folder = 1: length(bHsi_16_DirList)
+               if (~contains(nHsi_16_Folder(nHsi_16_Folder).name, imageFolder) || (~bHsi_16_images_labels))
+                   mkdir(hsi_16_bandsDataPath, imageFolder);
+                   mkdir(hsi_16_bandsDataPath, labelsFolder);
+                   
+                   bHsi_16_images_labels = true;
+                   
+                   Hsi_16_bandImageFolder = fullfile(hsi_16_bandsDataPath, imageFolder);
+                   Hsi_16_bandLabelsFolder = fullfile(hsi_16_bandsDataPath, labelsFolder);
+               end
+               
+               if bHsi_16_images_labels
+                   break;
+               end
+           end
+           
+        else
+            disp("No data folders for 16 band HSI dataset.")
+           
+            mkdir(root, Hsi_16_Folder);
+            mkdir(hsi_16_bandsDataPath, imageFolder);
+            mkdir(hsi_16_bandsDataPath, labelsFolder);
+            
+            bHsi_16_Folder = true;
+            bHsi_16_images_labels = true;
+            
+            Hsi_16_bandImageFolder = fullfile(hsi_16_bandsDataPath, imageFolder);
+            Hsi_16_bandLabelsFolder = fullfile(hsi_16_bandsDataPath, labelsFolder);
+        end
+        
+        %% HSI 25 band images
+        
+        if (~bHsi_25_Folder && contains(filesList(nFiles).name, Hsi_25_Folder))
+           bHsi_25_Folder = true; 
+           
+           bHsi_25_DirList = dir(hsi_25_bandsDataPath);
+           
+           for nHsi_25_Folder = 1: length(bHsi_25_DirList)
+               if (~contains(nHsi_25_Folder(nHsi_25_Folder).name, imageFolder) || (~bHsi_25_images_labels))
+                   mkdir(hsi_25_bandsDataPath, imageFolder);
+                   mkdir(hsi_25_bandsDataPath, labelsFolder);
+                   
+                   bHsi_25_images_labels = true;
+                   
+                   Hsi_25_bandImageFolder = fullfile(hsi_25_bandsDataPath, imageFolder);
+                   Hsi_25_bandLabelsFolder = fullfile(hsi_25_bandsDataPath, labelsFolder);
+               end
+               
+               if bHsi_25_images_labels
+                   break;
+               end
+           end
+           
+        else
+            disp("No data folders for 25 band HSI dataset.")
+           
+            mkdir(root, Hsi_25_Folder);
+            mkdir(hsi_25_bandsDataPath, imageFolder);
+            mkdir(hsi_25_bandsDataPath, labelsFolder);
+            
+            bHsi_25_Folder = true;
+            bHsi_25_images_labels = true;
+            
+            Hsi_25_bandImageFolder = fullfile(hsi_25_bandsDataPath, imageFolder);
+            Hsi_25_bandLabelsFolder = fullfile(hsi_25_bandsDataPath, labelsFolder);
+        end
+        
+
         
         %% 
         

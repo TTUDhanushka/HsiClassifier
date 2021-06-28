@@ -57,7 +57,7 @@ TrainingPixelClassesTo1D();
 
 reduced_bands_count = 9;
 
-% Bands list variables should be 'bSet_9', 'bSet_16' and 'bSet_25'.
+% Bands list variables should be 'bSet_9', ''
 
 bSet = Min_Max_Pooling(training_Data', reduced_bands_count);
 
