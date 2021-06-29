@@ -305,6 +305,11 @@ for nFiles = 1: length(filesList)
                             hsiToRgbLabels = strcat(str_temp, '\', results_file_struct(idx).name);
                             copyfile (hsiToRgbLabels, hsiToRgbLabelsFolder512_512, 'f');
                             
+                            % Copy labels to HSI folders.
+                            copyfile (hsiToRgbLabels, Hsi_9_bandLabelsFolder, 'f');
+                            copyfile (hsiToRgbLabels, Hsi_16_bandLabelsFolder, 'f');
+                            copyfile (hsiToRgbLabels, Hsi_25_bandLabelsFolder, 'f');
+                            
                         elseif (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
                                 contains(results_file_struct(idx).name, png_ext) && ...
                                 (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
