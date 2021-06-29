@@ -15,7 +15,7 @@ imageFolder = 'images';
 labelsFolder = 'labels';
 
 png_ext = '.png';
-reflectance_data_ext = '.dat';
+reflectance_data_ext = '.hdr';
 
 bDatasetFolder = false;
 bRGBFolder = false;                         % For 645x645 px RGB images from specim RGB sensor.
@@ -28,6 +28,9 @@ bHsi_25_Folder = false;
 bHsi_9_images_labels = false;
 bHsi_16_images_labels = false;
 bHsi_25_images_labels = false;
+
+bMetaUpdate = false;
+bWavelengthUpdate = false;
 
 root = uigetdir;
 
@@ -222,41 +225,41 @@ for nFiles = 1: length(filesList)
         if (~bHsi_25_Folder && contains(filesList(nFiles).name, Hsi_25_Folder))
            bHsi_25_Folder = true; 
            
-           bHsi_9_DirList = dir(hsi_9_bandsDataPath);
+           bHsi_25_DirList = dir(hsi_25_bandsDataPath);
            
-           for nHsi_9_Folder = 1: length(bHsi_9_DirList)
-               if (~contains(nHsi_9_Folder(nHsi_9_Folder).name, imageFolder) || (~bHsi_9_images_labels))
-                   mkdir(hsi_9_bandsDataPath, imageFolder);
-                   mkdir(hsi_9_bandsDataPath, labelsFolder);
+           for nHsi_25_Folder = 1: length(bHsi_25_DirList)
+               if (~contains(nHsi_25_Folder(nHsi_25_Folder).name, imageFolder) || (~bHsi_25_images_labels))
+                   mkdir(hsi_25_bandsDataPath, imageFolder);
+                   mkdir(hsi_25_bandsDataPath, labelsFolder);
                    
-                   bHsi_9_images_labels = true;
+                   bHsi_25_images_labels = true;
                    
-                   Hsi_9_bandImageFolder = fullfile(hsi_9_bandsDataPath, imageFolder);
-                   Hsi_9_bandLabelsFolder = fullfile(hsi_9_bandsDataPath, labelsFolder);
+                   Hsi_25_bandImageFolder = fullfile(hsi_25_bandsDataPath, imageFolder);
+                   Hsi_25_bandLabelsFolder = fullfile(hsi_25_bandsDataPath, labelsFolder);
                end
                
-               if bHsi_9_images_labels
+               if bHsi_25_images_labels
                    break;
                end
            end
            
         else
-            disp("No data folders for 9 band HSI dataset.")
+            disp("No data folders for 25 band HSI dataset.")
            
-            mkdir(root, Hsi_9_Folder);
-            mkdir(hsi_9_bandsDataPath, imageFolder);
-            mkdir(hsi_9_bandsDataPath, labelsFolder);
+            mkdir(root, Hsi_25_Folder);
+            mkdir(hsi_25_bandsDataPath, imageFolder);
+            mkdir(hsi_25_bandsDataPath, labelsFolder);
             
-            bHsi_9_Folder = true;
-            bHsi_9_images_labels = true;
+            bHsi_25_Folder = true;
+            bHsi_25_images_labels = true;
             
-            Hsi_9_bandImageFolder = fullfile(hsi_9_bandsDataPath, imageFolder);
-            Hsi_9_bandLabelsFolder = fullfile(hsi_9_bandsDataPath, labelsFolder);
+            Hsi_25_bandImageFolder = fullfile(hsi_25_bandsDataPath, imageFolder);
+            Hsi_25_bandLabelsFolder = fullfile(hsi_25_bandsDataPath, labelsFolder);
         end
         
 
         
-        %% 
+        %% Data copying
         
         % Go into the datacube folder and pick the dataCubes.
         
@@ -277,6 +280,7 @@ for nFiles = 1: length(filesList)
                     for idx = 1:length(results_file_struct)
                         results_file_list(idx) = results_file_struct(idx).name;
 
+                        % RGB Images copying.
                         if (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && ...
                                 contains(results_file_struct(idx).name, png_ext) && ...
                                 (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
@@ -292,9 +296,74 @@ for nFiles = 1: length(filesList)
                             
                             copyfile (rgbHighRes, rgbImageFolder625_625, 'f');
                         end
+                        
+                        % HSI to RGB Images copying.
+                        if (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
+                                contains(results_file_struct(idx).name, png_ext) && ...
+                                (contains(results_file_struct(idx).name, 'GT') || contains(results_file_struct(idx).name, 'gt')))
+                            
+                            hsiToRgbLabels = strcat(str_temp, '\', results_file_struct(idx).name);
+                            copyfile (hsiToRgbLabels, hsiToRgbLabelsFolder512_512, 'f');
+                            
+                        elseif (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
+                                contains(results_file_struct(idx).name, png_ext) && ...
+                                (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
+                            
+                            hsiToRgbImg = strcat(str_temp, '\', results_file_struct(idx).name);
+                            
+                            copyfile (hsiToRgbImg, hsiToRgbImageFolder512_512, 'f');
+                        end
+                        
+                        % Copy the reduced HSI datacube in ENVI format.
+                        if exist('bSet_9', 'var')
+                            bandCount = 9;
+                            
+                            if (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
+                                    contains(results_file_struct(idx).name, reflectance_data_ext))
+                                
+                                hsiFileFullPath = strcat(str_temp, '\', results_file_struct(idx).name);
+                                
+                                hsiData = hypercube(hsiFileFullPath);
+                                reducedCube = ReducedBandImage(hsiData.DataCube, bSet_9);
+                                
+                                if ~bMetaUpdate
+                                    meta = hsiData.Metadata;
+                                    meta.Bands = bandCount;
+                                    bMetaUpdate = true;
+                                end
+                                
+                                if ~bWavelengthUpdate
+                                    
+                                    waveSet = zeros()
+                                    
+                                    for nWave = 1:bandCount
+                                        
+                                        
+                                    end
+                                    
+                                    bWavelengthUpdate = true;
+                                end
+                                
+                                filename = fullfile(Hsi_9_bandImageFolder,results_file_struct(idx).name); 
+                                
+                                enviwrite(reducedCube, filename);
+                                
+                                clear hsiData reducedCube filename hsiFileFullPath;
+                            end
 
+                        else
+                            disp("Band list isn't available in the workspace.");
+                        end
+                        
+%                         if exists ('bSet_9', 'var')
+%                         end
+%                         
+%                         if exists ('bSet_9', 'var')
+%                         end
                     end
-
+                    
+                else
+                    disp("No results folder.");
                 end
             end
         end
