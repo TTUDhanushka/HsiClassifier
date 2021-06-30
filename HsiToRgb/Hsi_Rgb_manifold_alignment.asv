@@ -7,13 +7,7 @@
 
 visibleLightOnly = false;
 
-switch (bands)
-    case 9
-        bSet = bSet_9;
-    case 16
-        
-    case 25
-end
+
 
 bandsList = [];
 

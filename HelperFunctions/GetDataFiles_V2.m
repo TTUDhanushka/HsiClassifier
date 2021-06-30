@@ -102,7 +102,7 @@ function [rgb_file, hdr_file, hsi_file, dark_ref_cube, dark_ref_hdr, ...
                     reflectance_hdr = strcat(str_temp, '\', results_file_struct(idx).name);
                 elseif (contains(results_file_struct(idx).name, reflectance_data_ext))
                     reflectance_cube = strcat(str_temp, '\', results_file_struct(idx).name);
-                elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND'))
+                elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && contains(results_file_struct(idx).name, '.png'))
                     rgbHighRes = strcat(str_temp, '\', results_file_struct(idx).name);
                 end
                 

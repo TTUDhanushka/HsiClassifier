@@ -305,13 +305,18 @@ for nFiles = 1: length(filesList)
                             hsiToRgbLabels = strcat(str_temp, '\', results_file_struct(idx).name);
                             copyfile (hsiToRgbLabels, hsiToRgbLabelsFolder512_512, 'f');
                             
+                            % Copy labels to HSI folders.
+                            copyfile (hsiToRgbLabels, Hsi_9_bandLabelsFolder, 'f');
+                            copyfile (hsiToRgbLabels, Hsi_16_bandLabelsFolder, 'f');
+                            copyfile (hsiToRgbLabels, Hsi_25_bandLabelsFolder, 'f');
+                            
                         elseif (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
                                 contains(results_file_struct(idx).name, png_ext) && ...
                                 (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
                             
                             hsiToRgbImg = strcat(str_temp, '\', results_file_struct(idx).name);
                             
-                            copyfile (hsiToRgbImg, hsiToRgbImageFolder512_512, 'f');
+%                             copyfile (hsiToRgbImg, hsiToRgbImageFolder512_512, 'f');
                         end
                         
                         % Copy the reduced HSI datacube in ENVI format.
@@ -334,11 +339,10 @@ for nFiles = 1: length(filesList)
                                 
                                 if ~bWavelengthUpdate
                                     
-                                    waveSet = zeros()
+                                    waveSet = zeros(bandCount, 1, 'double');
                                     
-                                    for nWave = 1:bandCount
-                                        
-                                        
+                                    for nWave = 1:bandCount                                        
+                                        waveSet(nWave, 1) = hsiData.Wavelength(bSet_9(nWave));
                                     end
                                     
                                     bWavelengthUpdate = true;
@@ -346,7 +350,9 @@ for nFiles = 1: length(filesList)
                                 
                                 filename = fullfile(Hsi_9_bandImageFolder,results_file_struct(idx).name); 
                                 
-                                enviwrite(reducedCube, filename);
+                                reducedHyperCube = hypercube (reducedCube, waveSet, meta);
+                                
+                                enviwrite(reducedHyperCube, filename);
                                 
                                 clear hsiData reducedCube filename hsiFileFullPath;
                             end

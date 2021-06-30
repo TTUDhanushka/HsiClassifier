@@ -314,9 +314,9 @@ for nFiles = 1: length(filesList)
                                 contains(results_file_struct(idx).name, png_ext) && ...
                                 (~contains(results_file_struct(idx).name, 'GT') || ~contains(results_file_struct(idx).name, 'gt')))
                             
-                            hsiToRgbImg = strcat(str_temp, '\', results_file_struct(idx).name);
-                            
-                            copyfile (hsiToRgbImg, hsiToRgbImageFolder512_512, 'f');
+%                             This should be coming from manifold alignment
+%                             method which used to generate RGB images from
+%                             HSI.
                         end
                         
                         % Copy the reduced HSI datacube in ENVI format.

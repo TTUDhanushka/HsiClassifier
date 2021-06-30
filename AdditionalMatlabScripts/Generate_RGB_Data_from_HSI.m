@@ -14,3 +14,4 @@ rgbHighResPath = fullfile(root, RGB_Dataset_specim, 'images');
 
 
 % Manifold alignment from HSI to RGB.
+SemiSupervisedManifoldAlignment;
