@@ -1,8 +1,8 @@
 % Mark pixel pair locations as circles on image.
 
-function varargout = OverlayPoints(higResRgbRot, hsiCube, pixelListRgb, pixelListHsi)
+function varargout = OverlayPoints(higResRgbRot, hsiImage, pixelListRgb, pixelListHsi)
 
-    [h, w, d] = size(hsiCube);
+%     [h, w, d] = size(hsiCube);
 
     point = 1;
 
@@ -23,7 +23,7 @@ function varargout = OverlayPoints(higResRgbRot, hsiCube, pixelListRgb, pixelLis
 
     end
     
-    hsiImage = GetTriBandRgbImage(hsiCube);
+%     hsiImage = GetTriBandRgbImage(hsiCube);
     
     pointHs = 1;
     

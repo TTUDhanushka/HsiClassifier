@@ -5,37 +5,51 @@
 
 %%
 
-visibleLightOnly = false;
-
-bands = 9;
-
-switch (bands)
-    case 9
-        bSet = bSet_9;
-    case 16
-        bSet = bSet_16;
-    case 25
-        bSet = bSet_25;
+if ~exist('hsiToRgbManifoldDatasetGen', 'var')
+    hsiToRgbManifoldDatasetGen = false;
 end
 
-bandsList = [];
 
-
-if visibleLightOnly
-    for nBandId = 1:length(bSet)
-        if(bSet(nBandId) < 121)                 % 121 Band is at 750nm.
-            bandsList = [bandsList, bSet(nBandId)];
-        end
-    end
+if hsiToRgbManifoldDatasetGen
+    
+    reduceImageRot = hsiCubeData.DataCube;
+    reduceImage = RotateHsiImage(reduceImageRot, -90);
+    
 else
-    bandsList = bSet;
+    
+    visibleLightOnly = false;
+    
+    bands = 9;
+    
+    switch (bands)
+        case 9
+            bSet = bSet_9;
+        case 16
+            bSet = bSet_16;
+        case 25
+            bSet = bSet_25;
+    end
+    
+    bandsList = [];
+    
+    
+    if visibleLightOnly
+        for nBandId = 1:length(bSet)
+            if(bSet(nBandId) < 121)                 % 121 Band is at 750nm.
+                bandsList = [bandsList, bSet(nBandId)];
+            end
+        end
+    else
+        bandsList = bSet;
+    end
+
+    rotatedHsiCube = RotateHsiImage(reflectanceCube.DataCube, -90);
+    
+    reduceImage = ReducedBandImage(rotatedHsiCube, bandsList);
+
 end
 
-
-rotatedHsiCube = RotateHsiImage(reflectanceCube.DataCube, -90);
-
-reduceImage = ReducedBandImage(rotatedHsiCube, bandsList);
-
+[cols, lines, ~] = size(reduceImage);
 
 %% Create input data vector of quarter of the image
 
@@ -48,7 +62,9 @@ reduceImage = ReducedBandImage(rotatedHsiCube, bandsList);
 HSI_selectedpixels = extractedHsiPixels;
 RGB_selectedpixels = extractedRgbPixels;
 
-OverlayPoints(higResRgb, rotatedHsiCube, RGB_selectedpixels, HSI_selectedpixels);
+
+% OverlayPoints(higResRgb, rotatedHsiCube, RGB_selectedpixels, HSI_selectedpixels);
+OverlayPoints(higResRgb, rgbFromHsi, RGB_selectedpixels, HSI_selectedpixels);
 
 total_Pixels = length(HSI_selectedpixels);
 
@@ -81,15 +97,15 @@ sigmaHsi = sqrt(kHsi);
 clear meanHsiVec kHsi sqSumHsi;
 
 %% RGB image details
-rgb_size = size(higResRgbRot);
 
-clrChannels = rgb_size(3);
-
-higResRgb = imread(highResRgbPath);
+% higResRgb = imread(highResRgbPath);
 
 % Because hyperspectral image is rotated.
 higResRgbRot = imrotate(higResRgb, 90);
- 
+rgb_size = size(higResRgbRot);
+
+clrChannels = rgb_size(3); 
+
 vectorizedInputRgb = zeros(total_Pixels, clrChannels);
 
 for i = 1:total_Pixels
@@ -245,51 +261,53 @@ end
 %% Optimization 
 
 Evaluation = 0;
-% iteration = 1;
-% 
-% Optimum = zeros(4, hs_D^3);
-% 
-% for n1 = 1: hs_D
-%     for n2 = 1:hs_D
-%         for n3 = 1:hs_D
-%             selectedEigenVal = [q(n1), q(n2), q(n3)]
 
 
-            %  selectedEigenVal = [5 197 6];
+selectedEigenVectors =  zeros(hs_D + clrChannels, 3);
 
-            selectedEigenVectors =  zeros(hs_D + clrChannels, 3);
+for n = 1:3
+    selectedEigenVectors(:, n) = Eigens * Vec(: , selectedEigenVal(n));
+end
 
-            for n = 1:3
-                selectedEigenVectors(:, n) = Eigens * Vec(: , selectedEigenVal(n));
-            end
+% Projection functions.
+F_s = selectedEigenVectors(1:hs_D, :);
+F_t = selectedEigenVectors(hs_D + 1:hs_D + clrChannels, :);
 
-            % Projection functions.
-            F_s = selectedEigenVectors(1:hs_D, :);
-            F_t = selectedEigenVectors(hs_D + 1:hs_D + clrChannels, :);
+inv_F_t = inv(F_t);
 
-            inv_F_t = inv(F_t);
+% Image generation
+linePx = zeros(hs_D, 1);
 
-            % Image generation
-            linePx = zeros(hs_D, 1);
-            imageGen = zeros(cols, lines, 3, 'uint8');
 
-            for i = 1: cols
-                for j = 1:lines
-                    linePx(:, 1) = hsiCube(i, j, :);
-                    Srgb = inv_F_t' * F_s' * linePx;
-                    
-                    colorValue = uint8(Srgb);
-                    imageGen(i, j, :) = colorValue;
-                end
-            end
+imageGen = zeros(cols, lines, 3, 'uint8');
 
-            figure();
-            %imageGen = imrotate(imageGen, -90);
-            imshow(imageGen)
+for i = 1: cols
+    for j = 1:lines
+        linePx(:, 1) = hsiCube(i, j, :);
+        Srgb = inv_F_t' * F_s' * linePx;
+        
+        colorValue = uint8(Srgb);
+        imageGen(i, j, :) = colorValue;
+    end
+end
 
-            Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
-%             Optimum(:, iteration) = [q(n1), q(n2), q(n3), Evaluation];
-%             iteration = iteration + 1;
-%         end
-%     end
-% end
+figure();
+%imageGen = imrotate(imageGen, -90);
+imshow(imageGen)
+
+Evaluation = trace(selectedEigenVectors' * left * selectedEigenVectors);
+
+
+%% Clear workspace variables
+
+vars = {'Evaluation', 'colorValue', 'Srgb', 'linePx', 'cols', 'lines', 'i', ...
+    'j', 'inv_F_t', 'F_t', 'F_s', 'Eigens', 'selectedEigenVectors', 'hs_D', ...
+    'clrChannels', 'n', 'selectedEigenVal', 'p', 'q', 'eigenValues', 'Eigens', ...
+    'Vec', 'left', 'right', 'dummyHsi', 'dummyRgb', 'X', 'L', 'D', 'W', 'w_s_t', ...
+    'total_Pixels', 'al_1', 'al_2', 'adj_w_t', 'adj_w_s', 'pixelPosA', 'val', ...
+    'id', 'w_s', 'w_t', 'pixelPosB', 'sigmaRgb', 'eucDist', 'sa', 'dist_w_s', ...
+    'vectorizedInputRgb', 'vectorizedInputHsi', 'input_ef_mul', 'inputSq', ...
+    'refSq', 'meanRgbVec', 'kRgb', 'sigmaRgb', 'sigmaHsi', 'kHsi', 'rgb_size', ...
+    'sqSumRgb', 'higResRgbRot', 'higResRgb'};
+
+clear(vars{:});

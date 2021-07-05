@@ -1,8 +1,19 @@
 % Extract pixel pairs from both HSI and RGB images manually and let the
 % algorithm to pick up some random pixels for manifold alignment.
 
-fb_HSI_Image = RotateHsiImage(reflectanceCube.DataCube, -90);
-rgbFromHsi = GetTriBandRgbImage(fb_HSI_Image);
+if ~exist('hsiToRgbManifoldDatasetGen', 'var')
+    hsiToRgbManifoldDatasetGen = false;
+end
+
+
+if hsiToRgbManifoldDatasetGen
+    fb_HSI_Image = RotateHsiImage(hsiCubeData.DataCube, -90);
+    rgbFromHsi = ConstructRgbImage(fb_HSI_Image, 2, 3, 4);
+    
+else
+    fb_HSI_Image = RotateHsiImage(reflectanceCube.DataCube, -90);
+    rgbFromHsi = GetTriBandRgbImage(fb_HSI_Image);
+end
 
 classesInHsi = 7;
 noOfSample = 10;
@@ -46,8 +57,6 @@ extractedRgbVector = zeros(noOfSample, 2);
 
 % Positions in [height, width] format.
 
-
-
 % for nId = 1: classesInHsi
     
     [topLeft, btmRight] = PickUpPixelArea(higResRgb);
@@ -78,3 +87,9 @@ extractedRgbVector = zeros(noOfSample, 2);
     
 end
 
+%% Clear variables
+
+vars = {'noOfSample', 'nId', 'btmRight', 'classesInHsi', 'coordList',...
+     'randIds', 'px', 'nX', 'nY', 'H', 'W', 'topLeft', 'totalSamples'};
+
+clear(vars{:});

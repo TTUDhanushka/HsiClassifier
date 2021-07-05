@@ -1,5 +1,7 @@
 % Generate RGB versions from HSI images.
 
+hsiToRgbManifoldDatasetGen = true;
+
 % 'root' variable contains root of the image data folder.
 if ~exist('root', 'var')
     root = uigetdir;
@@ -19,6 +21,9 @@ Hsi_9_bandImagePath = fullfile(root, HSI_9bands_Dataset, imageFolder);
 
 Hsi_9_bandImagelist = dir(Hsi_9_bandImagePath);
 
+Hsi_Convert_RGB = 'HSI_RGB';
+hsiToRgbImageFolder512_512 = fullfile(root, Hsi_Convert_RGB, imageFolder);
+
 % check for the number of images in the folder.
 noOfRgbImgs = length(highResRGBImageList) - 2;
 noOf_9_bandImgHdr = length(Hsi_9_bandImagelist) - 2;
@@ -29,28 +34,61 @@ if ~(noOf_9_bandImg == noOfRgbImgs)
     disp('Error: Number of images in each folder are different.');
 end
 
+bHsiImage = false;
+bRgbImage = false;
+
+convertedFilesList = dir(hsiToRgbImageFolder512_512);
+noOfConvertedFiles = length(convertedFilesList);
+
+if noOfConvertedFiles == 0
+    noOfConvertedFiles = 1;
+end
  
-for nHsi_9_image = 1: noOf_9_bandImg
-     
-    if (~strcmp(Hsi_9_bandImagelist(nHsi_9_image).name, '.') && ~strcmp(Hsi_9_bandImagelist(nHsi_9_image).name, '..') && contains(Hsi_9_bandImagelist(nHsi_9_image).name, '.dat'))
+for nFileId = noOfConvertedFiles: 8 %noOf_9_bandImg
+    
+    if (nFileId > 2)        % Skip fist two file names as they are '.' and '..'
         
-        hsi_9_Path = fullfile(Hsi_9_bandImagePath, Hsi_9_bandImagelist(nHsi_9_image).name);
+        % 9 Bands HSI image
+        hsiId = ((nFileId - 2) * 2) + 1;
         
-        hsiCubeData = hypercube(hsi_9_Path);
+        if (~strcmp(Hsi_9_bandImagelist(hsiId).name, '.') && ~strcmp(Hsi_9_bandImagelist(hsiId).name, '..') && contains(Hsi_9_bandImagelist(hsiId).name, '.dat'))
+                        
+            hsi_9_Path = fullfile(Hsi_9_bandImagePath, Hsi_9_bandImagelist(hsiId).name);            
+            
+            hsiCubeData = hypercube(hsi_9_Path);
+            
+            bHsiImage = true;
+        end
+        
+        % RGB high res image.
+        if (~strcmp(highResRGBImageList(nFileId).name, '.') && ~strcmp(highResRGBImageList(nFileId).name, '..'))
+            
+            rgbFullPath = fullfile(rgbHighResPath, highResRGBImageList(nFileId).name);
+            
+            higResRgb = imread(rgbFullPath);
+            
+            bRgbImage = true;
+        end
+    end
+    
+    if (bHsiImage && bRgbImage)
+        
+        % Manifold alignment from HSI to RGB.
+        SemiSupervisedManifoldAlignment;
+
+        % perform manifold alignment to generate RGB
+        Hsi_Rgb_manifold_alignment;
+
+        % Save image to the RGB images folder.
+        imageName = highResRGBImageList(nFileId).name;
+
+        rgbFromHsiPath = fullfile(hsiToRgbImageFolder512_512, imageName);
+        imwrite(imageGen, rgbFromHsiPath);
     end
 end
 
-%% 
+%% clear variables 
 
 
-% Manifold alignment from HSI to RGB.
-SemiSupervisedManifoldAlignment;
 
-% perform manifold alignment to generate RGB
-Hsi_Rgb_manifold_alignment;
 
-% Save image to the RGB images folder.
-% imageName = 
-% 
-% rgbFromHsiPath = fullfile(hsiToRgbImageFolder512_512, );
-% imwrite(imageGen, rgbFromHsiPath);
