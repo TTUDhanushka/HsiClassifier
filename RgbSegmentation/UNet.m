@@ -1,18 +1,17 @@
-% SegNet image semantic segmentation
+% U-Net 
 
 % Set parameters
 mode = 'RGB';           % RGB or HSI_RGB
 
 switch (mode)
     case 'RGB'
-        imageSize = [645, 645, 3];
+        imageSize = [648, 648, 3];
         dataDir = 'RGB_625_625';
         
     case 'HSI_RGB'
         imageSize = [512, 512, 3];
         dataDir = 'HSI_RGB';
 end
-
 
 %% Data
 
@@ -96,24 +95,26 @@ augmenter = imageDataAugmenter('RandXReflection',true,...
 pximds = pixelLabelImageDatastore(imdsTrain, pxdsTrain, 'DataAugmentation',augmenter);
 
 
-%% Model
-% model = '';
-encodeDecoderDepth = 2;
+%%
 
-lgraph = segnetLayers(imageSize, noOfClasses, encodeDecoderDepth);
+encoderDepth = 3;
+
+lgraph = unetLayers(imageSize, noOfClasses, 'EncoderDepth', encoderDepth);
 
 options = trainingOptions('sgdm','InitialLearnRate',1e-3, ...
         'ValidationData',pximdsVal,...
         'MiniBatchSize',4, ...
         'MaxEpochs',20,'VerboseFrequency',10);
-  
+    
 net = trainNetwork(pximds, lgraph, options);
 
 
-%%
+%% Test
+
 I = readimage(imdsTest,3);
 C = semanticseg(I, net);
 
 B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0.4);
 imshow(B)
 pixelLabelColorbar(cmap, classes);
+    

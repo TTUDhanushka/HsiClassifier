@@ -14,7 +14,7 @@ switch (mode)
 end
 
 
-%% Training
+%% Data
 
 % Dataset directory
 datasetRoot = uigetdir();
