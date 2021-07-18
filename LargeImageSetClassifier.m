@@ -10,6 +10,8 @@ Image_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\6. Classif
 
 
 hsiInputImages = 'HSI_9_Bands';
+hsiClassificationImages = 'classification';
+classification_folder = '';
 
 %%
 
@@ -27,7 +29,7 @@ for nFolder = 1:length(dataDirList)
     if contains(dataDirList(nFolder).name, hsiInputImages)
         
         hsiInputImageDir =  fullfile(homeDirectory, dataDirList(nFolder).name, 'images');
-        
+        classification_folder = fullfile(homeDirectory, dataDirList(nFolder).name, hsiClassificationImages);
     end
 end
 
@@ -56,11 +58,11 @@ for nDataSet = 1: length(dataFilesList)
         
         SVM_Classifier;
            
-%         % Save ground truth results. 
-%         gtImageFileName = strcat(dataFilesList(nDataSet).name, '_gt.png');
-%         generatedGtPath = fullfile(Gt_from_classification_folder, gtImageFileName);
+         % Save classification results. 
+         resImageFileName = strcat(dataFilesList(nDataSet).name, '_res.png');                 
+         generatedGtPath = fullfile(classification_folder, resImageFileName);
 %         
-%         imwrite(rot_groundTruth, generatedGtPath);
+         imwrite(imageResult, generatedGtPath);
 %         
 %         % Save classified image results.
 %         gtImageLabelsFileName = strcat(dataFilesList(nDataSet).name, '_gt_labels.png');

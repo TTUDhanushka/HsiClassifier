@@ -32,7 +32,7 @@ predictY = predict(model, testInputs);
 imageResult = zeros(h, w,3, 'uint8');
 
 for n = 1: length(predictY)
-    lbl_id = predictY(n)
+    lbl_id = predictY(n);
     
     row = fix(n/w) + 1;
     column = mod(n,w);
