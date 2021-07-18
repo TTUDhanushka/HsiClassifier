@@ -17,7 +17,7 @@ function [network, options] = Cnn1D16bands(height, width, channels)
 
     c3 = convolution2dLayer([1 2], 16, 'stride', [1 1]); %Filter window size = [1 5], No of filters = 16, stride = [1 10].
     
-    f1 = fullyConnectedLayer(13); % No of output classes
+    f1 = fullyConnectedLayer(12); % No of output classes
     
     s1 = softmaxLayer();
     outputLayer = classificationLayer();

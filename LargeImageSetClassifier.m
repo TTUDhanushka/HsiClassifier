@@ -9,49 +9,64 @@ Gt_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\5. Ground Tru
 Image_from_classification_folder = 'G:\3. Hyperspectral\5. Matlab HSI\6. Classification Images ALL BANDS\';
 
 
+hsiInputImages = 'HSI_9_Bands';
+
 %%
 
 % Get all the folders in the HSI dataset folder.
 homeDirectory = uigetdir;
 homeDirectory = strcat(homeDirectory,'\');
 
-dataFilesList = dir(homeDirectory);
+dataDirList = dir(homeDirectory);
 
 classifyingLargeDataSet = true;
 
 count = 0;
 
+for nFolder = 1:length(dataDirList)
+    if contains(dataDirList(nFolder).name, hsiInputImages)
+        
+        hsiInputImageDir =  fullfile(homeDirectory, dataDirList(nFolder).name, 'images');
+        
+    end
+end
+
+dataFilesList = dir(hsiInputImageDir);
+
 for nDataSet = 1: length(dataFilesList)
-    if ~contains(dataFilesList(nDataSet).name, '.') && ~contains(dataFilesList(nDataSet).name, '..')
+    if contains(dataFilesList(nDataSet).name, '.dat')
         count = count + 1
-        hsiImagePath = fullfile(homeDirectory, dataFilesList(nDataSet).name);
+        hsiImagePath = fullfile(hsiInputImageDir, dataFilesList(nDataSet).name);
         
         % Read all the data files.
-        ReadSpecimData;
+        %         ReadSpecimData;
+        reflectanceCube = hypercube(hsiImagePath);
+        %
+        %         % Convert RGB images.
+        %         CreateTrueColorImage;
+        %
+        %         % Save RGB images in RGB image folder. (rot_Image)
+        %         rgbImageFileName = strcat(dataFilesList(nDataSet).name, 'RGB.png');
+        %         generatedRgbPath = fullfile(RGB_image_folder, rgbImageFileName);
+        %
+        %         imwrite(rot_Image, generatedRgbPath);
+
+        % Classification of HSI using
+        %         HSI_Cnn_1D_Dataset;
         
-        % Convert RGB images.
-        CreateTrueColorImage;
-        
-        % Save RGB images in RGB image folder. (rot_Image)
-        rgbImageFileName = strcat(dataFilesList(nDataSet).name, 'RGB.png');
-        generatedRgbPath = fullfile(RGB_image_folder, rgbImageFileName);
-        
-        imwrite(rot_Image, generatedRgbPath);
-        
-        % Classification of HSI using 
-        HSI_Cnn_1D_Dataset;
-        
-        % Save ground truth results. 
-        gtImageFileName = strcat(dataFilesList(nDataSet).name, '_gt.png');
-        generatedGtPath = fullfile(Gt_from_classification_folder, gtImageFileName);
-        
-        imwrite(rot_groundTruth, generatedGtPath);
-        
-        % Save classified image results.
-        gtImageLabelsFileName = strcat(dataFilesList(nDataSet).name, '_gt_labels.png');
-        generatedGtLabelsPath = fullfile(Image_from_classification_folder, gtImageLabelsFileName);
-        
-        imwrite(rot_ClassifiedImage, generatedGtLabelsPath);
+        SVM_Classifier;
+           
+%         % Save ground truth results. 
+%         gtImageFileName = strcat(dataFilesList(nDataSet).name, '_gt.png');
+%         generatedGtPath = fullfile(Gt_from_classification_folder, gtImageFileName);
+%         
+%         imwrite(rot_groundTruth, generatedGtPath);
+%         
+%         % Save classified image results.
+%         gtImageLabelsFileName = strcat(dataFilesList(nDataSet).name, '_gt_labels.png');
+%         generatedGtLabelsPath = fullfile(Image_from_classification_folder, gtImageLabelsFileName);
+%         
+%         imwrite(rot_ClassifiedImage, generatedGtLabelsPath);
 
     end
 end

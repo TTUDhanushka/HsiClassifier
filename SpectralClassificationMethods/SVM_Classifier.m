@@ -4,7 +4,7 @@ clc;
 
 % InputData preperation
 % X = training_Data_Aug.';
-rData = GetReducedBandData1D(training_Data_Aug, bSet);
+rData = GetReducedBandData1D(training_Data_Aug, bSet_9);
 X = rData.';
 Y = training_Labels_Aug.';
 
@@ -19,7 +19,7 @@ model = fitcecoc(X,Y);
 dataCube = RotateHsiImage(reflectanceCube.DataCube, -90);
 [h, w, d] = size(dataCube);
 
-inputData = ReducedBandImage(dataCube, bSet);
+inputData = dataCube; % ReducedBandImage(dataCube, bSet);
 tempInputs = UnfoldHsiCube(inputData);
 
 testInputs = tempInputs.';
@@ -32,7 +32,7 @@ predictY = predict(model, testInputs);
 imageResult = zeros(h, w,3, 'uint8');
 
 for n = 1: length(predictY)
-    lbl_id = predictY(n);
+    lbl_id = predictY(n)
     
     row = fix(n/w) + 1;
     column = mod(n,w);
