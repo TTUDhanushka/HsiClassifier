@@ -159,10 +159,10 @@ pixelLabelColorbar(cmap, classes);
 originalImage = fullfile(datasetFolder, 'original.png');
 resultlImage = fullfile(datasetFolder, 'result.png');
 
-B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0);
+B = labeloverlay(I,C,'Colormap',cmap,'Transparency',1);
 
 imwrite(B, originalImage);
 
-B = labeloverlay(I,C,'Colormap',cmap,'Transparency',1);
+B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0);
 
 imwrite(B, resultlImage);
