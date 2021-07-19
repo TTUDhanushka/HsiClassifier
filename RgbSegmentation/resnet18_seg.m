@@ -1,7 +1,9 @@
 %% Semantic segmentation using resnet18.
 % net = resnet18;
 
-imgType = 'RGB'; % Either RGB or HSI
+imgType = 'HSI'; % Either RGB or HSI
+
+labelType = 'Manual'; % Either Manual or HSI_RES
 
 % Get dataset folder 
 datasetFolder = uigetdir;
@@ -54,7 +56,23 @@ clear nColor
   
 %%
   
-labelDir = fullfile(datasetFolder,'labels');
+switch(imgType)
+    case 'RGB'
+        % For RGB Images
+        imageSize = [645 645 3];
+        labelDir = fullfile(datasetFolder,'labels');
+    case 'HSI'
+        % For HSI images.
+        imageSize = [512 512 3];
+        
+        if strcmp(labelType, 'Manual')
+            labelDir = fullfile(datasetFolder,'labels');
+        else
+            labelDir = fullfile(datasetFolder,'classification');
+        end
+end
+
+% labelDir = fullfile(datasetFolder,'labels');
 pxds = pixelLabelDatastore(labelDir,classes,labelIDs);
 
 
@@ -147,7 +165,9 @@ else
     net = data.net;
 end
 
-I = readimage(imdsTest,3);
+%%
+
+I = readimage(imdsTest, 3);
 C = semanticseg(I, net);
 
 B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0.4);
