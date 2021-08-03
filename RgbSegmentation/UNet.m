@@ -1,12 +1,14 @@
 % U-Net 
 
+% Select the root folder of the dataset.
+
 % Set parameters
 mode = 'RGB';           % RGB or HSI_RGB
 
 switch (mode)
     case 'RGB'
-        imageSize = [648, 648, 3];
-        dataDir = 'RGB_625_625';
+        imageSize = [640, 640, 3];
+        dataDir = 'RGB_640_640';
         
     case 'HSI_RGB'
         imageSize = [512, 512, 3];
