@@ -340,11 +340,9 @@ for nFiles = 1: length(filesList)
                             
                             for iL = 1: 640
                                 for jL = 1:640
-                                    label640(iL,jL,:) = labelRGB(iL,jL,:);
+                                    label640(iL,jL,:) = labelRGB(i,j,:);
                                 end
                             end
-                            
-                            imwrite (label640, rgbLabelsFolder640_640);
                             
                         elseif (contains(results_file_struct(idx).name, 'RGBBACKGROUND') && ...
                                 contains(results_file_struct(idx).name, png_ext) && ...
@@ -353,16 +351,6 @@ for nFiles = 1: length(filesList)
                             rgbHighRes = strcat(str_temp, '\', results_file_struct(idx).name);
                             
                             copyfile (rgbHighRes, rgbImageFolder625_625, 'f');
-                            
-                            imageRGB = imread(rgbLabels);
-                            
-                            for iR = 1: 640
-                                for jR = 1:640
-                                    images640(iR,jR,:) = imageRGB(iR,jR,:);
-                                end
-                            end
-                            
-                            imwrite (images640, rgbImageFolder640_640);
                         end
                         
                         % HSI to RGB Images copying.
