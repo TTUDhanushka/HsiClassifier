@@ -98,31 +98,17 @@ pximdsVal = pixelLabelImageDatastore(hsdsVal,pxdsVal);
 augmenter = imageDataAugmenter('RandXReflection',true,...
     'RandXTranslation',[-10 10],'RandYTranslation',[-10 10]);
 
-%% Define training data
-pximds = pixelLabelImageDatastore(hsds, pxds, 'DataAugmentation', augmenter);
+% % Define training data
+ pximds = pixelLabelImageDatastore(hsds, pxds);
 
 encoderDepth = 3;
 
 lgraph = unetLayers(imageSize, noOfClasses, 'EncoderDepth', encoderDepth);
 
-options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... 
-        'ValidationData',pximdsVal,...      
+options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... %'ValidationData',pximdsVal,...      
         'MiniBatchSize',4, ...
         'MaxEpochs',20, ...
         'Plots','training-progress', ...
         'VerboseFrequency',10);
     
 net = trainNetwork(pximds, lgraph, options);
-
-
-%% Test
-
-I = readimage(hsdsTest, 1);
-C = semanticseg(I, net);
-
-rgb_Out = ConstructRgbImage(I, 1, 3, 4);
-
-B = labeloverlay(rgb_Out,C,'Colormap',cmap,'Transparency',0.4);
-imshow(B)
-pixelLabelColorbar(cmap, classes);
-    
