@@ -469,11 +469,11 @@ for nFiles = 1: length(filesList)
                                 
                                 filename = fullfile(Hsi_16_bandImageFolder,results_file_struct(idx).name); 
                                 
-                                reducedHyperCube_16 = hypercube (reducedCube_16, waveSet_16, meta);
+                                reducedHyperCube = hypercube (reducedCube, waveSet_16, meta);
                                 
-                                enviwrite(reducedHyperCube_16, filename);
+                                enviwrite(reducedHyperCube, filename);
                                 
-                                clear hsiData reducedCube_16 filename hsiFileFullPath;
+                                clear hsiData reducedCube filename hsiFileFullPath;
                             end
 
                         else
