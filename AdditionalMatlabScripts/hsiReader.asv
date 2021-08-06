@@ -1,7 +1,0 @@
-function hsiData = hsiReader(filename)
-    hsiCube = hypercube(filename);
-    
-    reflectanceData = hsiCube.DataCube;
-     
-     hsiData = RotateHsiImage(reflectanceData, angle)
-end

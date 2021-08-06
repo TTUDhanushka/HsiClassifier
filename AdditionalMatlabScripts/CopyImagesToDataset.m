@@ -432,11 +432,47 @@ for nFiles = 1: length(filesList)
                             disp("Band list isn't available in the workspace.");
                         end
                         
-%                         if exists ('bSet_9', 'var')
-%                         end
-%                         
-%                         if exists ('bSet_9', 'var')
-%                         end
+                        % HSI 16 bands datacube in ENVI format.
+                        if exist('bSet_16', 'var')
+                            bandCount_16 = 16;
+                            
+                            if (contains(results_file_struct(idx).name, 'REFLECTANCE') && ...
+                                    contains(results_file_struct(idx).name, reflectance_data_ext))
+                                
+                                hsiFileFullPath = strcat(str_temp, '\', results_file_struct(idx).name);
+                                
+                                hsiData = hypercube(hsiFileFullPath);
+                                reducedCube = ReducedBandImage(hsiData.DataCube, bSet_16);
+                                
+                                if ~bMetaUpdate
+                                    meta = hsiData.Metadata;
+                                    meta.Bands = bandCount_16;
+                                    bMetaUpdate = true;
+                                end
+                                
+                                if ~bWavelengthUpdate
+                                    
+                                    waveSet_16 = zeros(bandCount_16, 1, 'double');
+                                    
+                                    for nWaveBand16 = 1:bandCount_16                                        
+                                        waveSet_16(nWaveBand16, 1) = hsiData.Wavelength(bSet_16(nWaveBand16));
+                                    end
+                                    
+                                    bWavelengthUpdate = true;
+                                end
+                                
+                                filename = fullfile(Hsi_16_bandImageFolder,results_file_struct(idx).name); 
+                                
+                                reducedHyperCube = hypercube (reducedCube, waveSet_16, meta);
+                                
+                                enviwrite(reducedHyperCube, filename);
+                                
+                                clear hsiData reducedCube filename hsiFileFullPath;
+                            end
+
+                        else
+                            disp("Band list isn't available in the workspace.");
+                        end
                     end
                     
                 else
