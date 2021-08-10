@@ -12,9 +12,9 @@ clc;
 
 %% Add necessary folders to path
 
-    addpath HelperFunctions SpectralClassificationMethods BandSelectionMethods SpectralSpatialClassificationMethods
-    addpath AdditionalMatlabScripts HsiToRgb ImageQualityMatrices FilterMethods AccuracyMatrices hsiDocs
-    addpath RgbSegmentation 
+    addpath HelperFunctions  BandSelectionMethods AccuracyMatrices
+    addpath AdditionalMatlabScripts HsiToRgb ImageQualityMatrices FilterMethods hsiDocs
+    addpath RgbSegmentation SpectralClassificationMethods SpectralSpatialClassificationMethods
     
 %% Get HSI images into workspace and perform calculate relative reflectance.
 

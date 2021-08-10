@@ -1,6 +1,6 @@
 function iouAccuracy = IouCoeff(groundTruthImage, classificationResult)
     % Read result image and ground truth image
-    noOfClasses = 13;
+    noOfClasses = 12;
 
     % These files are taken from the workspace.
     [h, w, d] = size(groundTruthImage);
