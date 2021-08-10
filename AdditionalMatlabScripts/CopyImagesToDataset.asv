@@ -490,30 +490,30 @@ for nFiles = 1: length(filesList)
                                 hsiFileFullPath = strcat(str_temp, '\', results_file_struct(idx).name);
                                 
                                 hsiData = hypercube(hsiFileFullPath);
-                                reducedCube_25 = ReducedBandImage(hsiData.DataCube, bSet_25);
+                                reducedCube_16 = ReducedBandImage(hsiData.DataCube, bSet_16);
                                 
-                                if ~bMetaUpdate_25
+                                if ~bMetaUpdate_16
                                     meta = hsiData.Metadata;
                                     meta.Bands = bandCount_25;
-                                    bMetaUpdate_25 = true;
+                                    bMetaUpdate_16 = true;
                                 end
                                 
-                                if ~bWavelengthUpdate_25
+                                if ~bWavelengthUpdate_16
                                     
-                                    waveSet_25 = zeros(bandCount_25, 1, 'double');
+                                    waveSet_16 = zeros(bandCount_25, 1, 'double');
                                     
-                                    for nWaveBand25 = 1:bandCount_25                                        
-                                        waveSet_25(nWaveBand25, 1) = hsiData.Wavelength(bSet_25(nWaveBand25));
+                                    for nWaveBand16 = 1:bandCount_25                                        
+                                        waveSet_16(nWaveBand16, 1) = hsiData.Wavelength(bSet_16(nWaveBand16));
                                     end
                                     
-                                    bWavelengthUpdate_25 = true;
+                                    bWavelengthUpdate_16 = true;
                                 end
                                 
-                                filename = fullfile(Hsi_25bandImageFolder,results_file_struct(idx).name); 
+                                filename = fullfile(Hsi_16_bandImageFolder,results_file_struct(idx).name); 
                                 
-                                reducedHyperCube_25 = hypercube (reducedCube_25, waveSet_25, meta);
+                                reducedHyperCube_16 = hypercube (reducedCube_16, waveSet_16, meta);
                                 
-                                enviwrite(reducedHyperCube_25, filename);
+                                enviwrite(reducedHyperCube_16, filename);
                                 
                                 clear hsiData reducedCube_16 filename hsiFileFullPath;
                             end
