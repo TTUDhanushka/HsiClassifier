@@ -509,7 +509,7 @@ for nFiles = 1: length(filesList)
                                     bWavelengthUpdate_25 = true;
                                 end
                                 
-                                filename = fullfile(Hsi_25bandImageFolder,results_file_struct(idx).name); 
+                                filename = fullfile(Hsi_25_bandImageFolder,results_file_struct(idx).name); 
                                 
                                 reducedHyperCube_25 = hypercube (reducedCube_25, waveSet_25, meta);
                                 
