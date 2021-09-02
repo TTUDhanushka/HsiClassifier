@@ -121,4 +121,17 @@ C = semanticseg(I, net);
 B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0.4);
 imshow(B)
 pixelLabelColorbar(cmap, classes);
+
+%% Save images to results folder
+
+originalImage = fullfile(datasetFolder, 'original.png');
+resultlImage = fullfile(datasetFolder, 'UNet_result.png');
+
+B = labeloverlay(I,C,'Colormap',cmap,'Transparency',1);
+
+imwrite(B, originalImage);
+
+B = labeloverlay(I,C,'Colormap',cmap,'Transparency',0);
+
+imwrite(B, resultlImage);
     
