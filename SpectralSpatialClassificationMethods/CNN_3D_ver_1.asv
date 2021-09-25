@@ -47,8 +47,7 @@ end
 
 hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader);
 
-%% Dataset with labels and images
-
+%%
 % Labels
 classes = [
             "undefined"
@@ -89,29 +88,8 @@ cmap = cmap ./ 255;
 
 pxds = pixelLabelDatastore(labelDir, classes, labelIDs);
 
-% Split the datastore
-[hsdsTrain, hsdsVal, hsdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitHsiDataset(hsds, pxds, classes, labelIDs);
-
-numTrainingImages = numel(hsdsTrain.Files);
-numValImages = numel(hsdsVal.Files);
-numTestingImages = numel(hsdsTest.Files);
-
-% Define validation data.
-pximdsVal = pixelLabelImageDatastore(hsdsVal,pxdsVal);
-
-pximds = pixelLabelImageDatastore(hsdsTrain, pxdsTrain);
-
 %% Network design
-networkLayers = layers_1;
-
-options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... 
-        'ValidationData',pximdsVal,...      
-        'MiniBatchSize',4, ...
-        'MaxEpochs',20, ...
-        'Plots','training-progress', ...
-        'VerboseFrequency',10);
-    
-networkHSI = trainNetwork(pximds, networkLayers, options);
+network = CNN_3D_9channels;
 
 % Performance matrices
 
