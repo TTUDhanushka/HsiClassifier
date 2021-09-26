@@ -6,16 +6,20 @@
 
 %% Read the dataset
 
-mode = 'HSI_9';           % No of channels, by default this should be HSI_9
+mode = 'RGB';           % No of channels, by default this should be HSI_9
 
 switch (mode)
     case 'HSI_9'
-        imageSize = [512, 512, 9];
+        imageSize = [512, 512, 9, 1];
         dataDir = 'HSI_9_Bands';
         
     case 'HSI_16'
-        imageSize = [512, 512, 16];
+        imageSize = [512, 512, 16, 1];
         dataDir = 'HSI_16_Bands';
+        
+    case 'RGB'
+        imageSize = [645, 645, 3];
+        dataDir = 'RGB_625_625';
 end
 
 datasetRoot = uigetdir();
@@ -45,8 +49,13 @@ for nFile = 1:10
     end
 end
 
-hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader);
+switch (mode)
+    case 'HSI_9'
+        hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader_v2);
 
+    case 'RGB'
+        hsds = imageDatastore(imageDir);
+end
 %% Dataset with labels and images
 
 % Labels
@@ -89,20 +98,29 @@ cmap = cmap ./ 255;
 
 pxds = pixelLabelDatastore(labelDir, classes, labelIDs);
 
-% Split the datastore
-[hsdsTrain, hsdsVal, hsdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitHsiDataset(hsds, pxds, classes, labelIDs);
+%% Split dataset
+switch (mode)
+    case 'HSI_9'
+        % Split the datastore
+        [hsdsTrain, hsdsVal, hsdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitHsiDataset(hsds, pxds, classes, labelIDs);
+        
+    case 'RGB'
+        % Split the datastore
+        [hsdsTrain, hsdsVal, hsdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitDataset(hsds, pxds, classes, labelIDs);
+end
+
 
 numTrainingImages = numel(hsdsTrain.Files);
 numValImages = numel(hsdsVal.Files);
 numTestingImages = numel(hsdsTest.Files);
 
 % Define validation data.
-pximdsVal = pixelLabelImageDatastore(hsdsVal,pxdsVal);
+pximdsVal = pixelLabelImageDatastore(hsdsVal, pxdsVal); %, 'ReadFcn', hsiLabelReader_v2);
 
 pximds = pixelLabelImageDatastore(hsdsTrain, pxdsTrain);
 
 %% Network design
-networkLayers = layers_1;
+networkLayers = layers_2;
 
 options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... 
         'ValidationData',pximdsVal,...      

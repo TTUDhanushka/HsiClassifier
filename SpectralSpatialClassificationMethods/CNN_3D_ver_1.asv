@@ -6,16 +6,20 @@
 
 %% Read the dataset
 
-mode = 'HSI_9';           % No of channels, by default this should be HSI_9
+mode = 'RGB';           % No of channels, by default this should be HSI_9
 
 switch (mode)
     case 'HSI_9'
-        imageSize = [512, 512, 9];
+        imageSize = [512, 512, 9, 1];
         dataDir = 'HSI_9_Bands';
         
     case 'HSI_16'
-        imageSize = [512, 512, 16];
+        imageSize = [512, 512, 16, 1];
         dataDir = 'HSI_16_Bands';
+        
+    case 'RGB'
+        imageSize = [645, 645, 3];
+        dataDir = 'RGB_625_625';
 end
 
 datasetRoot = uigetdir();
@@ -45,9 +49,15 @@ for nFile = 1:10
     end
 end
 
-hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader);
+switch (mode)
+    case 'HSI_9'
+        hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader_v2);
 
-%%
+    case 'RGB'
+        hsds = imageDatastore(imageDir);
+end
+%% Dataset with labels and images
+
 % Labels
 classes = [
             "undefined"
@@ -88,8 +98,33 @@ cmap = cmap ./ 255;
 
 pxds = pixelLabelDatastore(labelDir, classes, labelIDs);
 
+% Split the datastore
+[hsdsTrain, hsdsVal, hsdsTest, pxdsTrain, pxdsVal, pxdsTest] = splitHsiDataset(hsds, pxds, classes, labelIDs);
+    case 'RGB'
+        hsds = imageDatastore(imageDir);
+end
+
+
+numTrainingImages = numel(hsdsTrain.Files);
+numValImages = numel(hsdsVal.Files);
+numTestingImages = numel(hsdsTest.Files);
+
+% Define validation data.
+pximdsVal = pixelLabelImageDatastore(hsdsVal, pxdsVal); %, 'ReadFcn', hsiLabelReader_v2);
+
+pximds = pixelLabelImageDatastore(hsdsTrain, pxdsTrain);
+
 %% Network design
-network = CNN_3D_9channels;
+networkLayers = CNN_2D_Images;
+
+options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... 
+        'ValidationData',pximdsVal,...      
+        'MiniBatchSize',4, ...
+        'MaxEpochs',20, ...
+        'Plots','training-progress', ...
+        'VerboseFrequency',10);
+    
+networkHSI = trainNetwork(pximds, networkLayers, options);
 
 % Performance matrices
 

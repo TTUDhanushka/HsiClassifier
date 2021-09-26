@@ -114,7 +114,6 @@ options = trainingOptions('sgdm','InitialLearnRate',1e-3, ...
     
 net = trainNetwork(pximds, lgraph, options);
 
-
 %% Test
 
 I = readimage(hsdsTest, 1);
