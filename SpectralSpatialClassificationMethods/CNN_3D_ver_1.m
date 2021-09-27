@@ -6,7 +6,7 @@
 
 %% Read the dataset
 
-mode = 'RGB';           % No of channels, by default this should be HSI_9
+mode = 'HSI_9';           % No of channels, by default this should be HSI_9
 
 switch (mode)
     case 'HSI_9'
@@ -51,7 +51,7 @@ end
 
 switch (mode)
     case 'HSI_9'
-        hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader_v2);
+        hsds = imageDatastore(imageDir, 'FileExtensions', '.dat', 'ReadFcn', @hsiReader); % _v2
 
     case 'RGB'
         hsds = imageDatastore(imageDir);
@@ -120,7 +120,7 @@ pximdsVal = pixelLabelImageDatastore(hsdsVal, pxdsVal); %, 'ReadFcn', hsiLabelRe
 pximds = pixelLabelImageDatastore(hsdsTrain, pxdsTrain);
 
 %% Network design
-networkLayers = layers_2;
+networkLayers = layers_5;
 
 options = trainingOptions('sgdm','InitialLearnRate',1e-3, ... 
         'ValidationData',pximdsVal,...      
