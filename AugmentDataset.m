@@ -12,6 +12,7 @@
 ImagesDir = 'images';
 LabelDir = 'labels';
 HsiDataFIleExt = '.dat';
+LblDataFileExt = '.png';
 
 % Get the dataset folder
 dataSetDir = uigetdir();
@@ -26,6 +27,8 @@ for nFile = 1: length(dirList)
     end
 end
  
+% Augment images 
+
 if strcmp(DataType, 'RGB')
     
 elseif strcmp(DataType, 'HSI')
@@ -39,7 +42,6 @@ elseif strcmp(DataType, 'HSI')
     
     for nHsi = 1: length(hdrDatFilesList)
         if contains(hdrDatFilesList(nHsi).name, HsiDataFIleExt)
-            hdrDatFilesList(nHsi).name
             hsiFiles(fileCount, 1) = fullfile(imagesDir, hdrDatFilesList(nHsi).name);
             fileCount = fileCount + 1;
         end
@@ -47,11 +49,11 @@ elseif strcmp(DataType, 'HSI')
     
     for nHsiFile = 1: length(hsiFiles)
         hypercubeTemp = hypercube(hsiFiles(nHsiFile, 1));
-        fNemWoExt = erase(hsiFiles(nHsiFile, 1), HsiDataFIleExt);
+        fNameWoExt = erase(hsiFiles(nHsiFile, 1), HsiDataFIleExt);
         
-        rotatedClkFileName = strcat(fNemWoExt, '_clk');
-        FlpdFileName = strcat(fNemWoExt, '_flp');
-        rotatedClkFlpFileName = strcat(fNemWoExt, '_clk_flp');
+        rotatedClkFileName = strcat(fNameWoExt, '_clk');
+        FlpdFileName = strcat(fNameWoExt, '_flp');
+        rotatedClkFlpFileName = strcat(fNameWoExt, '_clk_flp');
         
         rotateClkHsi = RotateHsiImage(hypercubeTemp.DataCube, -90);
         flippedHsi = FlipHsiImage(hypercubeTemp.DataCube, 'H');
@@ -69,7 +71,38 @@ elseif strcmp(DataType, 'HSI')
        
 end
 
-% Rotate HSI datacube by 90 deg clockwise
 
-% Rotate label 90 deg clockwise
+%% Augment labels
 
+pngLblFilesList = dir(labelsDir);
+
+noOfLblFiles = length(pngLblFilesList) - 2;
+
+lblFiles = strings(noOfLblFiles, 1);
+
+    lblFileCount = 1;
+    
+    for nLblImg = 1: length(pngLblFilesList)
+        if contains(pngLblFilesList(nLblImg).name, LblDataFileExt)
+            lblFiles(lblFileCount, 1) = fullfile(labelsDir, pngLblFilesList(nLblImg).name);
+            lblFileCount = lblFileCount + 1;
+        end
+    end
+    
+    for nLabelFile = 1: length(lblFiles)
+        labelTemp = imread(lblFiles(nLabelFile, 1));
+        fNameWoExtLbl = erase(lblFiles(nLabelFile, 1), LblDataFileExt);
+        
+        rotatedClkFileNameLbl = strcat(fNameWoExtLbl, '_clk', '.png');
+        FlpdFileNameLbl = strcat(fNameWoExtLbl, '_flp', '.png');
+        rotatedClkFlpFileNameLbl = strcat(fNameWoExtLbl, '_clk_flp', '.png');
+        
+        rotateClkLbl = imrotate(labelTemp, -90);
+        flippedLbl = flip(labelTemp, 1);
+        rotateClkFlpdLbl = flip(rotateClkLbl, 1);
+        
+        imwrite(rotateClkLbl, rotatedClkFileNameLbl);
+        imwrite(flippedLbl, FlpdFileNameLbl);
+        imwrite(rotateClkFlpdLbl, rotatedClkFlpFileNameLbl);
+    end
+    
