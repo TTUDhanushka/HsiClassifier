@@ -6,7 +6,7 @@
 
 % Options
 
-    DataType = 'HSI';      % RGB, HSI
+    DataType = 'RGB';      % RGB, HSI
 %
 
 ImagesDir = 'images';
@@ -30,6 +30,36 @@ end
 % Augment images 
 
 if strcmp(DataType, 'RGB')
+    rgbDatFilesList = dir(imagesDir);
+    
+    noOfRgbFiles = length(rgbDatFilesList) - 2;
+    rgbFiles = strings(noOfRgbFiles, 1);
+
+    rgbFileCount = 1;
+    
+    for nRgbImg = 1: length(rgbDatFilesList)
+        if contains(rgbDatFilesList(nRgbImg).name, LblDataFileExt)
+            rgbFiles(rgbFileCount, 1) = fullfile(imagesDir, rgbDatFilesList(nRgbImg).name);
+            rgbFileCount = rgbFileCount + 1;
+        end
+    end
+    
+    for nRgbImgFile = 1: length(rgbFiles)
+        rgbImgTemp = imread(rgbFiles(nRgbImgFile, 1));
+        fNameWoExtRgb = erase(rgbFiles(nRgbImgFile, 1), LblDataFileExt);
+        
+        %rotatedClkFileNameLbl = strcat(fNameWoExtLbl, '_clk', '.png');
+        FlpdFileNameRgb = strcat(fNameWoExtRgb, '_flp', '.png');
+        %rotatedClkFlpFileNameLbl = strcat(fNameWoExtLbl, '_clk_flp', '.png');
+        
+        %rotateClkLbl = imrotate(labelTemp, -90);
+        flippedRgbImg = flip(rgbImgTemp, 2);
+        %rotateClkFlpdLbl = flip(rotateClkLbl, 1);
+        
+        %imwrite(rotateClkLbl, rotatedClkFileNameLbl);
+        imwrite(flippedRgbImg, FlpdFileNameRgb);
+        %imwrite(rotateClkFlpdLbl, rotatedClkFlpFileNameLbl);
+    end
     
 elseif strcmp(DataType, 'HSI')
     hdrDatFilesList = dir(imagesDir);
@@ -51,22 +81,22 @@ elseif strcmp(DataType, 'HSI')
         hypercubeTemp = hypercube(hsiFiles(nHsiFile, 1));
         fNameWoExt = erase(hsiFiles(nHsiFile, 1), HsiDataFIleExt);
         
-        rotatedClkFileName = strcat(fNameWoExt, '_clk');
+        %rotatedClkFileName = strcat(fNameWoExt, '_clk');
         FlpdFileName = strcat(fNameWoExt, '_flp');
-        rotatedClkFlpFileName = strcat(fNameWoExt, '_clk_flp');
+        %rotatedClkFlpFileName = strcat(fNameWoExt, '_clk_flp');
         
-        rotateClkHsi = RotateHsiImage(hypercubeTemp.DataCube, -90);
+        %rotateClkHsi = RotateHsiImage(hypercubeTemp.DataCube, -90);
         flippedHsi = FlipHsiImage(hypercubeTemp.DataCube, 'H');
-        rotateClkFlpdHsi = FlipHsiImage(rotateClkHsi, 'H');
+        %rotateClkFlpdHsi = FlipHsiImage(rotateClkHsi, 'H');
         
-        hypercubeTemp = assignData(hypercubeTemp, ':', ':', ':', rotateClkHsi);
-        enviwrite(hypercubeTemp, rotatedClkFileName, 'Interleave','bil');
+        %hypercubeTemp = assignData(hypercubeTemp, ':', ':', ':', rotateClkHsi);
+        %enviwrite(hypercubeTemp, rotatedClkFileName, 'Interleave','bil');
         
         hypercubeTemp = assignData(hypercubeTemp, ':', ':', ':', flippedHsi);
         enviwrite(hypercubeTemp, FlpdFileName, 'Interleave','bil');
         
-        hypercubeTemp = assignData(hypercubeTemp, ':', ':', ':', rotateClkFlpdHsi);
-        enviwrite(hypercubeTemp, rotatedClkFlpFileName, 'Interleave','bil');
+        %hypercubeTemp = assignData(hypercubeTemp, ':', ':', ':', rotateClkFlpdHsi);
+        %enviwrite(hypercubeTemp, rotatedClkFlpFileName, 'Interleave','bil');
     end
        
 end
@@ -93,16 +123,16 @@ lblFiles = strings(noOfLblFiles, 1);
         labelTemp = imread(lblFiles(nLabelFile, 1));
         fNameWoExtLbl = erase(lblFiles(nLabelFile, 1), LblDataFileExt);
         
-        rotatedClkFileNameLbl = strcat(fNameWoExtLbl, '_clk', '.png');
+        %rotatedClkFileNameLbl = strcat(fNameWoExtLbl, '_clk', '.png');
         FlpdFileNameLbl = strcat(fNameWoExtLbl, '_flp', '.png');
-        rotatedClkFlpFileNameLbl = strcat(fNameWoExtLbl, '_clk_flp', '.png');
+        %rotatedClkFlpFileNameLbl = strcat(fNameWoExtLbl, '_clk_flp', '.png');
         
-        rotateClkLbl = imrotate(labelTemp, -90);
-        flippedLbl = flip(labelTemp, 1);
-        rotateClkFlpdLbl = flip(rotateClkLbl, 1);
+        %rotateClkLbl = imrotate(labelTemp, -90);
+        flippedLbl = flip(labelTemp, 2);
+        %rotateClkFlpdLbl = flip(rotateClkLbl, 1);
         
-        imwrite(rotateClkLbl, rotatedClkFileNameLbl);
+        %imwrite(rotateClkLbl, rotatedClkFileNameLbl);
         imwrite(flippedLbl, FlpdFileNameLbl);
-        imwrite(rotateClkFlpdLbl, rotatedClkFlpFileNameLbl);
+        %imwrite(rotateClkFlpdLbl, rotatedClkFlpFileNameLbl);
     end
     
