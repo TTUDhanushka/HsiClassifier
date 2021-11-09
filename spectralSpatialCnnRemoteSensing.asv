@@ -28,14 +28,22 @@ end
 figure()
 imshow(slice);
 
+%% Bands reduction
+
+bandsList = [9, 23, 48, 67, 90, 111, 133, 155, 177];
+% bandsList = indian_16_bands_list;
+% bandsList = indian_25_bands_list;
+
+indianBandsReduced = ReducedBandImage(indian_pines_corrected, bandsList);
+
 %% Training dataset preperation
 
-selectedBands = d;
-classes = 17;
+selectedBands = 9;  % d or 9, 16, 25
+classes = 10;       % 17
 
 ssKernelSz = 5;  % forming a 3 x 3 image with 200 channels
 
-kernelSz = 16;  % to pick up trainng pixels
+kernelSz = 12;  % to pick up trainng pixels
 
 kernelPxPerClass = kernelSz - (ssKernelSz - 1);
 totalTrainingPxPerClass = (kernelPxPerClass * kernelPxPerClass);
@@ -44,17 +52,20 @@ trainingData = zeros(ssKernelSz, ssKernelSz, selectedBands, totalTrainingPxPerCl
 
 
 % Top left coordinates of each pixel class.
-trainingPixelTpL = [[9, 2]; [70, 99]; [20, 7]; [1, 1]; [36, 9 ]; [83, 12];...
-                    [68, 33]; [74, 110]; [46, 126]; [66, 23]; [13, 31];...
-                    [12, 103]; [19, 69]; [121, 44]; [129, 120]; [9, 93]; [17, 50]];
+trainingPixelTpL = [[95, 1]; [31, 37]; [60, 4]; [74, 2]; [99, 58];...   % 0 - 4
+                    [39, 122]; [40, 79]; [79, 56]; [13, 56]; [118, 102]];
     
+%                 trainingPixelTpL = [[9, 2]; [70, 99]; [20, 7]; [1, 1]; [36, 9 ]; [83, 12];...
+%                     [68, 33]; [74, 110]; [46, 126]; [66, 23]; [13, 31];...
+%                     [12, 103]; [19, 69]; [121, 44]; [129, 120]; [9, 93]; [17, 50]];
+                
 for nClass = 1:classes
     for kernelX = 1:kernelPxPerClass
        for kernelY = 1:kernelPxPerClass
             for ndx = 1:ssKernelSz
                 for ndy = 1:ssKernelSz
                     trainingData(ndx, ndy, :, (totalTrainingPxPerClass * (nClass - 1)) + ((kernelX - 1) * kernelPxPerClass) + kernelY) ...
-                        = indian_pines_corrected((trainingPixelTpL(nClass,1) + kernelX - 1) + ndx, ...
+                        = indianBandsReduced((trainingPixelTpL(nClass,1) + kernelX - 1) + ndx, ...
                         (trainingPixelTpL(nClass, 2) + kernelY - 1) + ndy, :);
                 end
             end
@@ -69,7 +80,7 @@ for nClass = 1:classes
     for kernelX = 1:kernelPxPerClass
         for kernelY = 1:kernelPxPerClass
             trainingLabels(1, (totalTrainingPxPerClass * (nClass - 1)) + ((kernelX - 1) * kernelPxPerClass) + kernelY) ...
-                = indian_pines_gt((trainingPixelTpL(nClass,1) + kernelX - 1) + 3, ...
+                = indian_pines_gt_few_classes((trainingPixelTpL(nClass,1) + kernelX - 1) + 3, ...
                 (trainingPixelTpL(nClass, 2) + kernelY - 1) + 3, :);           
         end
     end
@@ -99,17 +110,96 @@ opts = trainingOptions('adam', ...
     'Shuffle', 'every-epoch', ...
     'ExecutionEnvironment','gpu'); %Optimise using stochastic gradient descent with momentum
 
-deep_net = trainNetwork(augData, augLabelsCat, layers_3, opts);
+ deep_net = trainNetwork(augData, augLabelsCat, NN_10_bands, opts);
 
+% deep_net_16 = trainNetwork(augData, augLabelsCat, NN_16_bands, opts);
 
+% deep_net_25 = trainNetwork(augData, augLabelsCat, NN_25_bands, opts);
 %% Predict
 
-CNN_TestPixels = zeros(5, 5, 200);
+CNN_TestPixels = zeros(5, 5, selectedBands);
 
-for i = 1:5
-    for j = 1:5
-        CNN_TestPixels(i, j, :) = indian_pines_corrected(i, j, : );
+resultIndianPines = zeros(w, h, 'uint8');
+resultIndianPines_vis = zeros(w, h, 3, 'uint8');
+
+for kx = 1: w - 4
+    for ky = 1:h - 4
+        
+        for i = 1:5
+            for j = 1:5
+                CNN_TestPixels(i, j, :) = indianBandsReduced((kx - 1) + i, (ky - 1) + j, : );
+            end
+        end
+        
+        predictY = predict(deep_net, CNN_TestPixels);
+        [val, id] = max(predictY);
+        resultIndianPines(kx + 2, ky + 2) = id - 1;
     end
 end
 
-predictY = predict(deep_net, CNN_TestPixels);
+for i = 1:w
+    for j = 1:h
+        colorIdx = resultIndianPines(i, j) + 1;
+        resultIndianPines_vis(i, j, :) = revisedColorMap(colorIdx, :);
+    end
+end
+
+%%
+figure()
+imshow(resultIndianPines_vis);
+
+%% Overall accuracy
+
+totalPixels = w * h;
+
+correctPx = 0;
+incorrect = 0;
+
+
+for rx = 3:w-2
+    for ry = 3: h-2
+        if ~(indian_pines_gt_few_classes(rx, ry) == 0)
+            if indian_pines_gt_few_classes(rx, ry) == resultIndianPines(rx, ry)
+                correctPx = correctPx + 1;
+            else
+                incorrect = incorrect + 1;
+            end
+        end
+    end
+end
+
+% background pixels
+classPx = 0;
+
+for rx = 3:w-2
+    for ry = 3: h-2
+        if ~(indian_pines_gt_few_classes(rx, ry) == 0)
+            classPx = classPx + 1;
+        end
+    end
+end
+
+accuracy = (correctPx / classPx) * 100;
+
+%% Class-wise accuracy
+
+classResult = zeros(classes, 1);
+classPixels = zeros(classes, 1);
+
+for nClass = 1: classes - 1
+    for rx = 3:w-2
+        for ry = 3: h-2
+            if (indian_pines_gt_few_classes(rx, ry) == nClass)
+                
+                classPixels(nClass, 1) = classPixels(nClass, 1) + 1;
+                
+                if indian_pines_gt_few_classes(rx, ry) == resultIndianPines(rx, ry)
+                    classResult(nClass, 1) = classResult(nClass, 1) + 1;
+
+                end
+            end
+        end
+    end
+end
+
+px = (classResult ./ classPixels) * 100
