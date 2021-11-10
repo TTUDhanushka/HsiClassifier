@@ -1,0 +1,485 @@
+%% Hyperspectral terrain image spectral-spatial window classification
+%
+% This method works as a sliding window over HSI image while performing
+% image classification.
+%
+
+%% Cleaning workspace objects
+clear undefinedTrainingData undefinedTrainingLabel ...
+    grassTrainingData grassTrainingLabel ...
+    ConcreteTrainingData ConcreteTrainingLabel ...
+    AsphaltTrainingData AsphaltTrainingLabel ...
+    TreesTrainingData TreesTrainingLabel ...
+    RocksTrainingData RocksTrainingLabel ...
+    WaterTrainingData WaterTrainingLabel ...
+    skyTrainingData skyTrainingLabel ...
+    GravelTrainingData GravelTrainingLabel ...
+    ObjectTrainingData ObjectTrainingLabel ...
+    DirtTrainingData DirtTrainingLabel ...
+    MudTrainingData MudTrainingLabel 
+
+%% Load the image dataset
+
+imageDirectory = uigetdir();
+%%
+imageFileName = 'REFLECTANCE_2020-04-27_014.dat';
+
+imagePath = fullfile(imageDirectory, imageFileName);
+
+hsiTestImage = hypercube(imagePath);
+
+rotatedHsi = RotateHsiImage(hsiTestImage.DataCube, -90);
+
+%% Get the training data
+
+rgbImage = ConstructRgbImage(rotatedHsi, 2, 3, 5);
+
+% figure()
+% imshow(rgbImage);
+
+bandsCount = 25;
+ssKernel = 5;               % 5x5 kernel or window
+
+
+if ~exist('undefinedTrainingData','var')
+    undefinedTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    undefinedTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('grassTrainingData','var')
+    grassTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    grassTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('ConcreteTrainingData','var')
+    ConcreteTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    ConcreteTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('AsphaltTrainingData','var')
+    AsphaltTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    AsphaltTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('TreesTrainingData','var')
+    TreesTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    TreesTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('RocksTrainingData','var')
+    RocksTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    RocksTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('WaterTrainingData','var')
+    WaterTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    WaterTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('skyTrainingData','var')
+    skyTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    skyTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('GravelTrainingData','var')
+    GravelTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    GravelTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('ObjectTrainingData','var')
+    ObjectTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    ObjectTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('DirtTrainingData','var')
+    DirtTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    DirtTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+if ~exist('MudTrainingData','var')
+    MudTrainingData = zeros(ssKernel, ssKernel, bandsCount, 100);
+    MudTrainingLabel = zeros(1, 100, 'uint8');
+end
+
+% training data area
+[topLeft, btmRight] = PickUpPixelArea(rgbImage);
+
+Y_diff = btmRight(1,1) - topLeft(1,1);
+X_diff = btmRight(1,2) - topLeft(1,2);
+
+sampleCube = zeros(X_diff, Y_diff, bandsCount);
+
+for hx = 1:X_diff
+    for hy = 1:Y_diff
+        sampleCube(hx, hy, :) = rotatedHsi(topLeft(1,2) + hx, topLeft(1,1) + hy, :);
+    end
+end
+
+% Options
+% className = 
+%   "undefined"     = 0
+%   "grass"         = 1
+%   "Concrete"      = 2
+%   "Asphalt"       = 3
+%   "Trees"         = 4
+%   "Rocks"         = 5
+%   "Water"         = 6
+%   "Sky"           = 7
+%   "Gravel"        = 8
+%   "Object"        = 9
+%   "Dirt"          = 10
+%   "Mud"           = 11
+
+% Set the class to collect training data
+classId = 10;
+n = 1;
+
+switch classId
+    case 0
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        undefinedTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                undefinedTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+      
+    case 1
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        grassTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                grassTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 2
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        ConcreteTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                ConcreteTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 3
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        AsphaltTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                AsphaltTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 4
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        TreesTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                TreesTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 5
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        RocksTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                RocksTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 6
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        WaterTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                WaterTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 7
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        skyTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                skyTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 8
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        GravelTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                GravelTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 9
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        ObjectTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                ObjectTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 10
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        DirtTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                DirtTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+        
+    case 11
+        for dy = 1:Y_diff - (ssKernel - 1)
+            for dx = 1:X_diff - (ssKernel - 1)
+                
+                for i = 1:ssKernel
+                    for j = 1: ssKernel
+                        MudTrainingData(i, j,:, n) = sampleCube((dx-1) + i, (dy - 1) + j,:);
+                        
+                    end
+                end
+                
+                MudTrainingLabel(1, n) = classId;
+                n = n + 1;
+            end
+        end
+end
+
+%% Combine all the training data/labels and augment them
+
+[~, n1] = size( undefinedTrainingLabel);
+[~, n2] = size( grassTrainingLabel );
+[~, n3] = size( ConcreteTrainingLabel );
+[~, n4] = size( AsphaltTrainingLabel );
+[~, n5] = size( TreesTrainingLabel );
+[~, n6] = size( RocksTrainingLabel );
+[~, n7] = size( WaterTrainingLabel );
+[~, n8] = size( skyTrainingLabel );
+[~, n9] = size( GravelTrainingLabel );
+[~, n10] = size( ObjectTrainingLabel );
+[~, n11] = size( DirtTrainingLabel);
+[~, n12] = size( MudTrainingLabel);
+
+totalSamples = n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9 + n10 + n11 + n12;
+
+TempTrainingData = zeros(ssKernel, ssKernel, bandsCount, totalSamples);
+TempTrainingLabel = zeros(1, totalSamples, 'uint8');
+
+pxCount = 1;
+
+for f = 1: n1
+    TempTrainingData(:,:,:, pxCount) = undefinedTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = undefinedTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n2
+    TempTrainingData(:,:,:, pxCount) = grassTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = grassTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n3
+    TempTrainingData(:,:,:, pxCount) = ConcreteTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = ConcreteTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n4
+    TempTrainingData(:,:,:, pxCount) = AsphaltTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = AsphaltTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n5
+    TempTrainingData(:,:,:, pxCount) = TreesTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = TreesTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n6
+    TempTrainingData(:,:,:, pxCount) = RocksTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = RocksTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n7
+    TempTrainingData(:,:,:, pxCount) = WaterTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = WaterTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n8
+    TempTrainingData(:,:,:, pxCount) = skyTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = skyTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n9
+    TempTrainingData(:,:,:, pxCount) = GravelTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = GravelTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n10
+    TempTrainingData(:,:,:, pxCount) = ObjectTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = ObjectTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n11
+    TempTrainingData(:,:,:, pxCount) = DirtTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = DirtTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+for f = 1: n12
+    TempTrainingData(:,:,:, pxCount) = MudTrainingData(:,:,:, f);
+    TempTrainingLabel(1, pxCount) = MudTrainingLabel(1, f);
+    pxCount = pxCount + 1;
+end
+
+augData = zeros(ssKernel, ssKernel, bandsCount, totalSamples);
+augLabels = zeros(1, totalSamples, 'uint8');
+
+indices = randperm(totalSamples);
+
+for nPerm = 1: length(indices)
+   augData(:,:,:, indices(1, nPerm)) = TempTrainingData(:,:,:, nPerm);
+   augLabels(1, indices(1, nPerm)) = TempTrainingLabel(1, nPerm);
+end
+
+augLabelsCat = categorical(augLabels);
+
+%% Neural Network 
+
+load NN_9_sliding_window_CNN.mat
+
+% Training options to increase epochs
+opts = trainingOptions('adam', ...
+    'MaxEpochs', 25,...
+    'InitialLearnRate', 1e-3, ...
+    'Plots','training-progress',...
+    'Shuffle', 'every-epoch', ...
+    'ExecutionEnvironment','gpu'); %Optimise using stochastic gradient descent with momentum
+
+deep_net_25 = trainNetwork(augData, augLabelsCat, layers_2, opts);
+
+%% Prediction
+tic;
+
+CNN_TestPixels = zeros(ssKernel, ssKernel, bandsCount);
+
+[w, h, d] = size(rotatedHsi);
+
+resultHsi = zeros(w, h, 'uint8');
+resultHsi_vis = zeros(w, h, 3, 'uint8');
+
+for kx = 1: w - (ssKernel - 1)
+    for ky = 1:h - (ssKernel - 1)
+        
+        for i = 1:ssKernel
+            for j = 1:ssKernel
+                CNN_TestPixels(i, j, :) = rotatedHsi((ky - 1) + i, (kx - 1) + j, : );
+            end
+        end
+        
+        predictY = predict(deep_net_25, CNN_TestPixels);
+        [val, id] = max(predictY);
+        resultHsi(ky + 2, kx + 2) = id;
+    end
+end
+toc
+%%
+for i = 1:w
+    for j = 1:h
+        colorIdx = resultHsi(i, j);
+        resultHsi_vis(i, j, :) = Get_Label_Color(colorIdx + 1);
+    end
+end
+
+figure();
+imshow(resultHsi_vis)
