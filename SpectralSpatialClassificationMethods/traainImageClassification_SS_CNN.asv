@@ -20,9 +20,14 @@ clear undefinedTrainingData undefinedTrainingLabel ...
 
 %% Load the image dataset
 
-imageDirectory = 'G:\3. Hyperspectral\HSI_9_Bands\images';
+% path of the HSI images
+imageDirectory = uigetdir();
 
-imageFileName = 'REFLECTANCE_2020-04-27_002.dat';
+% Directory path of the results
+resRgbDirectory = uigetdir();
+
+%%
+imageFileName = 'REFLECTANCE_2020-05-04_008.dat';
 
 imagePath = fullfile(imageDirectory, imageFileName);
 
@@ -37,9 +42,8 @@ rgbImage = ConstructRgbImage(rotatedHsi, 2, 3, 5);
 % figure()
 % imshow(rgbImage);
 
-bandsCount = 9;
+bandsCount = 25;
 ssKernel = 5;               % 5x5 kernel or window
-
 
 
 if ~exist('undefinedTrainingData','var')
@@ -132,7 +136,7 @@ end
 %   "Mud"           = 11
 
 % Set the class to collect training data
-classId = 10;
+classId = 7;
 n = 1;
 
 switch classId
@@ -435,9 +439,10 @@ end
 
 augLabelsCat = categorical(augLabels);
 
+
 %% Neural Network 
 
-load NN_9_sliding_window_CNN.mat
+%load NN_9_sliding_window_CNN.mat
 
 % Training options to increase epochs
 opts = trainingOptions('adam', ...
@@ -447,7 +452,7 @@ opts = trainingOptions('adam', ...
     'Shuffle', 'every-epoch', ...
     'ExecutionEnvironment','gpu'); %Optimise using stochastic gradient descent with momentum
 
-deep_net_9 = trainNetwork(augData, augLabelsCat, NN_10_bands, opts);
+deep_net_25 = trainNetwork(augData, augLabelsCat, NN_25band_12class, opts);
 
 %% Prediction
 tic;
@@ -468,19 +473,27 @@ for kx = 1: w - (ssKernel - 1)
             end
         end
         
-        predictY = predict(deep_net_9, CNN_TestPixels);
+        predictY = predict(deep_net_25, CNN_TestPixels);
         [val, id] = max(predictY);
         resultHsi(ky + 2, kx + 2) = id;
     end
 end
 toc
 %%
+
+fileName = erase(imageFileName, '.dat');
+rgbFileName = strcat(fileName, '.png');
+
+rgbWritePath = fullfile(resRgbDirectory, rgbFileName);
+
 for i = 1:w
     for j = 1:h
         colorIdx = resultHsi(i, j);
-        resultHsi_vis(i, j, :) = Get_Label_Color(colorIdx + 1);
+        resultHsi_vis(i, j, :) = Get_Label_Color(colorIdx);
     end
 end
 
 figure();
 imshow(resultHsi_vis)
+
+imwrite(resultHsi_vis, rgbWritePath);
